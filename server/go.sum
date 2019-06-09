@@ -49,8 +49,6 @@ github.com/neko-neko/echo-logrus v1.1.0 h1:WHSHKtxdzlP7+xBC8DNoz9ER1oJBSp17C3/BA
 github.com/neko-neko/echo-logrus v1.1.0/go.mod h1:9YOl65UM0Kri6tLtLNRa7eZw9FrQgMPxyVZbPW93ruU=
 github.com/neko-neko/echo-logrus/v2 v2.0.0 h1:wbXbcBQF9As4ED5TZdnWGXDAJAMZadEHk95bClTIXFc=
 github.com/neko-neko/echo-logrus/v2 v2.0.0/go.mod h1:DrATlFaPX/B7shAUZnEkrjNEe7xAAAM55igg0sI/QrY=
-github.com/nu7hatch/gouuid v0.0.0-20131221200532-179d4d0c4d8d h1:VhgPp6v9qf9Agr/56bj7Y/xa04UccTW04VP0Qed4vnQ=
-github.com/nu7hatch/gouuid v0.0.0-20131221200532-179d4d0c4d8d/go.mod h1:YUTz3bUH2ZwIWBy3CJBeOBEugqcmXREj14T+iG/4k4U=
 github.com/olebedev/gojax v0.0.0-20170318114811-bb153be84336 h1:chSPSqdHJj3kuvxieoK2X2FWL5FAamzkP3Wb56+pJVU=
 github.com/olebedev/gojax v0.0.0-20170318114811-bb153be84336/go.mod h1:Vq6No+MV8FzNSee1rr7EagzcPJIzpoF4I+v4hRG8lt8=
 github.com/oleiade/reflections v1.0.0 h1:0ir4pc6v8/PJ0yw5AEtMddfXpWBXg9cnG7SgSoJuCgY=

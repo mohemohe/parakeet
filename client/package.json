@@ -5,7 +5,6 @@
   "license": "MIT",
   "private": true,
   "dependencies": {
-    "@babel/polyfill": "^7.4.4",
     "@material-ui/core": "^3.9.3",
     "@material-ui/icons": "^3.0.2",
     "@types/core-js": "^2.5.0",
@@ -23,14 +22,17 @@
     "react": ">=15",
     "react-dom": "^16.8.6",
     "react-router": "^5.0.0",
+    "react-router-dom": "^5.0.1",
     "tslib": "^1.9.3",
-    "typescript": "^3.4.5",
     "typestyle": "^2.0.2",
     "whatwg-fetch": "^3.0.0",
     "window": "^4.2.6"
   },
   "scripts": {
-    "build": "parcel build -d ../../server/public/js/ --public-url '/public/js/' ssr.tsx csr.tsx",
-    "watch": "NODE_ENV=development parcel watch -d ../../server/public/js/ --public-url '/public/js/' ssr.tsx csr.tsx"
+    "build": "parcel build -d ../server/public/js/ --public-url '/public/js/' ./guest/ssr.tsx ./guest/csr.tsx ./admin/index.tsx",
+    "watch": "NODE_ENV=development parcel watch -d ../server/public/js/ --public-url '/public/js/' ./guest/ssr.tsx ./guest/csr.tsx ./admin/index.tsx"
+  },
+  "devDependencies": {
+    "typescript": "^3.5.1"
   }
 }

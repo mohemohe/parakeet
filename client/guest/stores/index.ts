@@ -1,4 +1,4 @@
-import ToastStore from "./ToastStore";
+import ToastStore from "../../common/stores/ToastStore";
 import {RouterStore} from "mobx-react-router";
 
 export default function createStore(isSSR: boolean) {

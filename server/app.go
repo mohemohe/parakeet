@@ -30,14 +30,14 @@ func initEcho(e *echo.Echo) {
 		e.Logger.SetLevel(0)
 	}
 	e.Static("/public", "public")
-	e.Use(middlewares.SetUUID)
 	e.Use(middlewares.SSRWithConfig(middlewares.SSRConfig{
 		Skipper: func(c echo.Context) bool {
-			return strings.HasPrefix(c.Path(), "/public") || strings.HasPrefix(c.Path(), "/api") || c.Path() == "/favicon.ico"
+			return strings.HasPrefix(c.Path(), "/public") || strings.HasPrefix(c.Path(), "/admin") || strings.HasPrefix(c.Path(), "/api") || c.Path() == "/favicon.ico"
 		},
 		Handler: e,
 	}))
 
+	e.GET("/admin", controllers.AdminIndex)
 	e.GET("/api/v1/", controllers.ListPosts)
 }
 

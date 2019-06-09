@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html data-uuid="{{ .UUID }}">
+<html>
 <head>
     <meta charset="UTF-8">
     <title>{{ .Title }}</title>
@@ -10,13 +10,11 @@
 <body>
 {{if .Error}}
     <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(32, 32, 40, 0.9); color: #fefeff; z-index: 999999; pointer-events: none;">
-        <p>Server Error: {{ .UUID }}</p>
-        <hr style="height: 0; border: none; border-bottom: 1px solid #afafaf;">
         <pre style="font-family: monospace; padding: 0 10px 10px; margin: 0;">{{ .Error }}</pre>
     </div>
 {{end}}
 <div id="app">{{ .RawApp }}</div>
 {{if .State}}<script>window.__INITIAL_STATE__ = JSON.parse("{{ .State }}");</script>{{end}}
-<script async src="/public/js/csr.js"></script>
+<script async src="/public/js/guest/csr.js"></script>
 </body>
 </html>

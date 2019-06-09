@@ -11,7 +11,6 @@ function SSR(options: any, callback: (result: any) => void) {
     console.log("SSR complete");
 
     callback({
-        uuid: options.uuid,
         app,
         style,
         title: undefined || "parakeet",

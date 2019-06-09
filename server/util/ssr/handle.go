@@ -3,7 +3,6 @@ package ssr
 import (
 	"github.com/labstack/echo/v4"
 	"github.com/mohemohe/parakeet/server/util"
-	uuid "github.com/nu7hatch/gouuid"
 	"net/http"
 	"time"
 )
@@ -38,7 +37,6 @@ func Handle(c echo.Context, pool *Pool) error {
 	ch := js.Exec(map[string]interface{}{
 		"url":     c.Request().URL.String(),
 		"headers": map[string][]string(c.Request().Header),
-		"uuid":    c.Get("uuid").(*uuid.UUID).String(),
 	})
 
 	select {

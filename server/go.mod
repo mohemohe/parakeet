@@ -18,7 +18,6 @@ require (
 	github.com/labstack/echo/v4 v4.0.0
 	github.com/mitchellh/mapstructure v1.1.2
 	github.com/neko-neko/echo-logrus/v2 v2.0.0
-	github.com/nu7hatch/gouuid v0.0.0-20131221200532-179d4d0c4d8d
 	github.com/olebedev/gojax v0.0.0-20170318114811-bb153be84336
 	github.com/oleiade/reflections v1.0.0 // indirect
 	github.com/pkg/errors v0.8.1 // indirect

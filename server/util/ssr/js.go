@@ -36,7 +36,7 @@ func newJS(handler http.Handler) (*JS, bool) {
 	this.EventLoop.Start()
 	_ = fetch.Enable(this.EventLoop, handler)
 
-	jsPath, _ := filepath.Abs("./public/js/ssr.js")
+	jsPath, _ := filepath.Abs("./public/js/guest/ssr.js")
 	bundle, err := ioutil.ReadFile(jsPath)
 	if err != nil {
 		this.err = err

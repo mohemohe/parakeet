@@ -5,7 +5,6 @@ import (
 )
 
 type Result struct {
-	UUID  string `json:"uuid"`
 	Error string `json:"error"`
 	App   string `json:"app"`
 	Style string `json:"style"`

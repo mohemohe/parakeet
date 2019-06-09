@@ -6,5 +6,5 @@ import (
 )
 
 func AdminIndex(c echo.Context) error {
-	return c.Render(http.StatusOK, "admin/index.html", nil)
+	return c.Render(http.StatusOK, "admin.html", nil)
 }
