@@ -72,7 +72,7 @@ export default class StoreBase {
         const result = Object.assign({}, baseHeader);
         if (withAuth) {
             Object.assign(result, {
-                Authorization: `Bearer ${localStorage.accessToken}`,
+                Authorization: `Bearer ${localStorage.token}`,
             });
         }
         if (override) {

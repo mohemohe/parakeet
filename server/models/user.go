@@ -21,6 +21,7 @@ type (
 	JwtClaims struct {
 		ID   string `json:"id"`
 		Name string `json:"name"`
+		Role int    `json:"role"`
 		jwt.StandardClaims
 	}
 )
@@ -72,6 +73,7 @@ func AuthroizeUser(username string, password string) (*User, *string) {
 	claims := &JwtClaims{
 		user.GetId().Hex(),
 		user.Name,
+		user.Role,
 		jwt.StandardClaims{
 			ExpiresAt: time.Now().Add(time.Hour * 24).Unix(),
 		},

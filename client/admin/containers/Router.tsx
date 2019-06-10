@@ -4,12 +4,12 @@ import {inject, observer} from "mobx-react";
 import {Route, Router as ReactRouter, StaticRouter, Switch} from "react-router";
 import {createHashHistory} from "history";
 import MobxReactRouter, {RouterStore, syncHistoryWithStore} from "mobx-react-router";
-import {SIZES} from "../constants/Style";
 import Toast from "./common/Toast";
 import Notfound from "./page/NotFound";
 import Index from "./page";
 import {AuthStatus, AuthStore} from "../stores/AuthStore";
 import {LoginPage} from "./page/auth/Login";
+import {LogoutPage} from "./page/auth/Logout";
 
 interface IProps {
     RouterStore?: RouterStore;
@@ -44,7 +44,7 @@ export default class Router extends React.Component<IProps, IState> {
 
         const history = createHashHistory();
         this.history = syncHistoryWithStore(history, this.props.RouterStore!);
-        this.history.replace(window.location.hash.substring(1));
+        // this.history.replace(window.location.hash.substring(1));
     }
 
     private history: MobxReactRouter.SynchronizedHistory;
@@ -59,18 +59,16 @@ export default class Router extends React.Component<IProps, IState> {
                 <div className={styles.root}>
                     <div className={styles.contents}>
                         <StaticRouter location={this.props.RouterStore!.location} context={this.context || {}}>
-                            <Switch>
-                                {this.props.AuthStore!.authStatus === AuthStatus.Unauthorized ?
-                                    <>
-                                        <Route component={LoginPage} />
-                                    </> :
-                                    <>
-                                        <Route exact={true} path="/" component={Index} />
-                                        <Route exact={true} path="/auth/login" component={Index} />
-                                        <Route component={Notfound} />
-                                    </>
-                                }
-                            </Switch>
+                            {this.props.AuthStore!.token == "" && this.props.AuthStore!.authStatus === AuthStatus.Unauthorized ?
+                                <Switch>
+                                    <Route component={LoginPage} />
+                                </Switch> :
+                                <Switch>
+                                    <Route exact={true} path="/" component={Index} />
+                                    <Route path="/auth/logout" component={LogoutPage} />
+                                    <Route component={Notfound} />
+                                </Switch>
+                            }
                         </StaticRouter>
                     </div>
                     <Toast/>

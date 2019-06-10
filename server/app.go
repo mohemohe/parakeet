@@ -38,7 +38,9 @@ func initEcho(e *echo.Echo) {
 	}))
 
 	e.GET("/admin", controllers.AdminIndex)
-	e.GET("/api/v1/", controllers.ListPosts)
+
+	e.GET("/api/v1/auth", controllers.AuthCheck, middlewares.Authorized)
+	e.POST("/api/v1/auth", controllers.AuthLogin)
 }
 
 func initTemplate(e *echo.Echo) {

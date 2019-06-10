@@ -4,13 +4,17 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/mohemohe/parakeet/server/models"
 	"net/http"
-	"time"
 )
 
 type (
 	AuthRequest struct {
 		Name     string `json:"name"`
 		Password string `json:"password"`
+	}
+
+	AuthResponse struct {
+		User  *models.User `json:"user"`
+		Token *string      `json:"token"`
 	}
 )
 
@@ -20,22 +24,24 @@ func AuthLogin(c echo.Context) error {
 		panic("bind error")
 	}
 
-	_, token := models.AuthroizeUser(authRequest.Name, authRequest.Password)
+	user, token := models.AuthroizeUser(authRequest.Name, authRequest.Password)
 	if token == nil {
 		panic("invalid token")
 	}
 
-	cookie := new(http.Cookie)
-	cookie.Name = "token"
-	cookie.Value = *token
-	cookie.Expires = time.Now().Add(24 * time.Hour)
-	c.SetCookie(cookie)
+	return c.JSON(http.StatusOK, AuthResponse{
+		User: user,
+		Token: token,
+	})
+}
 
-	// TODO: redirect
-
-	return c.Render(http.StatusOK, "posts/index.html", nil)
+func AuthCheck(c echo.Context) error {
+	user := c.Get("User").(*models.User)
+	return c.JSON(http.StatusOK, AuthResponse{
+		User: user,
+	})
 }
 
 func AuthLogout(c echo.Context) error {
-	return c.Render(http.StatusOK, "posts/post.html", nil)
+	return c.Render(http.StatusOK, "admin.html", nil)
 }

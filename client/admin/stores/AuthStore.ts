@@ -11,10 +11,7 @@ export class AuthStore extends StoreBase {
     public authStatus: AuthStatus;
 
     @observable
-    public accessToken: string;
-
-    @observable
-    public refreshToken: string;
+    public token: string;
 
     @observable
     public userInfo: any;
@@ -23,8 +20,7 @@ export class AuthStore extends StoreBase {
         super();
 
         this.userInfo = {} as any;
-        this.accessToken = localStorage.accessToken || "";
-        this.refreshToken = localStorage.refreshToken || "";
+        this.token = localStorage.token || "";
         this.authStatus = AuthStatus.Unauthorized;
     }
 
@@ -43,17 +39,17 @@ export class AuthStore extends StoreBase {
                 }),
             });
 
-            const result = await response.json();
-            if (result.statusCode === 200) {
-                this.accessToken = localStorage.accessToken = result.tokens.accessToken;
-                this.refreshToken = localStorage.refreshToken = result.tokens.refreshToken;
-            } else {
+            if (response.status !== 200) {
                 throw new Error();
             }
+            const result = await response.json();
+            this.token = localStorage.token = result.token;
+            this.userInfo = result.user;
 
             await this.checkAuth();
             this.setState(State.DONE);
         } catch (e) {
+            this.tryShowToast("ログインに失敗しました");
             console.error(e);
             this.setState(State.ERROR);
         }
@@ -61,33 +57,28 @@ export class AuthStore extends StoreBase {
 
     @action
     public logout() {
-        localStorage.removeItem("accessToken");
-        localStorage.removeItem("refreshToken");
+        localStorage.removeItem("token");
         this.authStatus = AuthStatus.Unauthorized;
-        this.accessToken = "";
-        this.refreshToken = "";
+        this.token = "";
         this.userInfo = {} as any;
     }
 
     @action
     public async checkAuth() {
-        if (!this.accessToken || !this.refreshToken) {
+        if (!this.token) {
             this.logout();
             return;
         }
-        const response = await fetch(this.apiBasePath + "v1/me", {
+        const response = await fetch(this.apiBasePath + "v1/auth", {
             headers: this.generateFetchHeader(),
         });
-        if (!response.ok) {
+        if (response.status !== 200) {
+            this.tryShowToast("ログインセッション エラー");
             this.logout();
             return;
         }
 
         const result = await response.json();
-        if (result.statusCode !== 200) {
-            this.logout();
-        }
-
         this.userInfo = result.user;
         this.authStatus = AuthStatus.Authorized;
     }
