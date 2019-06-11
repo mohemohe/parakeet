@@ -45,6 +45,7 @@ export class LogoutPage extends React.Component<IProps, IState> {
 
         return (
             <div className={styles.root}>
+                Logout...
             </div>
         );
     }

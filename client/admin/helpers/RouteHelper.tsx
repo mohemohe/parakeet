@@ -1,7 +1,7 @@
 import {IRouteInfo} from "../constants/Route";
-import AuthStore from "../stores/AuthStore";
+import {AuthStore} from "../stores/AuthStore";
 
-export default class RouteHelper {
+export class RouteHelper {
     public static getRoute(routes: IRouteInfo[], authStore: AuthStore, visibleOnly: boolean) {
         let visibleRoutes: IRouteInfo[];
         if (authStore.isRoot) {
