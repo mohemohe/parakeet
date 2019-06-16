@@ -129,7 +129,7 @@ export class LoginPage extends React.Component<IProps, IState> {
                         </CardContent>
                         <CardActions className={styles.loginActions}>
                             <div className={styles.loginButtons}>
-                                <Button fullWidth variant="raised" classes={{root: styles.loginButton}} onClick={() => this.props.AuthStore!.login(this.state.name, this.state.password)}>
+                                <Button fullWidth variant="raised" classes={{root: styles.loginButton}} onClick={() => this.props.AuthStore!.login(this.state.name, this.state.password)} type={"submit"} onSubmit={() => false}>
                                     <Send/>
                                     <span style={{marginLeft: ".5rem"}}>ログイン</span>
                                 </Button>

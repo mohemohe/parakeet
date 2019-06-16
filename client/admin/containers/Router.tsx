@@ -12,6 +12,9 @@ import {RouteHelper} from "../helpers/RouteHelper";
 import {IRouteInfo, ROUTES} from "../constants/Route";
 import {LeftNav} from "./common/LeftNav";
 import {SyncedRouter} from "../../common/components/SyncedRouter";
+import {UserInfo} from "../components/UserInfo";
+import {IconButton} from "@material-ui/core";
+import ExitIcon from "@material-ui/icons/NoMeetingRoom";
 
 interface IProps {
     RouterStore?: RouterStore;
@@ -37,6 +40,10 @@ const styles = {
         maxWidth: "100%",
         padding: "1rem",
         overflow: "auto",
+    }),
+    logout: style({
+        display: "flex",
+        alignItems: "flex-end",
     }),
 };
 
@@ -88,7 +95,15 @@ export default class Router extends React.Component<IProps, IState> {
         return (
             <ReactRouter history={this.history}>
                 <div className={styles.root}>
-                    <LeftNav/>
+                    <LeftNav>
+                        <UserInfo name={this.props.AuthStore!.name} role={this.props.AuthStore!.role}>
+                            <div className={styles.logout}>
+                                <IconButton onClick={() => this.props.AuthStore!.logout()}>
+                                    <ExitIcon />
+                                </IconButton>
+                            </div>
+                        </UserInfo>
+                    </LeftNav>
                     <div className={styles.contents}>
                         <SyncedRouter history={this.props.RouterStore!.history}>
                             {this.props.AuthStore!.token == "" && this.props.AuthStore!.authStatus === AuthStatus.Unauthorized ?

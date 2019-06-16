@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Link } from "react-router-dom";
 import { inject, observer } from "mobx-react";
-import {Collapse, List, ListItem, ListItemText, Paper} from "@material-ui/core";
+import {Collapse, Divider, List, ListItem, ListItemText, Paper} from "@material-ui/core";
 import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
 import {style} from "typestyle";
@@ -16,7 +16,13 @@ const styles = {
         width: SIZES.LeftNav.width,
         maxWidth: SIZES.LeftNav.width,
         minWidth: SIZES.LeftNav.width,
+        overflowY: "hidden",
+        display: "flex",
+        flexDirection: "column",
+    }),
+    list: style({
         overflowY: "auto",
+        flex: 1,
     }),
     menuText: {
         display: "flex",
@@ -285,7 +291,11 @@ export class LeftNav extends React.Component<IProps, IState> {
                 elevation={5}
                 square={true}
             >
-                <List>{this.generateListItem()}</List>
+                <List className={styles.list}>{this.generateListItem()}</List>
+                <div>
+                    <Divider />
+                    {this.props.children}
+                </div>
             </Paper>
         );
     }

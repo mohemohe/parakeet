@@ -6,6 +6,11 @@ export enum AuthStatus {
     Authorized = 1,
 }
 
+export interface IUserInfo {
+    name: string;
+    role: number;
+}
+
 export class AuthStore extends StoreBase {
     @observable
     public authStatus: AuthStatus;
@@ -14,7 +19,7 @@ export class AuthStore extends StoreBase {
     public token: string;
 
     @observable
-    public userInfo: any;
+    public userInfo: IUserInfo;
 
     constructor() {
         super();
@@ -84,14 +89,23 @@ export class AuthStore extends StoreBase {
     }
 
     @computed
+    public get name() {
+        if (this.userInfo) {
+            return this.userInfo.name;
+        } else {
+            return "";
+        }
+    }
+
+    @computed
     public get role() {
-        return this.isRoot ? "管理者" : "ユーザー";
+        return this.isRoot ? "管理者" : "編集者";
     }
 
     @computed
     public get isRoot() {
         if (this.userInfo) {
-            return this.userInfo.type === 1;
+            return this.userInfo.role === 1;
         } else {
             return false;
         }
