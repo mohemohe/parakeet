@@ -30,7 +30,7 @@ func AuthLogin(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, AuthResponse{
-		User: user,
+		User:  user,
 		Token: token,
 	})
 }

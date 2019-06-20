@@ -14,6 +14,7 @@ type (
 	User struct {
 		bongo.DocumentBase `bson:",inline"`
 		Name               string `bson:"name" json:"name"`
+		Email              string `bson:"email" json:"email"`
 		Password           string `bson:"password" json:"-"`
 		Role               int    `bson:"role" json:"role"`
 	}
@@ -28,7 +29,7 @@ type (
 
 const (
 	RootRole = iota + 1
-	AdminRole
+	UserRole
 )
 
 const (

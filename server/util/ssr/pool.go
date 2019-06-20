@@ -9,14 +9,14 @@ import (
 
 type (
 	Pool struct {
-		JS      chan *JS
+		JS chan *JS
 	}
 )
 
 func NewPool(handler http.Handler) *Pool {
 	cpus := runtime.NumCPU()
 	this := &Pool{
-		JS:      make(chan *JS, cpus),
+		JS: make(chan *JS, cpus),
 	}
 
 	go func() {

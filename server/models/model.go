@@ -19,6 +19,7 @@ func InitDB() {
 	if user == nil {
 		err := UpsertUser(&User{
 			Name:     "root",
+			Email:    "",
 			Password: configs.GetEnv().Root.Password,
 			Role:     RootRole,
 		})
