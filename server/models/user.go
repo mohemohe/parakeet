@@ -36,6 +36,18 @@ const (
 	Name = "name"
 )
 
+func GetUserById(id string) *User {
+	conn := connection.Mongo()
+
+	user := &User{}
+	err := conn.Collection(collections.Users).FindById(bson.ObjectIdHex(id), user)
+	if err != nil {
+		return nil
+	}
+
+	return user
+}
+
 func GetUserByName(name string) *User {
 	conn := connection.Mongo()
 

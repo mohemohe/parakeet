@@ -49,8 +49,9 @@ func UpdateUser(c echo.Context) error {
 		panic("bind error")
 	}
 
-	user := models.GetUserByName(reqBody.Name)
-	if user != nil {
+	id := c.Param("id")
+	user := models.GetUserById(id)
+	if user == nil {
 		panic("the user not found")
 	}
 
@@ -75,8 +76,9 @@ func DeleteUser(c echo.Context) error {
 		panic("bind error")
 	}
 
-	user := models.GetUserByName(reqBody.Name)
-	if user != nil {
+	id := c.Param("id")
+	user := models.GetUserById(id)
+	if user == nil {
 		panic("the user not found")
 	}
 
