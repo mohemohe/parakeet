@@ -94,6 +94,11 @@ export class LoginPage extends React.Component<IProps, IState> {
         };
     }
 
+    private onSubmit(e: React.FormEvent<HTMLFormElement>) {
+        e.preventDefault();
+        return false;
+    }
+
     public render() {
         if (this.props.AuthStore!.authStatus === AuthStatus.Authorized) {
             return <Redirect to="/"/>;
@@ -101,7 +106,7 @@ export class LoginPage extends React.Component<IProps, IState> {
 
         return (
             <div className={styles.root}>
-                <form className={styles.loginCardWrapper}>
+                <form className={styles.loginCardWrapper} onSubmit={(e) => this.onSubmit(e)}>
                     <Card className={styles.loginCard}>
                         <Typography variant="headline" component="h3">
                             parakeet ログイン
@@ -129,7 +134,7 @@ export class LoginPage extends React.Component<IProps, IState> {
                         </CardContent>
                         <CardActions className={styles.loginActions}>
                             <div className={styles.loginButtons}>
-                                <Button fullWidth variant="raised" classes={{root: styles.loginButton}} onClick={() => this.props.AuthStore!.login(this.state.name, this.state.password)} type={"submit"} onSubmit={() => false}>
+                                <Button fullWidth variant="raised" classes={{root: styles.loginButton}} onClick={() => this.props.AuthStore!.login(this.state.name, this.state.password)} type={"submit"}>
                                     <Send/>
                                     <span style={{marginLeft: ".5rem"}}>ログイン</span>
                                 </Button>
