@@ -1,5 +1,7 @@
 import * as React from "react";
 import Search from "@material-ui/icons/Search";
+import Home from "@material-ui/icons/Home";
+import People from "@material-ui/icons/People";
 import { Index } from "../containers/page/Index";
 import { LoginPage } from "../containers/page/auth/Login";
 import { LogoutPage } from "../containers/page/auth/Logout";
@@ -21,6 +23,7 @@ export const ROUTES: IRouteInfo[] = [
     {
         name: "Index",
         path: "/",
+        icon: <Home/>,
         component: Index,
         showLeftNav: true,
         permission: [],
@@ -42,6 +45,7 @@ export const ROUTES: IRouteInfo[] = [
     {
         name: "ユーザー",
         path: "/users",
+        icon: <People/>,
         component: User,
         showLeftNav: true,
         permission: [],
