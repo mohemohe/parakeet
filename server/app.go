@@ -41,9 +41,10 @@ func initEcho(e *echo.Echo) {
 
 	e.GET("/api/v1/auth", controllers.AuthCheck, middlewares.Authorized)
 	e.POST("/api/v1/auth", controllers.AuthLogin)
-	e.POST("/api/v1/user", controllers.CreateUser, middlewares.Authorized)
-	e.PUT("/api/v1/user/:id", controllers.UpdateUser, middlewares.Authorized)
-	e.DELETE("/api/v1/user/:id", controllers.DeleteUser, middlewares.Authorized)
+	e.GET("/api/v1/users", controllers.GetUsers, middlewares.Authorized)
+	e.POST("/api/v1/users", controllers.CreateUser, middlewares.Authorized)
+	e.PUT("/api/v1/users/:id", controllers.UpdateUser, middlewares.Authorized)
+	e.DELETE("/api/v1/users/:id", controllers.DeleteUser, middlewares.Authorized)
 }
 
 func initTemplate(e *echo.Echo) {

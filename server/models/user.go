@@ -19,6 +19,11 @@ type (
 		Role               int    `bson:"role" json:"role"`
 	}
 
+	Users struct {
+		Info  *bongo.PaginationInfo `bson:"-" json:"info"`
+		Users []User                `bson:"-" json:"users"`
+	}
+
 	JwtClaims struct {
 		ID   string `json:"id"`
 		Name string `json:"name"`
@@ -60,6 +65,29 @@ func GetUserByName(name string) *User {
 	}
 
 	return user
+}
+
+func GetUsers(perPage int, page int) *Users {
+	conn := connection.Mongo()
+
+	result := conn.Collection(collections.Users).Find(bson.M{})
+	if result == nil {
+		return nil
+	}
+	info, err := result.Paginate(perPage, page)
+	if err != nil {
+		return nil
+	}
+	users := make([]User, info.RecordsOnPage)
+	for i :=0; i < info.RecordsOnPage; i++ {
+		_ = result.Next(&users[i])
+	}
+
+
+	return &Users{
+		Info: info,
+		Users: users,
+	}
 }
 
 func UpsertUser(user *User) error {

@@ -4,6 +4,7 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/mohemohe/parakeet/server/models"
 	"net/http"
+	"strconv"
 )
 
 type (
@@ -17,6 +18,24 @@ type (
 		User  *models.User `json:"user"`
 	}
 )
+
+func GetUsers(c echo.Context) error {
+	limit, err := strconv.Atoi(c.Param("limit"))
+	if err != nil {
+		limit = 10
+	}
+	page, err := strconv.Atoi(c.Param("page"))
+	if err != nil {
+		page = 1
+	}
+
+	users := models.GetUsers(limit, page)
+	if users == nil {
+		panic("db error")
+	}
+
+	return c.JSON(http.StatusOK, users)
+}
 
 func CreateUser(c echo.Context) error {
 	reqBody := new(UserRequest)
