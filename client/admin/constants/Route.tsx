@@ -3,7 +3,7 @@ import Search from "@material-ui/icons/Search";
 import { Index } from "../containers/page/Index";
 import { LoginPage } from "../containers/page/auth/Login";
 import { LogoutPage } from "../containers/page/auth/Logout";
-import {Test} from "../containers/page/Test";
+import {User} from "../containers/page/User";
 
 export interface IRouteInfo {
     name: string;
@@ -40,9 +40,9 @@ export const ROUTES: IRouteInfo[] = [
         permission: [],
     },
     {
-        name: "Test",
-        path: "/test",
-        component: Test,
+        name: "ユーザー",
+        path: "/users",
+        component: User,
         showLeftNav: true,
         permission: [],
     },
