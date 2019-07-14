@@ -22,4 +22,5 @@
 
 # End of https://www.gitignore.io/api/go
 
-/public/js/app.js*
+/public/js/**/*.js
+/public/js/**/*.js.map

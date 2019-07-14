@@ -7,7 +7,7 @@ import MobxReactRouter, {syncHistoryWithStore, RouterStore} from "mobx-react-rou
 import { SIZES } from "../constants/Style";
 import Toast from "./common/Toast";
 import Notfound from "./page/NotFound";
-import Index from "./page";
+import Index from "./page/Index";
 
 interface IProps {
     isSSR: boolean;

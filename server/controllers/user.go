@@ -37,6 +37,18 @@ func GetUsers(c echo.Context) error {
 	return c.JSON(http.StatusOK, users)
 }
 
+func GetUser(c echo.Context) error {
+	id := c.Param("id")
+	user := models.GetUserById(id)
+	if user == nil {
+		panic("the user not found")
+	}
+
+	return c.JSON(http.StatusOK, UserResponse{
+		User:  user,
+	})
+}
+
 func CreateUser(c echo.Context) error {
 	reqBody := new(UserRequest)
 	if err := c.Bind(reqBody); err != nil {

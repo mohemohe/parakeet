@@ -43,6 +43,7 @@ func initEcho(e *echo.Echo) {
 	e.POST("/api/v1/auth", controllers.AuthLogin)
 	e.GET("/api/v1/users", controllers.GetUsers, middlewares.Authorized)
 	e.POST("/api/v1/users", controllers.CreateUser, middlewares.Authorized)
+	e.GET("/api/v1/users/:id", controllers.GetUser, middlewares.Authorized)
 	e.PUT("/api/v1/users/:id", controllers.UpdateUser, middlewares.Authorized)
 	e.DELETE("/api/v1/users/:id", controllers.DeleteUser, middlewares.Authorized)
 }

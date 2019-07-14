@@ -21,6 +21,10 @@ export enum Mode {
     IMPORT,
 }
 
+export interface IModel {
+    _id: string;
+}
+
 export default class StoreBase {
     constructor() {
         this.state = State.IDLE;

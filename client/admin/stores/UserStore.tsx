@@ -1,7 +1,9 @@
-import {action, observable} from "mobx";
-import StoreBase, {Mode, State} from "./StoreBase";
+import React from "react";
+import {Link} from "react-router-dom";
+import {action, computed, observable} from "mobx";
+import StoreBase, {IModel, Mode, State} from "./StoreBase";
 
-export interface IUserInfo {
+export interface IUserInfo extends IModel {
     name: string;
     role: number;
 }
@@ -40,5 +42,15 @@ export class UserStore extends StoreBase {
             console.error(e);
             this.setState(State.ERROR);
         }
+    }
+
+    @computed
+    public get editableUsers() {
+        return this.users.map((user) => {
+            return {
+                ...user,
+                path: <Link to={`/users/edit/${user._id}`}>編集</Link>,
+            }
+        })
     }
 }
