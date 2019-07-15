@@ -1,13 +1,14 @@
 import {action, computed, observable} from "mobx";
-import StoreBase, {Mode, State} from "./StoreBase";
+import StoreBase, {IModel, Mode, State} from "./StoreBase";
 
 export enum AuthStatus {
     Unauthorized = 0,
     Authorized = 1,
 }
 
-export interface IUserInfo {
+export interface IUserInfo extends IModel {
     name: string;
+    email: string;
     role: number;
 }
 
@@ -30,7 +31,7 @@ export class AuthStore extends StoreBase {
     }
 
     @action
-    public async login(name: string, password: string) {
+    public async login(email: string, password: string) {
         this.setMode(Mode.LOGIN);
         this.setState(State.RUNNING);
 
@@ -39,7 +40,7 @@ export class AuthStore extends StoreBase {
                 method: "POST",
                 headers: this.generateFetchHeader(),
                 body: JSON.stringify({
-                    name,
+                    email,
                     password,
                 }),
             });
@@ -92,6 +93,15 @@ export class AuthStore extends StoreBase {
     public get name() {
         if (this.userInfo) {
             return this.userInfo.name;
+        } else {
+            return "";
+        }
+    }
+
+    @computed
+    public get email() {
+        if (this.userInfo) {
+            return this.userInfo.email;
         } else {
             return "";
         }

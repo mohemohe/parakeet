@@ -8,7 +8,7 @@ import (
 
 type (
 	AuthRequest struct {
-		Name     string `json:"name"`
+		Email    string `json:"email"`
 		Password string `json:"password"`
 	}
 
@@ -24,7 +24,7 @@ func AuthLogin(c echo.Context) error {
 		panic("bind error")
 	}
 
-	user, token := models.AuthroizeUser(authRequest.Name, authRequest.Password)
+	user, token := models.AuthroizeUser(authRequest.Email, authRequest.Password)
 	if token == nil {
 		panic("invalid token")
 	}

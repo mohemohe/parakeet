@@ -96,7 +96,7 @@ export default class Router extends React.Component<IProps, IState> {
             <ReactRouter history={this.history}>
                 <div className={styles.root}>
                     <LeftNav>
-                        <UserInfo name={this.props.AuthStore!.name} role={this.props.AuthStore!.role}>
+                        <UserInfo identicon={this.props.AuthStore!.email} name={this.props.AuthStore!.name} role={this.props.AuthStore!.role}>
                             <div className={styles.logout}>
                                 <IconButton onClick={() => this.props.AuthStore!.logout()}>
                                     <ExitIcon />

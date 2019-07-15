@@ -12,7 +12,7 @@ interface IProps extends React.ClassAttributes<HTMLDivElement> {
 }
 
 interface IState extends React.ComponentState {
-    name: string;
+    email: string;
     password: string;
 }
 
@@ -89,7 +89,7 @@ export class LoginPage extends React.Component<IProps, IState> {
         super(props, state);
 
         this.state = {
-            name: "",
+            email: "",
             password: "",
         };
     }
@@ -113,12 +113,12 @@ export class LoginPage extends React.Component<IProps, IState> {
                         </Typography>
                         <CardContent className={styles.loginInputs}>
                             <TextField
-                                label="アカウント名"
+                                label="メールアドレス"
                                 margin="normal"
                                 fullWidth
-                                value={this.state.name}
+                                value={this.state.email}
                                 onChange={(event) => this.setState({
-                                    name: event.target.value,
+                                    email: event.target.value,
                                 })}
                             />
                             <TextField
@@ -134,7 +134,7 @@ export class LoginPage extends React.Component<IProps, IState> {
                         </CardContent>
                         <CardActions className={styles.loginActions}>
                             <div className={styles.loginButtons}>
-                                <Button fullWidth variant="raised" classes={{root: styles.loginButton}} onClick={() => this.props.AuthStore!.login(this.state.name, this.state.password)} type={"submit"}>
+                                <Button fullWidth variant="raised" classes={{root: styles.loginButton}} onClick={() => this.props.AuthStore!.login(this.state.email, this.state.password)} type={"submit"}>
                                     <Send/>
                                     <span style={{marginLeft: ".5rem"}}>ログイン</span>
                                 </Button>

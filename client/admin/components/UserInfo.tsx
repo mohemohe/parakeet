@@ -5,6 +5,7 @@ import {Typography} from "@material-ui/core";
 import {COLORS} from "../constants/Style";
 
 export interface IProps extends React.HTMLProps<HTMLDivElement> {
+    identicon: string;
     name: string;
     role: string;
 }
@@ -33,7 +34,7 @@ export class UserInfo extends React.Component<IProps, {}> {
     public render(): React.ReactNode {
         return (
             <div className={styles.root} {...this.props}>
-                <Identicon source={this.props.name} style={{width: 64, height: 64}}/>
+                <Identicon source={this.props.identicon} style={{width: 64, height: 64}}/>
                 <div className={styles.names}>
                     <Typography variant={"title"}>
                         {this.props.name}

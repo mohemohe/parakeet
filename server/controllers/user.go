@@ -12,10 +12,11 @@ type (
 		Name     string `json:"name"`
 		Email    string `json:"email"`
 		Password string `json:"password"`
+		Role     int    `json:"role"`
 	}
 
 	UserResponse struct {
-		User  *models.User `json:"user"`
+		User *models.User `json:"user"`
 	}
 )
 
@@ -45,7 +46,7 @@ func GetUser(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, UserResponse{
-		User:  user,
+		User: user,
 	})
 }
 
@@ -55,22 +56,22 @@ func CreateUser(c echo.Context) error {
 		panic("bind error")
 	}
 
-	if user := models.GetUserByName(reqBody.Name); user != nil {
+	if user := models.GetUserByEmail(reqBody.Email); user != nil {
 		panic("the user already registered")
 	}
 
 	user := &models.User{
-		Name: reqBody.Name,
-		Email: reqBody.Email,
+		Name:     reqBody.Name,
+		Email:    reqBody.Email,
 		Password: reqBody.Password,
-		Role: models.UserRole,
+		Role:     models.UserRole,
 	}
 	if err := models.UpsertUser(user); err != nil {
 		panic(err)
 	}
 
 	return c.JSON(http.StatusOK, UserResponse{
-		User:  user,
+		User: user,
 	})
 }
 
@@ -85,19 +86,25 @@ func UpdateUser(c echo.Context) error {
 	if user == nil {
 		panic("the user not found")
 	}
+	password := reqBody.Password
+	if password == "" {
+		password = user.Password
+	}
 
 	nextUser := &models.User{
-		Name: user.Name,
-		Email: reqBody.Email,
-		Password: reqBody.Password,
-		Role: user.Role,
+		Name:     reqBody.Name,
+		Email:    reqBody.Email,
+		Password: password,
+		Role:     reqBody.Role,
 	}
+	nextUser.Id = user.Id
+
 	if err := models.UpsertUser(nextUser); err != nil {
 		panic(err)
 	}
 
 	return c.JSON(http.StatusOK, UserResponse{
-		User:  user,
+		User: nextUser,
 	})
 }
 

@@ -25,9 +25,9 @@ type (
 	}
 
 	JwtClaims struct {
-		ID   string `json:"id"`
-		Name string `json:"name"`
-		Role int    `json:"role"`
+		ID    string `json:"id"`
+		Email string `json:"email"`
+		Role  int    `json:"role"`
 		jwt.StandardClaims
 	}
 )
@@ -38,7 +38,7 @@ const (
 )
 
 const (
-	Name = "name"
+	Email = "email"
 )
 
 func GetUserById(id string) *User {
@@ -53,12 +53,12 @@ func GetUserById(id string) *User {
 	return user
 }
 
-func GetUserByName(name string) *User {
+func GetUserByEmail(email string) *User {
 	conn := connection.Mongo()
 
 	user := &User{}
 	err := conn.Collection(collections.Users).FindOne(bson.M{
-		Name: name,
+		Email: email,
 	}, user)
 	if err != nil {
 		return nil
@@ -79,13 +79,12 @@ func GetUsers(perPage int, page int) *Users {
 		return nil
 	}
 	users := make([]User, info.RecordsOnPage)
-	for i :=0; i < info.RecordsOnPage; i++ {
+	for i := 0; i < info.RecordsOnPage; i++ {
 		_ = result.Next(&users[i])
 	}
 
-
 	return &Users{
-		Info: info,
+		Info:  info,
 		Users: users,
 	}
 }
@@ -101,8 +100,8 @@ func DeleteUser(user *User) error {
 	return connection.Mongo().Collection(collections.Users).DeleteDocument(user)
 }
 
-func AuthroizeUser(username string, password string) (*User, *string) {
-	user := GetUserByName(username)
+func AuthroizeUser(email string, password string) (*User, *string) {
+	user := GetUserByEmail(email)
 	if user == nil {
 		panic("user not found")
 	}
@@ -113,7 +112,7 @@ func AuthroizeUser(username string, password string) (*User, *string) {
 
 	claims := &JwtClaims{
 		user.GetId().Hex(),
-		user.Name,
+		user.Email,
 		user.Role,
 		jwt.StandardClaims{
 			ExpiresAt: time.Now().Add(time.Hour * 24).Unix(),

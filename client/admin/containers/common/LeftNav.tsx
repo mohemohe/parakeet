@@ -199,7 +199,7 @@ export class LeftNav extends React.Component<IProps, IState> {
 									</span>
                                     <ListItemText
                                         inset
-                                        primary={route.name + "aaaa"}
+                                        primary={route.name}
                                         disableTypography={true}
                                         style={selectedPath ? styles.selectedItemText : styles.menuText}/>
                                 </ListItem>

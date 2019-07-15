@@ -23,6 +23,8 @@ export enum Mode {
 
 export interface IModel {
     _id: string;
+    _created: string;
+    _modified: string;
 }
 
 export default class StoreBase {

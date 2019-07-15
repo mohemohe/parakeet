@@ -26,12 +26,12 @@ func Authorized(next echo.HandlerFunc) echo.HandlerFunc {
 			return c.JSON(http.StatusUnauthorized, struct{}{})
 		}
 
-		user := models.GetUserByName(tokenUser.Name)
+		user := models.GetUserByEmail(tokenUser.Email)
 		if user == nil {
 			return c.JSON(http.StatusUnauthorized, struct{}{})
 		}
 
-		if user.Id.Hex() == tokenUser.ID && user.Name == tokenUser.Name && user.Role == tokenUser.Role {
+		if user.Id.Hex() == tokenUser.ID && user.Email == tokenUser.Email && user.Role == tokenUser.Role {
 			c.Set("User", user)
 			return next(c)
 		}

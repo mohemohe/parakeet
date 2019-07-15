@@ -9,6 +9,7 @@ import { LoginPage } from "../containers/page/auth/Login";
 import { LogoutPage } from "../containers/page/auth/Logout";
 import {User} from "../containers/page/User";
 import {Entry} from "../containers/page/Entry";
+import {UserEdit} from "../containers/page/UserEdit";
 
 export interface IRouteInfo {
     name: string;
@@ -68,6 +69,17 @@ export const ROUTES: IRouteInfo[] = [
         component: User,
         showLeftNav: true,
         permission: [1],
+        link: true,
+        children: [
+            {
+                name: "ユーザー編集",
+                path: "/users/:id/edit",
+                icon: <People/>,
+                component: UserEdit,
+                showLeftNav: false,
+                permission: [1],
+            },
+        ],
     },
     {
         name: "設定",
