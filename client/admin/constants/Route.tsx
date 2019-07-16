@@ -10,6 +10,7 @@ import { LogoutPage } from "../containers/page/auth/Logout";
 import {User} from "../containers/page/User";
 import {Entry} from "../containers/page/Entry";
 import {UserEdit} from "../containers/page/UserEdit";
+import {EntryEdit} from "../containers/page/EntryEdit";
 
 export interface IRouteInfo {
     name: string;
@@ -53,13 +54,30 @@ export const ROUTES: IRouteInfo[] = [
         component: Entry,
         showLeftNav: true,
         permission: [],
+        link: true,
+        children: [
+            {
+                name: "エントリー編集",
+                path: "/entries/new",
+                component: EntryEdit,
+                showLeftNav: false,
+                permission: [],
+            },
+            {
+                name: "エントリー編集",
+                path: "/entries/:id",
+                component: EntryEdit,
+                showLeftNav: false,
+                permission: [],
+            },
+        ],
     },
     {
         name: "ページ",
         path: "/pages",
         icon: <InsertDriveFile/>,
         component: Entry,
-        showLeftNav: true,
+        showLeftNav: false,
         permission: [],
     },
     {
@@ -74,7 +92,6 @@ export const ROUTES: IRouteInfo[] = [
             {
                 name: "ユーザー編集",
                 path: "/users/:id/edit",
-                icon: <People/>,
                 component: UserEdit,
                 showLeftNav: false,
                 permission: [1],
@@ -102,7 +119,7 @@ export const ROUTES: IRouteInfo[] = [
                 showLeftNav: true,
                 permission: [1],
             },
-        ]
+        ],
     },
     // {
     //     name: "外部リンク (Google)",

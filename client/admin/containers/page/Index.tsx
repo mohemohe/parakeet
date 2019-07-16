@@ -15,6 +15,7 @@ export class Index extends React.Component<IProps, IState> {
         return (
             <div>
                 <h2>index</h2>
+                //TODO: ここに何かエモい感じのダッシュボード
             </div>
         );
     }

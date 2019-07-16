@@ -16,7 +16,6 @@ var connection *bongo.Connection
 func Mongo() *bongo.Connection {
 	if connection == nil {
 		connection = newMongo()
-
 	}
 	return connection
 }

@@ -9,11 +9,11 @@ import (
 
 var collections = struct {
 	PubSub string
-	Posts  string
+	Entries  string
 	Users  string
 }{
 	PubSub: "pubsub",
-	Posts:  "posts",
+	Entries:  "entries",
 	Users:  "users",
 }
 

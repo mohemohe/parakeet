@@ -25,6 +25,7 @@
     "react-dom": "^16.8.6",
     "react-router": "^5.0.0",
     "react-router-dom": "^5.0.1",
+    "react-simplemde-editor": "^4.0.3",
     "tslib": "^1.9.3",
     "typestyle": "^2.0.2",
     "whatwg-fetch": "^3.0.0",

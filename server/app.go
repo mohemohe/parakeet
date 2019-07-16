@@ -46,6 +46,11 @@ func initEcho(e *echo.Echo) {
 	e.GET("/api/v1/users/:id", controllers.GetUser, middlewares.Authorized)
 	e.PUT("/api/v1/users/:id", controllers.UpdateUser, middlewares.Authorized)
 	e.DELETE("/api/v1/users/:id", controllers.DeleteUser, middlewares.Authorized)
+	e.GET("/api/v1/entries", controllers.GetEntries)
+	e.POST("/api/v1/entries", controllers.UpsertEntry, middlewares.Authorized)
+	e.GET("/api/v1/entries/:id", controllers.GetEntry)
+	e.PUT("/api/v1/entries/:id", controllers.UpsertEntry, middlewares.Authorized)
+	e.DELETE("/api/v1/entries/:id", controllers.DeleteEntry, middlewares.Authorized)
 }
 
 func initTemplate(e *echo.Echo) {
