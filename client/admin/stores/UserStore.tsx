@@ -1,10 +1,10 @@
 import React from "react";
 import {Link} from "react-router-dom";
 import {action, computed, observable} from "mobx";
-import StoreBase, {IModel, Mode, State} from "./StoreBase";
+import StoreBase, {IModel, IPagitane, Mode, State} from "./StoreBase";
 import stores from "./index";
 
-export interface IUserInfo extends IModel {
+export interface IUser extends IModel {
     name: string;
     email: string;
     role: number;
@@ -12,16 +12,20 @@ export interface IUserInfo extends IModel {
 
 export class UserStore extends StoreBase {
     @observable
-    public users: IUserInfo[];
+    public users: IUser[];
 
     @observable
-    public user: IUserInfo;
+    public info: IPagitane;
+
+    @observable
+    public user: IUser;
 
     constructor() {
         super();
 
         this.users = [];
-        this.user = {} as IUserInfo;
+        this.user = {} as IUser;
+        this.info = {} as IPagitane;
     }
 
     @action
@@ -41,6 +45,7 @@ export class UserStore extends StoreBase {
             }
             const result = await response.json();
             this.users = result.users;
+            this.info = result.info;
 
             this.setState(State.DONE);
         } catch (e) {
@@ -116,7 +121,7 @@ export class UserStore extends StoreBase {
     }
 
     @action
-    public async setUser(info: IUserInfo) {
+    public async setUser(info: IUser) {
         this.user = info;
     }
 }
