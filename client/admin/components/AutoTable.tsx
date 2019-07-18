@@ -1,5 +1,7 @@
 import React from 'react';
-import {Paper, Table, TableHead, TableBody, TableCell, TableRow} from '@material-ui/core';
+import {Paper, Table, TableHead, TableBody, TableCell, TableRow, Button} from '@material-ui/core';
+import ArrowBack from '@material-ui/icons/ArrowBack';
+import ArrowForward from '@material-ui/icons/ArrowForward';
 import {PaperProps} from '@material-ui/core/Paper';
 
 type Any = any;
@@ -11,6 +13,10 @@ export interface IProps extends PaperProps {
     items?: ITableItem[];
     order?: string[];
     replacer?: Map<string, string>;
+    onClickBack?: () => void;
+    onClickForward?: () => void;
+    disableBackButton?: boolean;
+    disableForwardButton?: boolean;
 }
 
 export class AutoTable extends React.Component<IProps, {}> {
@@ -126,6 +132,8 @@ export class AutoTable extends React.Component<IProps, {}> {
                     <TableBody>
                         {this.generateItems()}
                     </TableBody>
+                    <Button onClick={this.props.onClickBack ? () => this.props.onClickBack!() : undefined} disabled={this.props.disableBackButton === true}><ArrowBack/></Button>
+                    <Button onClick={this.props.onClickForward ? () => this.props.onClickForward!() : undefined} disabled={this.props.disableForwardButton === true}><ArrowForward/></Button>
                 </Table>
             </Paper>
         );

@@ -27,6 +27,14 @@ export interface IModel {
     _modified: string;
 }
 
+export interface IPagitane {
+    current: number;
+    perPage: number;
+    recordsOnPage: number;
+    totalPages: number;
+    totalRecords: number;
+}
+
 export default class StoreBase {
     constructor() {
         this.state = State.IDLE;

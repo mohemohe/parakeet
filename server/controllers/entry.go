@@ -19,11 +19,11 @@ type (
 )
 
 func GetEntries(c echo.Context) error {
-	limit, err := strconv.Atoi(c.Param("limit"))
+	limit, err := strconv.Atoi(c.QueryParam("limit"))
 	if err != nil {
 		limit = 10
 	}
-	page, err := strconv.Atoi(c.Param("page"))
+	page, err := strconv.Atoi(c.QueryParam("page"))
 	if err != nil {
 		page = 1
 	}

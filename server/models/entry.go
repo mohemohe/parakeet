@@ -41,6 +41,7 @@ func GetEntries(perPage int, page int) *Entries {
 	if result == nil {
 		return nil
 	}
+	result.Query.Sort("-_created")
 	info, err := result.Paginate(perPage, page)
 	if err != nil {
 		return nil

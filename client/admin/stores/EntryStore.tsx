@@ -1,5 +1,5 @@
 import {action, computed, observable} from "mobx";
-import StoreBase, {IModel, Mode, State} from "./StoreBase";
+import StoreBase, {IModel, IPagitane, Mode, State} from "./StoreBase";
 import {Link} from "react-router-dom";
 import React from "react";
 import stores from "./index";
@@ -15,6 +15,9 @@ export class EntryStore extends StoreBase {
     public entries: IEntry[];
 
     @observable
+    public info: IPagitane;
+
+    @observable
     public entry: IEntry;
 
     constructor() {
@@ -22,6 +25,7 @@ export class EntryStore extends StoreBase {
 
         this.entries = [];
         this.entry = {} as IEntry;
+        this.info = {} as IPagitane;
     }
 
     @action
@@ -41,6 +45,7 @@ export class EntryStore extends StoreBase {
             }
             const result = await response.json();
             this.entries = result.entries;
+            this.info = result.info;
 
             this.setState(State.DONE);
         } catch (e) {
