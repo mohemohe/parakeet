@@ -1,8 +1,8 @@
 import React from "react";
-import {Link} from "react-router-dom";
 import {action, computed, observable} from "mobx";
 import StoreBase, {IModel, IPagitane, Mode, State} from "./StoreBase";
 import stores from "../../admin/stores";
+import {LinkButton} from "../components/LinkButton";
 
 export interface IUser extends IModel {
     name: string;
@@ -60,7 +60,7 @@ export class UserStore extends StoreBase {
         return this.users.map((user) => {
             return {
                 ...user,
-                path: <Link to={`/users/${user._id}/edit`}>編集</Link>,
+                path: <LinkButton to={`/users/${user._id}/edit`} buttonProps={{variant: "raised", color: "primary"}}>編集</LinkButton>,
             }
         })
     }

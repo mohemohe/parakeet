@@ -6,6 +6,7 @@ import {ValidatableTextField} from "../../components/ValidatableTextField";
 import {FormControl, Input, InputLabel, Select, MenuItem, Button} from "@material-ui/core";
 import {style} from "typestyle";
 import {AuthStore} from "../../../common/stores/AuthStore";
+import {TitleBar} from "../../../common/components/TitleBar";
 
 interface IProps extends RouteComponentProps<{id: string}> {
     AuthStore?: AuthStore;
@@ -45,7 +46,7 @@ export class UserEdit extends React.Component<IProps, IState> {
 
         return (
             <div>
-                <h2>ユーザー編集</h2>
+                <TitleBar>ユーザー編集</TitleBar>
                 <FormControl className={styles.control}>
                     <ValidatableTextField label={"ID"} fullWidth={true} validators={[]} onChangeValue={() => {}} value={user._id} disabled={true} InputLabelProps={{shrink: true}}/>
                 </FormControl>

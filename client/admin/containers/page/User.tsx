@@ -2,6 +2,7 @@ import * as React from "react";
 import {inject, observer} from "mobx-react";
 import {UserStore} from "../../../common/stores/UserStore";
 import {AutoTable} from "../../components/AutoTable";
+import {TitleBar} from "../../../common/components/TitleBar";
 
 interface IProps extends React.ClassAttributes<{}> {
     UserStore?: UserStore;
@@ -36,7 +37,7 @@ export class User extends React.Component<IProps, IState> {
     public render() {
         return (
             <div>
-                <h2>ユーザー</h2>
+                <TitleBar>ユーザー</TitleBar>
                 <AutoTable
                     items={this.props.UserStore!.editableUsers}
                     order={["_id", "email", "name", "role", "path"]}

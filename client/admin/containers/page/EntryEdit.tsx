@@ -7,6 +7,7 @@ import {RouteComponentProps} from "react-router";
 import {style} from "typestyle";
 import {Button, FormControl} from "@material-ui/core";
 import {ValidatableTextField} from "../../components/ValidatableTextField";
+import {TitleBar} from "../../../common/components/TitleBar";
 
 interface IProps extends RouteComponentProps<{id: string}> {
     EntryStore?: EntryStore;
@@ -53,7 +54,7 @@ export class EntryEdit extends React.Component<IProps, IState> {
         }
         return (
             <div>
-                <h2>{pageTitle}</h2>
+                <TitleBar>{pageTitle}</TitleBar>
                 <FormControl className={styles.control}>
                     <ValidatableTextField
                         label={"タイトル"}

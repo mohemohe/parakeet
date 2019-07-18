@@ -19,6 +19,7 @@ const styles = {
         overflowY: "hidden",
         display: "flex",
         flexDirection: "column",
+        zIndex: 200,
     }),
     list: style({
         overflowY: "auto",
