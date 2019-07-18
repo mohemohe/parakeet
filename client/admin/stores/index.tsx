@@ -1,8 +1,8 @@
 import {RouterStore} from "mobx-react-router";
 import ToastStore from "../../common/stores/ToastStore";
-import {AuthStore} from "./AuthStore";
-import {UserStore} from "./UserStore";
-import {EntryStore} from "./EntryStore";
+import {AuthStore} from "../../common/stores/AuthStore";
+import {UserStore} from "../../common/stores/UserStore";
+import {EntryStore} from "../../common/stores/EntryStore";
 
 const stores = {
     AuthStore: new AuthStore(),

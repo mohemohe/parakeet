@@ -6,7 +6,7 @@ import {createHashHistory} from "history";
 import MobxReactRouter, {RouterStore, syncHistoryWithStore} from "mobx-react-router";
 import Toast from "./common/Toast";
 import Notfound from "./page/NotFound";
-import {AuthStatus, AuthStore} from "../stores/AuthStore";
+import {AuthStatus, AuthStore} from "../../common/stores/AuthStore";
 import {LoginPage} from "./page/auth/Login";
 import {RouteHelper} from "../helpers/RouteHelper";
 import {IRouteInfo, ROUTES} from "../constants/Route";

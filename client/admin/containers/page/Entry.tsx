@@ -1,6 +1,6 @@
 import * as React from "react";
 import {inject, observer} from "mobx-react";
-import {EntryStore} from "../../stores/EntryStore";
+import {EntryStore} from "../../../common/stores/EntryStore";
 import {AutoTable} from "../../components/AutoTable";
 import {LinkButton} from "../../../common/components/LinkButton";
 

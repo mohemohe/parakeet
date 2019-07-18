@@ -2,7 +2,7 @@ import * as React from "react";
 import SimpleMDE from "react-simplemde-editor";
 import "easymde/dist/easymde.min.css";
 import {inject, observer} from "mobx-react";
-import {EntryStore, IEntry} from "../../stores/EntryStore";
+import {EntryStore, IEntry} from "../../../common/stores/EntryStore";
 import {RouteComponentProps} from "react-router";
 import {style} from "typestyle";
 import {Button, FormControl} from "@material-ui/core";

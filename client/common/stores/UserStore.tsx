@@ -2,7 +2,7 @@ import React from "react";
 import {Link} from "react-router-dom";
 import {action, computed, observable} from "mobx";
 import StoreBase, {IModel, IPagitane, Mode, State} from "./StoreBase";
-import stores from "./index";
+import stores from "../../admin/stores";
 
 export interface IUser extends IModel {
     name: string;

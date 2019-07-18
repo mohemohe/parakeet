@@ -2,7 +2,7 @@ import {action, computed, observable} from "mobx";
 import StoreBase, {IModel, IPagitane, Mode, State} from "./StoreBase";
 import {Link} from "react-router-dom";
 import React from "react";
-import stores from "./index";
+import stores from "../../admin/stores";
 
 export interface IEntry extends IModel {
     title: string;

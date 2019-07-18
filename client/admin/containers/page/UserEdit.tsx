@@ -1,11 +1,11 @@
 import * as React from "react";
 import {inject, observer} from "mobx-react";
-import {UserStore} from "../../stores/UserStore";
+import {UserStore} from "../../../common/stores/UserStore";
 import {RouteComponentProps} from "react-router-dom";
 import {ValidatableTextField} from "../../components/ValidatableTextField";
 import {FormControl, Input, InputLabel, Select, MenuItem, Button} from "@material-ui/core";
 import {style} from "typestyle";
-import {AuthStore} from "../../stores/AuthStore";
+import {AuthStore} from "../../../common/stores/AuthStore";
 
 interface IProps extends RouteComponentProps<{id: string}> {
     AuthStore?: AuthStore;

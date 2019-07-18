@@ -5,7 +5,7 @@ import { inject, observer } from "mobx-react";
 import { Card, CardActions, CardContent, Button, Typography, TextField } from "@material-ui/core";
 import { Send } from "@material-ui/icons";
 import { COLORS } from "../../../constants/Style";
-import {AuthStore, AuthStatus} from "../../../stores/AuthStore";
+import {AuthStore, AuthStatus} from "../../../../common/stores/AuthStore";
 
 interface IProps extends React.ClassAttributes<HTMLDivElement> {
     AuthStore?: AuthStore;

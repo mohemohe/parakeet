@@ -1,5 +1,5 @@
 import { action, observable } from "mobx";
-import stores from ".";
+import stores from "../../admin/stores";
 
 export enum State {
     IDLE,
