@@ -1,8 +1,8 @@
 import {action, computed, observable} from "mobx";
 import StoreBase, {IModel, IPagitane, Mode, State} from "./StoreBase";
-import {Link} from "react-router-dom";
 import React from "react";
 import stores from "../../admin/stores";
+import {LinkButton} from "../components/LinkButton";
 
 export interface IEntry extends IModel {
     title: string;
@@ -58,9 +58,14 @@ export class EntryStore extends StoreBase {
     @computed
     public get editableEntries() {
         return this.entries.map((entry) => {
+            entry._created = new Date(entry._created).toLocaleString();
+            entry._modified = new Date(entry._modified).toLocaleString();
+            if (entry._created === entry._modified) {
+                entry._modified = "";
+            }
             return {
                 ...entry,
-                path: <Link to={`/entries/${entry._id}`}>編集</Link>,
+                path: <LinkButton to={`/entries/${entry._id}`} buttonProps={{variant: "raised", color: "primary"}}>編集</LinkButton>,
             }
         })
     }

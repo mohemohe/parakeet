@@ -41,8 +41,8 @@ export class Entry extends React.Component<IProps, IState> {
                 <LinkButton to={"/entries/new"} buttonProps={{variant: "raised", color: "primary"}}>作成</LinkButton>
                 <AutoTable
                     items={this.props.EntryStore!.editableEntries}
-                    order={["_id", "title", "body", "path"]}
-                    replacer={new Map<string, string>([["_id", "ID"], ["title", "タイトル"], ["body", "本文"], ["path", " "]])}
+                    order={["_id", "title", "_created", "_modified", "path"]}
+                    replacer={new Map<string, string>([["_id", "ID"], ["title", "タイトル"], ["_created", "作成日時"], ["_modified", "更新日時"], ["path", " "]])}
                     onClickBack={() => this.props.EntryStore!.getEntries(this.back)}
                     onClickForward={() => this.props.EntryStore!.getEntries(this.forward)}
                     disableBackButton={this.index === 1}

@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"github.com/globalsign/mgo/bson"
 	"github.com/labstack/echo/v4"
 	"github.com/mohemohe/parakeet/server/models"
 	"net/http"
@@ -60,7 +59,11 @@ func UpsertEntry(c echo.Context) error {
 	if id != "" && id != "undefined" {
 		current := models.GetEntryById(id)
 		if current != nil {
-			entry.Id = bson.ObjectIdHex(id)
+			current.Title = entry.Title
+			current.Tag = entry.Tag
+			current.Body = entry.Body
+			current.Author = entry.Author
+			entry = current
 		}
 	} else {
 		entry = &models.Entry{

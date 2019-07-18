@@ -11,6 +11,11 @@ interface IProps extends LinkProps {
 const styles = {
     button: style({
         textDecoration: "none",
+        $nest: {
+            "& a": {
+                textDecoration: "none",
+            }
+        },
     }),
 };
 
@@ -18,13 +23,13 @@ export class LinkButton extends React.Component<IProps, {}> {
     public render() {
         if (this.props.buttonProps) {
             return (
-                <Link {...this.props}>
+                <Link {...this.props} className={`${this.props.className} ${styles.button}`}>
                     <Button {...this.props.buttonProps} className={`${this.props.buttonProps.className} ${styles.button}`}>{this.props.children}</Button>
                 </Link>
             );
         } else {
             return (
-                <Link {...this.props}>
+                <Link {...this.props} className={`${this.props.className} ${styles.button}`}>
                     <Button className={styles.button}>{this.props.children}</Button>
                 </Link>
             );
