@@ -23,7 +23,7 @@ const styles = {
         width: "100vw",
         top: 0,
         left: 0,
-        zIndex: 10,
+        zIndex: 1000,
         display: "flex",
         flexDirection: "column",
         backgroundColor: COLORS.DarkColor,
