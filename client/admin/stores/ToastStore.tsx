@@ -1,5 +1,5 @@
 import {action, observable} from "mobx";
-import StoreBase from "../../guest/stores/StoreBase";
+import StoreBase from "./StoreBase";
 
 export default class ToastStore extends StoreBase {
     @observable

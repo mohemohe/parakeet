@@ -1,4 +1,5 @@
 import * as React from "react";
+import {Entries} from "../common/Entries";
 
 interface IProps extends React.ClassAttributes<{}> {
 }
@@ -15,6 +16,9 @@ export default class Index extends React.Component<IProps, IState> {
         return (
             <div>
                 <h2>index</h2>
+                <a href="/admin">admin</a>
+
+                <Entries/>
             </div>
         );
     }

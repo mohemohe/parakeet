@@ -1,5 +1,5 @@
 import {IRouteInfo} from "../constants/Route";
-import {AuthStore} from "../../common/stores/AuthStore";
+import {AuthStore} from "../stores/AuthStore";
 
 export class RouteHelper {
     public static getRoute(routes: IRouteInfo[], authStore: AuthStore, visibleOnly: boolean) {

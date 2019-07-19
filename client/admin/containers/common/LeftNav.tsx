@@ -8,7 +8,7 @@ import {style} from "typestyle";
 import { COLORS, SIZES } from "../../constants/Style";
 import { IRouteInfo, ROUTES } from "../../constants/Route";
 import {RouterStore} from "mobx-react-router";
-import { AuthStore } from "../../../common/stores/AuthStore";
+import { AuthStore } from "../../stores/AuthStore";
 import { RouteHelper } from "../../helpers/RouteHelper";
 
 const styles = {

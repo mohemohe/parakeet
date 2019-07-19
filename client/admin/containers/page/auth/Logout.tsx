@@ -3,7 +3,7 @@ import { style } from "typestyle";
 import { Redirect } from "react-router-dom";
 import { inject, observer } from "mobx-react";
 import { COLORS } from "../../../constants/Style";
-import {AuthStore, AuthStatus} from "../../../../common/stores/AuthStore";
+import {AuthStore, AuthStatus} from "../../../stores/AuthStore";
 
 interface IProps extends React.ClassAttributes<HTMLDivElement> {
     AuthStore?: AuthStore;

@@ -1,8 +1,6 @@
-import {action, computed, observable} from "mobx";
+import {action, observable} from "mobx";
 import StoreBase, {IModel, IPagitane, Mode, State} from "./StoreBase";
-import React from "react";
-import stores from "../../admin/stores";
-import {LinkButton} from "../components/LinkButton";
+import {Stores} from "../stores";
 
 export interface IEntry extends IModel {
     title: string;
@@ -37,7 +35,6 @@ export class EntryStore extends StoreBase {
             const url = `${this.apiBasePath}v1/entries?page=${page}`;
             const response = await fetch(url, {
                 method: "GET",
-                headers: this.generateFetchHeader(),
             });
 
             if (response.status !== 200) {
@@ -53,21 +50,6 @@ export class EntryStore extends StoreBase {
             console.error(e);
             this.setState(State.ERROR);
         }
-    }
-
-    @computed
-    public get editableEntries() {
-        return this.entries.map((entry) => {
-            entry._created = new Date(entry._created).toLocaleString();
-            entry._modified = new Date(entry._modified).toLocaleString();
-            if (entry._created === entry._modified) {
-                entry._modified = "";
-            }
-            return {
-                ...entry,
-                path: <LinkButton to={`/entries/${entry._id}`} buttonProps={{variant: "raised", color: "primary"}}>編集</LinkButton>,
-            }
-        })
     }
 
     @action
@@ -118,7 +100,7 @@ export class EntryStore extends StoreBase {
             this.tryShowToast("エントリーを編集しました");
             this.setState(State.DONE);
 
-            stores.RouterStore.history.push(`/entries/${this.entry._id}`);
+            Stores.cached.RouterStore.history.push(`/entries/${this.entry._id}`);
         } catch (e) {
             this.tryShowToast("エントリーの保存に失敗しました");
             console.error(e);

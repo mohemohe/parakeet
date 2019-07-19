@@ -1,40 +1,40 @@
-import React from "react";
 import {action, computed, observable} from "mobx";
 import StoreBase, {IModel, IPagitane, Mode, State} from "./StoreBase";
+import React from "react";
 import stores from "../../admin/stores";
-import {LinkButton} from "../components/LinkButton";
+import {LinkButton} from "../../common/components/LinkButton";
 
-export interface IUser extends IModel {
-    name: string;
-    email: string;
-    role: number;
+export interface IEntry extends IModel {
+    title: string;
+    tags: string[];
+    body: string;
 }
 
-export class UserStore extends StoreBase {
+export class EntryStore extends StoreBase {
     @observable
-    public users: IUser[];
+    public entries: IEntry[];
 
     @observable
     public info: IPagitane;
 
     @observable
-    public user: IUser;
+    public entry: IEntry;
 
     constructor() {
         super();
 
-        this.users = [];
-        this.user = {} as IUser;
+        this.entries = [];
+        this.entry = {} as IEntry;
         this.info = {} as IPagitane;
     }
 
     @action
-    public async getUsers(page: number) {
+    public async getEntries(page: number) {
         this.setMode(Mode.GET);
         this.setState(State.RUNNING);
 
         try {
-            const url = `${this.apiBasePath}v1/users?page=${page}`;
+            const url = `${this.apiBasePath}v1/entries?page=${page}`;
             const response = await fetch(url, {
                 method: "GET",
                 headers: this.generateFetchHeader(),
@@ -44,34 +44,39 @@ export class UserStore extends StoreBase {
                 throw new Error();
             }
             const result = await response.json();
-            this.users = result.users;
+            this.entries = result.entries;
             this.info = result.info;
 
             this.setState(State.DONE);
         } catch (e) {
-            this.tryShowToast("ユーザーの取得に失敗しました");
+            this.tryShowToast("エントリーの取得に失敗しました");
             console.error(e);
             this.setState(State.ERROR);
         }
     }
 
     @computed
-    public get editableUsers() {
-        return this.users.map((user) => {
+    public get editableEntries() {
+        return this.entries.map((entry) => {
+            entry._created = new Date(entry._created).toLocaleString();
+            entry._modified = new Date(entry._modified).toLocaleString();
+            if (entry._created === entry._modified) {
+                entry._modified = "";
+            }
             return {
-                ...user,
-                path: <LinkButton to={`/users/${user._id}/edit`} buttonProps={{variant: "raised", color: "primary"}}>編集</LinkButton>,
+                ...entry,
+                path: <LinkButton to={`/entries/${entry._id}`} buttonProps={{variant: "raised", color: "primary"}}>編集</LinkButton>,
             }
         })
     }
 
     @action
-    public async getUser(id: string) {
+    public async getEntry(id: string) {
         this.setMode(Mode.GET);
         this.setState(State.RUNNING);
 
         try {
-            const url = `${this.apiBasePath}v1/users/${id}`;
+            const url = `${this.apiBasePath}v1/entries/${id}`;
             const response = await fetch(url, {
                 method: "GET",
                 headers: this.generateFetchHeader(),
@@ -81,47 +86,48 @@ export class UserStore extends StoreBase {
                 throw new Error();
             }
             const result = await response.json();
-            this.user = result.user;
+            this.entry = result.entry;
 
             this.setState(State.DONE);
         } catch (e) {
-            this.tryShowToast("ユーザーの取得に失敗しました");
+            this.tryShowToast("エントリーの取得に失敗しました");
             console.error(e);
             this.setState(State.ERROR);
         }
     }
 
     @action
-    public async putUser() {
+    public async putEntry() {
         this.setMode(Mode.GET);
         this.setState(State.RUNNING);
 
         try {
-            const url = `${this.apiBasePath}v1/users/${this.user._id}`;
+            const url = `${this.apiBasePath}v1/entries/${this.entry._id}`;
             const response = await fetch(url, {
                 method: "PUT",
                 headers: this.generateFetchHeader(),
-                body: JSON.stringify(this.user),
+                body: JSON.stringify(this.entry),
             });
 
             if (response.status !== 200) {
                 throw new Error();
             }
             const result = await response.json();
-            this.user = result.user;
+            this.entry = result.entry;
 
-            this.tryShowToast("ユーザーを編集しました");
-            stores.AuthStore.checkAuth();
+            this.tryShowToast("エントリーを編集しました");
             this.setState(State.DONE);
+
+            stores.RouterStore.history.push(`/entries/${this.entry._id}`);
         } catch (e) {
-            this.tryShowToast("ユーザーの保存に失敗しました");
+            this.tryShowToast("エントリーの保存に失敗しました");
             console.error(e);
             this.setState(State.ERROR);
         }
     }
 
     @action
-    public async setUser(info: IUser) {
-        this.user = info;
+    public async setEntry(entry: IEntry) {
+        this.entry = entry;
     }
 }

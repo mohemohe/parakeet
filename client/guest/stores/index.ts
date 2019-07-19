@@ -1,5 +1,12 @@
-import ToastStore from "../../common/stores/ToastStore";
+import ToastStore from "./ToastStore";
 import {RouterStore} from "mobx-react-router";
+import {EntryStore} from "./EntryStore";
+
+let cached: {
+    ToastStore: ToastStore;
+    RouterStore: RouterStore;
+    EntryStore: EntryStore;
+};
 
 export default function createStore(isSSR: boolean) {
     let initialState = {};
@@ -8,8 +15,17 @@ export default function createStore(isSSR: boolean) {
         console.log("initial state:", initialState);
     }
 
-    return {
+    cached = {
         ToastStore: new ToastStore(),
         RouterStore: new RouterStore(),
-    }
+        EntryStore: new EntryStore(),
+    };
+
+    return cached;
 };
+
+export class Stores {
+    static get cached() {
+        return cached;
+    }
+}

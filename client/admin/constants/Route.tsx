@@ -121,11 +121,4 @@ export const ROUTES: IRouteInfo[] = [
             },
         ],
     },
-    // {
-    //     name: "外部リンク (Google)",
-    //     path: "https://google.com",
-    //     icon: <Search/>,
-    //     showLeftNav: true,
-    //     permission: [],
-    // },
 ];

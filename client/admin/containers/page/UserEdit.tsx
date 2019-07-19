@@ -5,7 +5,7 @@ import {RouteComponentProps} from "react-router-dom";
 import {ValidatableTextField} from "../../components/ValidatableTextField";
 import {FormControl, Input, InputLabel, Select, MenuItem, Button} from "@material-ui/core";
 import {style} from "typestyle";
-import {AuthStore} from "../../../common/stores/AuthStore";
+import {AuthStore} from "../../stores/AuthStore";
 import {TitleBar} from "../../../common/components/TitleBar";
 
 interface IProps extends RouteComponentProps<{id: string}> {
