@@ -8,6 +8,7 @@ import {ISSRState} from "./stores";
 
 interface ISSROptions {
     url: string;
+    title: string;
     headers: any;
     state: ISSRState;
 }
@@ -18,7 +19,7 @@ function SSR(options: ISSROptions, callback: (result: any) => void) {
     const serverStyleSheets = new ServerStyleSheets();
     const app = ReactDOMServer.renderToString(
         serverStyleSheets.collect(
-            <App isSSR={true} pathname={options.url} ssrState={options.state}/>
+            <App isSSR={true} pathname={options.url} ssrState={options.state} title={options.title}/>
         ));
 
     const materialStyle = serverStyleSheets.toString().replace(/\n/g,"").replace(/\s*([{};:,])\s+/g, "$1");
@@ -30,11 +31,12 @@ function SSR(options: ISSROptions, callback: (result: any) => void) {
     callback({
         app,
         style,
-        title: undefined || "parakeet",
+        title: options.title,
         meta: undefined,
         state: JSON.stringify({
             pathname: options.url,
             state: options.state,
+            title: options.title,
         }),
         error: undefined || "",
     });

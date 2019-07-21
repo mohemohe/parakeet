@@ -5,6 +5,7 @@ import Paper, {PaperProps} from "@material-ui/core/Paper";
 import {Link} from "react-router-dom";
 
 interface IProps extends PaperProps {
+    title: string;
 }
 
 const styles = {
@@ -31,7 +32,7 @@ export class Header extends React.Component<IProps, {}> {
         return (
             <Paper {...this.props} className={styles.root} elevation={2} square={true}>
                 <div className={styles.inner}>
-                    <Link to={"/"} className={styles.title}><h1>開発環境ぴろぴろぴろ〜〜〜〜〜〜</h1></Link>
+                    <Link to={"/"} className={styles.title}><h1>{this.props.title}</h1></Link>
                 </div>
             </Paper>
         )

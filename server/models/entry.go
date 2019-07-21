@@ -21,7 +21,6 @@ type (
 	}
 )
 
-
 func GetEntryById(id string) *Entry {
 	conn := connection.Mongo()
 
@@ -52,7 +51,7 @@ func GetEntries(perPage int, page int) *Entries {
 	}
 
 	return &Entries{
-		Info:  info,
+		Info:    info,
 		Entries: entries,
 	}
 }

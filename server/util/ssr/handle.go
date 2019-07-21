@@ -39,23 +39,36 @@ func Handle(c echo.Context, pool *Pool) error {
 		})
 	}
 
+	title := "parakeet"
+	titleKV := models.GetKVS("site_title")
+	if titleKV != nil && titleKV.Value != "" {
+		title = titleKV.Value.(string)
+	}
+	initialState, entry := initializeState(c)
 	ch := js.Exec(map[string]interface{}{
 		"url":     c.Request().URL.String(),
+		"title":   title,
 		"headers": map[string][]string(c.Request().Header),
-		"state": initializeState(c),
+		"state":   initialState,
 	})
 
 	select {
 	case res := <-ch:
+		res.Title = title
 		if js.err != nil {
 			util.Logger().WithField("error", res.Error).Errorln("js eval error")
 			return c.Render(http.StatusInternalServerError, "ssr.html", Result{
 				Error: js.err.Error(),
-				Title: "parakeet",
+				Title: res.Title,
 				Meta:  "",
 			})
 		}
 		if len(res.Error) == 0 {
+			if entry.Title != "" {
+				res.Title = entry.Title + " - " + res.Title
+			} else {
+
+			}
 			return c.Render(http.StatusOK, "ssr.html", res)
 		} else {
 			util.Logger().WithField("error", res.Error).Errorln("js result error")
@@ -65,14 +78,13 @@ func Handle(c echo.Context, pool *Pool) error {
 		util.Logger().Errorln("cant keep up!")
 		return c.Render(http.StatusInternalServerError, "ssr.html", Result{
 			Error: "timeout",
-			Title: "parakeet",
+			Title: title,
 			Meta:  "",
 		})
 	}
 }
 
-
-func initializeState(c echo.Context) map[string]interface{} {
+func initializeState(c echo.Context) (map[string]interface{}, *models.Entry) {
 	path := c.Request().URL.Path
 
 	entries := &models.Entries{}
@@ -99,11 +111,11 @@ func initializeState(c echo.Context) map[string]interface{} {
 
 	return map[string]interface{}{
 		"entryStore": map[string]interface{}{
-			"entries": toJson(entries.Entries),
+			"entries":  toJson(entries.Entries),
 			"paginate": toJson(entries.Info),
-			"entry": toJson(entry),
+			"entry":    toJson(entry),
 		},
-	}
+	}, entry
 }
 
 func toJson(t interface{}) (result string) {

@@ -11,6 +11,7 @@ import {User} from "../containers/page/User";
 import {Entry} from "../containers/page/Entry";
 import {UserEdit} from "../containers/page/UserEdit";
 import {EntryEdit} from "../containers/page/EntryEdit";
+import {SiteSetting} from "../containers/page/settings/Site";
 
 export interface IRouteInfo {
     name: string;
@@ -108,17 +109,17 @@ export const ROUTES: IRouteInfo[] = [
             {
                 name: "サイト情報",
                 path: "/settings/site",
-                component: User,
+                component: SiteSetting,
                 showLeftNav: true,
                 permission: [1],
             },
-            {
-                name: "Google Analytics",
-                path: "/settings/google-analytics",
-                component: User,
-                showLeftNav: true,
-                permission: [1],
-            },
+            // {
+            //     name: "Google Analytics",
+            //     path: "/settings/google-analytics",
+            //     component: User,
+            //     showLeftNav: true,
+            //     permission: [1],
+            // },
         ],
     },
 ];

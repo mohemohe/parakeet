@@ -5,6 +5,7 @@ import Router from "./Router";
 
 interface IProps {
     isSSR: boolean;
+    title: string;
     ssrState: ISSRState;
     pathname: string;
 }

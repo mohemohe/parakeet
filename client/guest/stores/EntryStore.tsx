@@ -50,6 +50,8 @@ export class EntryStore extends StoreBase {
             this.entries = result.entries;
             this.info = result.info;
 
+            document.title = this.siteTitle;
+
             this.setState(State.DONE);
         } catch (e) {
             this.tryShowToast("エントリーの取得に失敗しました");
@@ -75,6 +77,8 @@ export class EntryStore extends StoreBase {
             }
             const result = await response.json();
             this.entry = result.entry;
+
+            document.title = `${this.entry.title} - ${this.siteTitle}`;
 
             this.setState(State.DONE);
         } catch (e) {

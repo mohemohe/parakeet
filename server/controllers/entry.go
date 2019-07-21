@@ -67,9 +67,9 @@ func UpsertEntry(c echo.Context) error {
 		}
 	} else {
 		entry = &models.Entry{
-			Title: entry.Title,
-			Tag: entry.Tag,
-			Body: entry.Body,
+			Title:  entry.Title,
+			Tag:    entry.Tag,
+			Body:   entry.Body,
 			Author: entry.Author,
 		}
 	}

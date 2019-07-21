@@ -95,4 +95,8 @@ export default class StoreBase {
 
         return result;
     }
+
+    public get siteTitle() {
+        return (window as any).__INITIAL_STATE__.title || "";
+    }
 }
