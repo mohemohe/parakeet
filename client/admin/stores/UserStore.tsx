@@ -60,7 +60,7 @@ export class UserStore extends StoreBase {
         return this.users.map((user) => {
             return {
                 ...user,
-                path: <LinkButton to={`/users/${user._id}/edit`} buttonProps={{variant: "raised", color: "primary"}}>編集</LinkButton>,
+                path: <LinkButton to={`/users/${user._id}/edit`} buttonProps={{variant: "contained", color: "primary"}}>編集</LinkButton>,
             }
         })
     }

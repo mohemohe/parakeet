@@ -2,7 +2,7 @@ import * as React from "react";
 import SimpleMDE from "react-simplemde-editor";
 import "easymde/dist/easymde.min.css";
 import {inject, observer} from "mobx-react";
-import {EntryStore, IEntry} from "../../../common/stores/EntryStore";
+import {EntryStore, IEntry} from "../../stores/EntryStore";
 import {RouteComponentProps} from "react-router";
 import {style} from "typestyle";
 import {Button, FormControl} from "@material-ui/core";
@@ -19,6 +19,19 @@ interface IState extends React.ComponentState {
 const styles = {
     control: style({
         display: "block",
+    }),
+    simpleMDE: style({
+        $nest: {
+            "& .fullscreen": {
+                zIndex: 1000,
+            },
+            "& .CodeMirror-fullscreen": {
+                zIndex: 1000,
+            },
+            "& .CodeMirror-fullscreen + .editor-preview": {
+                zIndex: 1000,
+            },
+        },
     }),
 };
 
@@ -45,7 +58,6 @@ export class EntryEdit extends React.Component<IProps, IState> {
 
     public render() {
         const entry = this.props.EntryStore!.entry;
-
         let pageTitle = "エントリー";
         if (entry._id) {
             pageTitle += "編集";
@@ -65,8 +77,8 @@ export class EntryEdit extends React.Component<IProps, IState> {
                         InputLabelProps={{shrink: true}}
                     />
                 </FormControl>
-                <SimpleMDE onChange={(body) => this.props.EntryStore!.setEntry({...entry, body})} value={entry.body}/>
-                <Button onClick={() => this.props.EntryStore!.putEntry()} variant={"raised"} color={"primary"}>保存</Button>
+                <SimpleMDE onChange={(body) => this.props.EntryStore!.setEntry({...entry, body})} value={entry.body} className={styles.simpleMDE} options={{spellChecker: false}}/>
+                <Button onClick={() => this.props.EntryStore!.putEntry()} variant={"contained"} color={"primary"}>保存</Button>
             </div>
         );
     }

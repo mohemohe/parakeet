@@ -40,7 +40,7 @@ export class Entry extends React.Component<IProps, IState> {
         return (
             <div>
                 <TitleBar>エントリー</TitleBar>
-                <LinkButton to={"/entries/new"} buttonProps={{variant: "raised", color: "primary"}}>作成</LinkButton>
+                <LinkButton to={"/entries/new"} buttonProps={{variant: "contained", color: "primary"}}>作成</LinkButton>
                 <AutoTable
                     items={this.props.EntryStore!.editableEntries}
                     order={["_id", "title", "_created", "_modified", "path"]}

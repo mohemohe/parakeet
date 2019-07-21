@@ -65,7 +65,7 @@ export class EntryStore extends StoreBase {
             }
             return {
                 ...entry,
-                path: <LinkButton to={`/entries/${entry._id}`} buttonProps={{variant: "raised", color: "primary"}}>編集</LinkButton>,
+                path: <LinkButton to={`/entries/${entry._id}`} buttonProps={{variant: "contained", color: "primary"}}>編集</LinkButton>,
             }
         })
     }

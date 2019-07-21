@@ -1,6 +1,6 @@
 import * as React from "react";
 import {inject, observer} from "mobx-react";
-import {UserStore} from "../../../common/stores/UserStore";
+import {UserStore} from "../../stores/UserStore";
 import {RouteComponentProps} from "react-router-dom";
 import {ValidatableTextField} from "../../components/ValidatableTextField";
 import {FormControl, Input, InputLabel, Select, MenuItem, Button} from "@material-ui/core";
@@ -71,7 +71,7 @@ export class UserEdit extends React.Component<IProps, IState> {
                         <MenuItem value={2}>編集者</MenuItem>
                     </Select>
                 </FormControl>
-                <Button className={styles.button} variant={"raised"} color={"primary"} onClick={() => this.props.UserStore!.putUser()}>保存</Button>
+                <Button className={styles.button} variant={"contained"} color={"primary"} onClick={() => this.props.UserStore!.putUser()}>保存</Button>
             </div>
         );
     }

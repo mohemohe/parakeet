@@ -1,6 +1,6 @@
 import * as React from "react";
 import {inject, observer} from "mobx-react";
-import {UserStore} from "../../../common/stores/UserStore";
+import {UserStore} from "../../stores/UserStore";
 import {AutoTable} from "../../components/AutoTable";
 import {TitleBar} from "../../../common/components/TitleBar";
 

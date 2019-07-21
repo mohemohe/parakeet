@@ -3,8 +3,9 @@ import {inject, observer} from "mobx-react";
 import {EntryStore} from "../../stores/EntryStore";
 import {Entry} from "../../components/Entry";
 import {style} from "typestyle";
+import {RouteComponentProps} from "react-router-dom";
 
-interface IProps extends React.ClassAttributes<{}> {
+interface IProps extends RouteComponentProps<{id: string}> {
     EntryStore?: EntryStore;
 }
 
@@ -26,31 +27,19 @@ const styles = {
 
 @inject("EntryStore")
 @observer
-export class Entries extends React.Component<IProps, IState> {
+export class SingleEntry extends React.Component<IProps, IState> {
     constructor(props: IProps, state: IState) {
         super(props, state);
-
-        this.index = 1;
     }
-
-    private index: number;
 
     public componentDidMount() {
-        this.props.EntryStore!.getEntries(this.index);
-    }
-
-    public get back() {
-        return this.index === 1 ? 1 : --this.index;
-    }
-
-    public get forward() {
-        return ++this.index;
+        this.props.EntryStore!.getEntry(this.props.match.params.id);
     }
 
     public render() {
         return (
             <div className={styles.root}>
-                {this.props.EntryStore!.entries.map((entry) => <Entry entry={entry}/>)}
+                <Entry entry={this.props.EntryStore!.entry}/>
             </div>
         );
     }

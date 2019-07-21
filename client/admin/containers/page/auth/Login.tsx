@@ -108,7 +108,7 @@ export class LoginPage extends React.Component<IProps, IState> {
             <div className={styles.root}>
                 <form className={styles.loginCardWrapper} onSubmit={(e) => this.onSubmit(e)}>
                     <Card className={styles.loginCard}>
-                        <Typography variant="headline" component="h3">
+                        <Typography variant="headline">
                             parakeet ログイン
                         </Typography>
                         <CardContent className={styles.loginInputs}>
@@ -134,7 +134,7 @@ export class LoginPage extends React.Component<IProps, IState> {
                         </CardContent>
                         <CardActions className={styles.loginActions}>
                             <div className={styles.loginButtons}>
-                                <Button fullWidth variant="raised" classes={{root: styles.loginButton}} onClick={() => this.props.AuthStore!.login(this.state.email, this.state.password)} type={"submit"}>
+                                <Button fullWidth variant="contained" classes={{root: styles.loginButton}} onClick={() => this.props.AuthStore!.login(this.state.email, this.state.password)} type={"submit"}>
                                     <Send/>
                                     <span style={{marginLeft: ".5rem"}}>ログイン</span>
                                 </Button>

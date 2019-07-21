@@ -1,6 +1,6 @@
 import * as React from "react";
 import { inject, observer } from "mobx-react";
-import Snackbar from "@material-ui/core/Snackbar";
+import { Snackbar } from "@material-ui/core";
 import ToastStore from "../../stores/ToastStore";
 
 interface IProps {

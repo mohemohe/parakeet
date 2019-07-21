@@ -16,7 +16,13 @@ export class Index extends React.Component<IProps, IState> {
         return (
             <div>
                 <TitleBar>ホーム</TitleBar>
-                //TODO: ここに何かエモい感じのダッシュボード
+                <div>
+                    // TODO: ここに何かエモい感じのダッシュボード
+                </div>
+
+                <div>
+                    // FIXME: <a href="/">サイトに戻る</a>
+                </div>
             </div>
         );
     }

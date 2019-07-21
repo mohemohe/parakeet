@@ -8,6 +8,8 @@ export const COLORS = {
     EmotionalWhite: "#fafafe",
     EmotionalBlack: "#202020",
     EmotionalDarkGray: "#323240",
+    EmotionalLightGray: "#4b4c5e",
+    BackGround: "#f4f4f8",
     DangerRed: "#ff4346",
     WarnYellow: "#e5cf3f",
     SafeGreen: "#74e589",
@@ -15,15 +17,8 @@ export const COLORS = {
 };
 
 export const SIZES = {
-    Header: {
-        height: 56,
-        Logo: {
-            height: 20,
-            transform: 1.05,
-        },
-    },
-    LeftNav: {
-        width: 320,
+    Emotional: {
+        wrapHeight: 128,
     },
 };
 
