@@ -10,4 +10,4 @@ if (style) {
     typestyle.setStylesTarget(style);
 }
 
-ReactDOM.hydrate(<App isSSR={false} pathname={(window as any).__INITIAL_STATE__.pathname}/>, document.querySelector("#app"));
+ReactDOM.hydrate(<App isSSR={false} pathname={(window as any).__INITIAL_STATE__.pathname} ssrState={(window as any).__INITIAL_STATE__.state}/>, document.querySelector("#app"));

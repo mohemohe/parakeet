@@ -19,16 +19,12 @@ let cached: {
 export default function createStore(isSSR: boolean, ssrState: ISSRState) {
     let initialState = {};
     if (!isSSR) {
-        initialState = (window as any).__INITIAL_STATE__ || {};
-
         cached = {
             ToastStore: new ToastStore(),
             RouterStore: new RouterStore(),
-            EntryStore: new EntryStore(),
+            EntryStore: new EntryStore(JSON.parse(ssrState.entryStore.entries), JSON.parse(ssrState.entryStore.entry), JSON.parse(ssrState.entryStore.paginate)),
         };
     } else {
-        console.log("initial state:", initialState);
-
         cached = {
             ToastStore: new ToastStore(),
             RouterStore: new RouterStore(),

@@ -15,10 +15,6 @@ interface ISSROptions {
 function SSR(options: ISSROptions, callback: (result: any) => void) {
     console.log("SSR from js");
 
-    console.log("initial state:", options.state);
-    console.log("initial state:", options.state.entryStore);
-    console.log("initial state:", JSON.stringify(options.state));
-
     const serverStyleSheets = new ServerStyleSheets();
     const app = ReactDOMServer.renderToString(
         serverStyleSheets.collect(
@@ -27,10 +23,7 @@ function SSR(options: ISSROptions, callback: (result: any) => void) {
 
     const materialStyle = serverStyleSheets.toString().replace(/\n/g,"").replace(/\s*([{};:,])\s+/g, "$1");
     const customStyle = getStyles();
-    const style = materialStyle + customStyle;
-
-    console.log("materialStyle:", materialStyle);
-    console.log("customStyle:", customStyle);
+    const style = materialStyle + customStyle ;
 
     console.log("SSR complete");
 
@@ -41,6 +34,7 @@ function SSR(options: ISSROptions, callback: (result: any) => void) {
         meta: undefined,
         state: JSON.stringify({
             pathname: options.url,
+            state: options.state,
         }),
         error: undefined || "",
     });
