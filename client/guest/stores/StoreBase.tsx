@@ -1,5 +1,5 @@
 import { action, observable } from "mobx";
-import stores from "./index";
+import {Stores} from "./index";
 
 export enum State {
     IDLE,
@@ -69,7 +69,7 @@ export default class StoreBase {
 
     protected tryShowToast(message?: string) {
         try {
-            stores.ToastStore.showToast(message);
+            Stores.cached.ToastStore.showToast(message);
         } catch (e) {}
     }
 

@@ -17,7 +17,6 @@ let cached: {
 };
 
 export default function createStore(isSSR: boolean, ssrState: ISSRState) {
-    let initialState = {};
     if (!isSSR) {
         cached = {
             ToastStore: new ToastStore(),

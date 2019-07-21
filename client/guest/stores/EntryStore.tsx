@@ -1,6 +1,5 @@
 import {action, observable} from "mobx";
 import StoreBase, {IModel, IPagitane, Mode, State} from "./StoreBase";
-import {Stores} from ".";
 
 export interface IEntry extends IModel {
     title: string;
@@ -24,16 +23,22 @@ export class EntryStore extends StoreBase {
 
         this.entries = entries || [];
         this.entry = entry || {} as IEntry;
-        this.info = paginate || {} as IPagitane;
+        this.info = paginate || {
+            current: 1,
+            perPage: 10,
+            recordsOnPage: 10,
+            totalPages: 1,
+            totalRecords: 10,
+        };
     }
 
     @action
-    public async getEntries(page: number) {
+    public async getEntries(page?: number) {
         this.setMode(Mode.GET);
         this.setState(State.RUNNING);
 
         try {
-            const url = `${this.apiBasePath}v1/entries?page=${page}`;
+            const url = `${this.apiBasePath}v1/entries?page=${page || this.info.current}`;
             const response = await fetch(url, {
                 method: "GET",
             });
@@ -77,40 +82,5 @@ export class EntryStore extends StoreBase {
             console.error(e);
             this.setState(State.ERROR);
         }
-    }
-
-    @action
-    public async putEntry() {
-        this.setMode(Mode.GET);
-        this.setState(State.RUNNING);
-
-        try {
-            const url = `${this.apiBasePath}v1/entries/${this.entry._id}`;
-            const response = await fetch(url, {
-                method: "PUT",
-                headers: this.generateFetchHeader(),
-                body: JSON.stringify(this.entry),
-            });
-
-            if (response.status !== 200) {
-                throw new Error();
-            }
-            const result = await response.json();
-            this.entry = result.entry;
-
-            this.tryShowToast("エントリーを編集しました");
-            this.setState(State.DONE);
-
-            Stores.cached.RouterStore.history.push(`/entries/${this.entry._id}`);
-        } catch (e) {
-            this.tryShowToast("エントリーの保存に失敗しました");
-            console.error(e);
-            this.setState(State.ERROR);
-        }
-    }
-
-    @action
-    public async setEntry(entry: IEntry) {
-        this.entry = entry;
     }
 }

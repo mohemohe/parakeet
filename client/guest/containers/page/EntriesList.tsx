@@ -8,7 +8,7 @@ interface IProps extends RouteComponentProps<any> {
 interface IState extends React.ComponentState {
 }
 
-export default class Index extends React.Component<IProps, IState> {
+export default class EntriesList extends React.Component<IProps, IState> {
     constructor(props: IProps, state: IState) {
         super(props, state);
     }

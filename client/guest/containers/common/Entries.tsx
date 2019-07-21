@@ -3,8 +3,10 @@ import {inject, observer} from "mobx-react";
 import {EntryStore} from "../../stores/EntryStore";
 import {Entry} from "../../components/Entry";
 import {style} from "typestyle";
+import {LinkButton} from "../../../common/components/LinkButton";
+import {RouteComponentProps} from "react-router";
 
-interface IProps extends React.ClassAttributes<{}> {
+interface IProps extends RouteComponentProps<{id: string}> {
     EntryStore?: EntryStore;
 }
 
@@ -22,6 +24,10 @@ const styles = {
             },
         }
     }),
+    pager: style({
+        display: "flex",
+        justifyContent: "space-between",
+    }),
 };
 
 @inject("EntryStore")
@@ -29,28 +35,37 @@ const styles = {
 export class Entries extends React.Component<IProps, IState> {
     constructor(props: IProps, state: IState) {
         super(props, state);
-
-        this.index = 1;
     }
-
-    private index: number;
 
     public componentDidMount() {
-        this.props.EntryStore!.getEntries(this.index);
+        const page = parseInt(`${this.props.match.params.id || 1}`, 10);
+        this.props.EntryStore!.getEntries(page);
     }
 
-    public get back() {
-        return this.index === 1 ? 1 : --this.index;
-    }
-
-    public get forward() {
-        return ++this.index;
+    public componentWillReceiveProps(nextProps: Readonly<IProps>, nextContext: any): void {
+        if (this.props.match.params.id != nextProps.match.params.id) {
+            const page = parseInt(`${nextProps.match.params.id || 1}`, 10);
+            this.props.EntryStore!.getEntries(page);
+        }
     }
 
     public render() {
+        const page = parseInt(`${this.props.match.params.id || 1}`, 10);
+
         return (
             <div className={styles.root}>
                 {this.props.EntryStore!.entries.map((entry) => <Entry entry={entry}/>)}
+
+                <div className={styles.pager}>
+                    {page > 1 ?
+                        <LinkButton to={`/entries/${page - 1}`} buttonProps={{variant: "contained", color: "primary"}}>新しい投稿</LinkButton> :
+                        <div/>
+                    }
+                    {this.props.EntryStore!.info.totalPages > page ?
+                        <LinkButton to={`/entries/${page + 1}`} buttonProps={{variant: "contained", color: "primary"}}>古い投稿</LinkButton> :
+                        <div/>
+                    }
+                </div>
             </div>
         );
     }

@@ -34,10 +34,11 @@
     "window": "^4.2.6"
   },
   "scripts": {
-    "build": "parcel build -d ../server/public/js/ --public-url '/public/js/' ./guest/ssr.tsx ./guest/csr.tsx ./admin/index.tsx",
+    "build": "NODE_ENV=production parcel build -d ../server/public/js/ --public-url '/public/js/' ./guest/ssr.tsx ./guest/csr.tsx ./admin/index.tsx",
     "watch": "NODE_ENV=development parcel watch -d ../server/public/js/ --public-url '/public/js/' ./guest/ssr.tsx ./guest/csr.tsx ./admin/index.tsx"
   },
   "devDependencies": {
+    "parcel-plugin-bundle-visualiser": "^1.2.0",
     "typescript": "^3.5.1"
   }
 }

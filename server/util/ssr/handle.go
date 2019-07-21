@@ -76,7 +76,7 @@ func initializeState(c echo.Context) map[string]interface{} {
 	path := c.Request().URL.Path
 
 	entries := &models.Entries{}
-	entry := models.Entry{
+	entry := &models.Entry{
 		Tag: make([]string, 0),
 	}
 	if path == "/" {
@@ -85,9 +85,15 @@ func initializeState(c echo.Context) map[string]interface{} {
 	if strings.HasPrefix(path, "/entries/") {
 		r := regexp.MustCompile(`^/entries/(\d+)`).FindAllStringSubmatch(path, -1)
 		if len(r) == 1 && len(r[0]) == 2 {
-			if page, err := strconv.Atoi(r[0][1]); err != nil {
+			if page, err := strconv.Atoi(r[0][1]); err == nil {
 				entries = models.GetEntries(10, page)
 			}
+		}
+	}
+	if strings.HasPrefix(path, "/entry/") {
+		r := regexp.MustCompile(`^/entry/(.*)`).FindAllStringSubmatch(path, -1)
+		if len(r) == 1 && len(r[0]) == 2 {
+			entry = models.GetEntryById(r[0][1])
 		}
 	}
 

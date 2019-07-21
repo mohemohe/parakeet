@@ -10,6 +10,7 @@ import Index from "./page/Index";
 import {COLORS} from "../constants/Style";
 import {SingleEntry} from "./common/SingleEntry";
 import {Template} from "./Template";
+import EntriesList from "./page/EntriesList";
 
 interface IProps {
     isSSR: boolean;
@@ -48,6 +49,7 @@ export default class Router extends React.Component<IProps, IState> {
         const s = (
             <Switch>
                 <Route exact={true} path="/" component={Index} />
+                <Route path="/entries/:id" component={EntriesList} />
                 <Route path="/entry/:id" component={SingleEntry} />
                 <Route component={Notfound} />
             </Switch>
