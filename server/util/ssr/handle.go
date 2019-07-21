@@ -1,9 +1,14 @@
 package ssr
 
 import (
+	"encoding/json"
 	"github.com/labstack/echo/v4"
+	"github.com/mohemohe/parakeet/server/models"
 	"github.com/mohemohe/parakeet/server/util"
 	"net/http"
+	"regexp"
+	"strconv"
+	"strings"
 	"time"
 )
 
@@ -37,6 +42,7 @@ func Handle(c echo.Context, pool *Pool) error {
 	ch := js.Exec(map[string]interface{}{
 		"url":     c.Request().URL.String(),
 		"headers": map[string][]string(c.Request().Header),
+		"state": initializeState(c),
 	})
 
 	select {
@@ -63,4 +69,48 @@ func Handle(c echo.Context, pool *Pool) error {
 			Meta:  "",
 		})
 	}
+}
+
+
+func initializeState(c echo.Context) map[string]interface{} {
+	path := c.Request().URL.Path
+
+	entries := &models.Entries{}
+	entry := models.Entry{
+		Tag: make([]string, 0),
+	}
+	if path == "/" {
+		entries = models.GetEntries(10, 1)
+	}
+	if strings.HasPrefix(path, "/entries/") {
+		r := regexp.MustCompile(`^/entries/(\d+)`).FindAllStringSubmatch(path, -1)
+		if len(r) == 1 && len(r[0]) == 2 {
+			if page, err := strconv.Atoi(r[0][1]); err != nil {
+				entries = models.GetEntries(10, page)
+			}
+		}
+	}
+
+	return map[string]interface{}{
+		"entryStore": map[string]interface{}{
+			"entries": toJson(entries.Entries),
+			"paginate": toJson(entries.Info),
+			"entry": toJson(entry),
+		},
+	}
+}
+
+func toJson(t interface{}) (result string) {
+	defer func() {
+		if err := recover(); err != nil {
+			util.Logger().WithField("target", t).Warn("toJson failed")
+			result = "{}"
+		}
+	}()
+	b, err := json.Marshal(t)
+	if err != nil {
+		panic(err)
+	}
+	result = string(b)
+	return
 }

@@ -1,10 +1,10 @@
 import * as React from "react";
 import {inject, observer} from "mobx-react";
 import {EntryStore} from "../../stores/EntryStore";
-import {LinkButton} from "../../../common/components/LinkButton";
-import {TitleBar} from "../../../common/components/TitleBar";
-import {Paper} from "@material-ui/core";
-
+import Paper from "@material-ui/core/Paper";
+import ReactMarkdown from "react-markdown";
+import {style} from "typestyle";
+import {COLORS} from "../../constants/Style";
 
 interface IProps extends React.ClassAttributes<{}> {
     EntryStore?: EntryStore;
@@ -12,6 +12,21 @@ interface IProps extends React.ClassAttributes<{}> {
 
 interface IState extends React.ComponentState {
 }
+
+const styles = {
+    root: style({
+        "margin": "1rem",
+    }),
+    title: style({
+        "padding": "1rem",
+        "background": COLORS.BaseColor,
+        "color": COLORS.EmotionalWhite,
+        "borderRadius": "4px 4px 0 0",
+    }),
+    body: style({
+        "padding": "1rem",
+    }),
+};
 
 @inject("EntryStore")
 @observer
@@ -38,15 +53,16 @@ export class Entries extends React.Component<IProps, IState> {
 
     public render() {
         return (
-            <div>
+            <>
                 {this.props.EntryStore!.entries.map((entry) => {
                     return (
-                        <Paper>
-                            {JSON.stringify(entry)}
+                        <Paper className={styles.root}>
+                            <h1 className={styles.title}>{entry.title}</h1>
+                            <ReactMarkdown source={entry.body} className={`markdown-body ${styles.body}`} escapeHtml={false}/>
                         </Paper>
                     )
                 })}
-            </div>
+            </>
         );
     }
 }

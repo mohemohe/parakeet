@@ -1,6 +1,7 @@
 package ssr
 
 import (
+	"github.com/mohemohe/parakeet/server/configs"
 	"github.com/mohemohe/parakeet/server/util"
 	"net/http"
 	"runtime"
@@ -15,6 +16,11 @@ type (
 
 func NewPool(handler http.Handler) *Pool {
 	cpus := runtime.NumCPU()
+	if configs.GetEnv().Echo.Env == "debug" {
+		util.Logger().Warnln("ECHO_ENV is 'debug'. worker pool limit to 1.")
+		cpus = 1
+	}
+
 	this := &Pool{
 		JS: make(chan *JS, cpus),
 	}

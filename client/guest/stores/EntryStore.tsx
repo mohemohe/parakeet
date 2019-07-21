@@ -1,11 +1,12 @@
 import {action, observable} from "mobx";
 import StoreBase, {IModel, IPagitane, Mode, State} from "./StoreBase";
-import {Stores} from "../stores";
+import {Stores} from ".";
 
 export interface IEntry extends IModel {
     title: string;
     tags: string[];
     body: string;
+    author: string;
 }
 
 export class EntryStore extends StoreBase {
@@ -18,12 +19,12 @@ export class EntryStore extends StoreBase {
     @observable
     public entry: IEntry;
 
-    constructor() {
+    constructor(entries?: IEntry[], entry?: IEntry, paginate?: IPagitane) {
         super();
 
-        this.entries = [];
-        this.entry = {} as IEntry;
-        this.info = {} as IPagitane;
+        this.entries = entries || [];
+        this.entry = entry || {} as IEntry;
+        this.info = paginate || {} as IPagitane;
     }
 
     @action

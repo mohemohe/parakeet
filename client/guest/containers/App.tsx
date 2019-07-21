@@ -1,10 +1,11 @@
 import * as React from "react";
 import { Provider } from "mobx-react";
-import createStore from "../stores";
+import createStore, {ISSRState} from "../stores";
 import Router from "./Router";
 
 interface IProps {
     isSSR: boolean;
+    ssrState: ISSRState;
     pathname: string;
 }
 
@@ -14,7 +15,7 @@ interface IState {
 export default class App extends React.Component<IProps, IState> {
     constructor(props: IProps, state: IState) {
         super(props, state);
-        this.store = createStore(props.isSSR);
+        this.store = createStore(props.isSSR, props.ssrState);
     }
 
     private store: any;

@@ -4,7 +4,6 @@ import { inject, observer } from "mobx-react";
 import {Route, Router as ReactRouter, StaticRouter, Switch} from "react-router";
 import {createMemoryHistory} from "history";
 import MobxReactRouter, {syncHistoryWithStore, RouterStore} from "mobx-react-router";
-import { SIZES } from "../constants/Style";
 import Toast from "./common/Toast";
 import Notfound from "./page/NotFound";
 import Index from "./page/Index";
@@ -23,11 +22,6 @@ const styles = {
         height: "100vh",
         minHeight: "100vh",
         maxHeight: "100vh",
-    }),
-    bottom: style({
-        display: "flex",
-        height: `calc(100vh - ${SIZES.Header.height}px)`,
-        overflow: "hidden" as "hidden",
     }),
     contentWrapper: style({
         flex: 1,
@@ -68,17 +62,15 @@ export default class Router extends React.Component<IProps, IState> {
         return (
             <ReactRouter history={this.history}>
                 <div className={styles.root}>
-                    <div className={styles.bottom}>
-                        <div className={styles.contentWrapper}>
-                            <div className={styles.contentInner}>
-                                <div className={styles.contents}>
-                                    <StaticRouter location={this.props.RouterStore!.location} context={this.context || {}}>
-                                        <Switch>
-                                            <Route exact={true} path="/" component={Index} />
-                                            <Route component={Notfound} />
-                                        </Switch>
-                                    </StaticRouter>
-                                </div>
+                    <div className={styles.contentWrapper}>
+                        <div className={styles.contentInner}>
+                            <div className={styles.contents}>
+                                <StaticRouter location={this.props.RouterStore!.location} context={this.context || {}}>
+                                    <Switch>
+                                        <Route exact={true} path="/" component={Index} />
+                                        <Route component={Notfound} />
+                                    </Switch>
+                                </StaticRouter>
                             </div>
                         </div>
                     </div>
