@@ -1,0 +1,35 @@
+---
+version: "3.2"
+services:
+  parakeet:
+    # build: .
+    image: mohemohe/parakeet:latest
+    environment:
+      - MONGO_ADDRESS=mongodb://mongo:27017
+    networks:
+      - wan
+      - lan
+    ports:
+      - 1323:1323
+    depends_on:
+      - mongo
+    restart: on-failure
+  mongo:
+    image: mongo:4.0
+    networks:
+      - lan
+    volumes:
+      - type: volume
+        source: mongo-db
+        target: /data/db
+      - type: volume
+        source: mongo-configdb
+        target: /data/configdb
+    restart: on-failure
+volumes:
+  mongo-db:
+  mongo-configdb:
+networks:
+  wan:
+  lan:
+    internal: true
