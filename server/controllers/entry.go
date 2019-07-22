@@ -1,10 +1,13 @@
 package controllers
 
 import (
+	"github.com/globalsign/mgo/bson"
 	"github.com/labstack/echo/v4"
 	"github.com/mohemohe/parakeet/server/models"
+	"github.com/mohemohe/parakeet/server/util"
 	"net/http"
 	"strconv"
+	"strings"
 )
 
 type (
@@ -55,6 +58,8 @@ func UpsertEntry(c echo.Context) error {
 	user := c.Get("User").(*models.User)
 	entry.Author = user.Id
 
+	enableNotify := false
+
 	id := c.Param("id")
 	if id != "" && id != "undefined" {
 		current := models.GetEntryById(id)
@@ -72,10 +77,25 @@ func UpsertEntry(c echo.Context) error {
 			Body:   entry.Body,
 			Author: entry.Author,
 		}
+		enableNotify = true
 	}
 
 	if err := models.UpsertEntry(entry); err != nil {
+		enableNotify = false
 		panic(err)
+	}
+
+	if enableNotify {
+		kv := models.GetKVS("notify_mastodon")
+		if kv != nil {
+			notifyMastodon := kv.Value.(bson.M)
+			if notifyMastodon["baseurl"] != "" && notifyMastodon["token"] != "" && notifyMastodon["template"] != "" {
+				status := notifyMastodon["template"].(string)
+				status = strings.ReplaceAll(status, "%ENTRY_TITLE%", entry.Title)
+				status = strings.ReplaceAll(status, "%ENTRY_URL%", c.Scheme()+"://"+c.Request().Host + "/entry/" + entry.Id.Hex())
+				_ = util.PostMastodon(status, notifyMastodon["baseurl"].(string), notifyMastodon["token"].(string))
+			}
+		}
 	}
 
 	return c.JSON(http.StatusOK, EntryResponse{

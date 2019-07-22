@@ -8,8 +8,8 @@ import (
 
 type (
 	Setting struct {
-		Key   string `json:"key"`
-		Value string `json:"value"`
+		Key   string      `json:"key"`
+		Value interface{} `json:"value"`
 	}
 )
 
@@ -34,4 +34,29 @@ func SetSiteTitle(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, reqBody)
+}
+
+func GetNotifyMastodon(c echo.Context) error {
+	kv := models.GetKVS("notify_mastodon")
+	if kv == nil {
+		panic("db error")
+	}
+
+	return c.JSON(http.StatusOK, kv)
+}
+
+func SetNotifyMastodon(c echo.Context) error {
+	reqBody := new(models.NotifyMastodon)
+	if err := c.Bind(reqBody); err != nil {
+		panic("bind error")
+	}
+
+	if err := models.SetKVS("notify_mastodon", reqBody); err != nil {
+		panic(err)
+	}
+
+	return c.JSON(http.StatusOK, &models.KV{
+		Key:   "notify_mastodon",
+		Value: reqBody,
+	})
 }
