@@ -21,6 +21,14 @@ var collections = struct {
 	KVS:     "kvs",
 }
 
+type (
+	NotifyMastodon struct {
+		BaseURL  string `json:"baseurl"`
+		Token    string `json:"token"`
+		Template string `json:"template"`
+	}
+)
+
 func InitDB() {
 	ensureIndex(collections.KVS, getIndex([]string{"key"}, true, false))
 
@@ -35,6 +43,11 @@ func InitDB() {
 	}
 
 	setDefaultConfig("site_title", "parakeet")
+	setDefaultConfig("notify_mastodon", NotifyMastodon{
+		BaseURL:  "",
+		Token:    "",
+		Template: "ブログを書きました: %ENTRY_TITLE% %ENTRY_URL%",
+	})
 
 	user := GetUserByEmail("root")
 	if user == nil {

@@ -12,6 +12,7 @@ import {Entry} from "../containers/page/Entry";
 import {UserEdit} from "../containers/page/UserEdit";
 import {EntryEdit} from "../containers/page/EntryEdit";
 import {SiteSetting} from "../containers/page/settings/Site";
+import {NotifySetting} from "../containers/page/settings/Notify";
 
 export interface IRouteInfo {
     name: string;
@@ -110,6 +111,13 @@ export const ROUTES: IRouteInfo[] = [
                 name: "サイト情報",
                 path: "/settings/site",
                 component: SiteSetting,
+                showLeftNav: true,
+                permission: [1],
+            },
+            {
+                name: "投稿通知",
+                path: "/settings/notify",
+                component: NotifySetting,
                 showLeftNav: true,
                 permission: [1],
             },
