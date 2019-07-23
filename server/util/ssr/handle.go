@@ -3,6 +3,7 @@ package ssr
 import (
 	"encoding/json"
 	"github.com/labstack/echo/v4"
+	"github.com/mohemohe/parakeet/server/configs"
 	"github.com/mohemohe/parakeet/server/models"
 	"github.com/mohemohe/parakeet/server/util"
 	"net/http"
@@ -17,6 +18,7 @@ func Handle(c echo.Context, pool *Pool) error {
 		if r := recover(); r != nil {
 			_ = c.Render(http.StatusInternalServerError, "ssr.html", Result{
 				Error: r.(string),
+				Unix:  configs.GetUnix(),
 			})
 		}
 	}()
@@ -30,12 +32,14 @@ func Handle(c echo.Context, pool *Pool) error {
 				Error: js.err.Error(),
 				Title: "parakeet",
 				Meta:  "",
+				Unix:  configs.GetUnix(),
 			})
 		}
 		return c.Render(http.StatusInternalServerError, "ssr.html", Result{
 			Error: "invalid js",
 			Title: "parakeet",
 			Meta:  "",
+			Unix:  configs.GetUnix(),
 		})
 	}
 
@@ -55,19 +59,19 @@ func Handle(c echo.Context, pool *Pool) error {
 	select {
 	case res := <-ch:
 		res.Title = title
+		res.Unix = configs.GetUnix()
 		if js.err != nil {
 			util.Logger().WithField("error", res.Error).Errorln("js eval error")
 			return c.Render(http.StatusInternalServerError, "ssr.html", Result{
 				Error: js.err.Error(),
 				Title: res.Title,
 				Meta:  "",
+				Unix:  configs.GetUnix(),
 			})
 		}
 		if len(res.Error) == 0 {
 			if entry.Title != "" {
 				res.Title = entry.Title + " - " + res.Title
-			} else {
-
 			}
 			return c.Render(http.StatusOK, "ssr.html", res)
 		} else {
@@ -80,6 +84,7 @@ func Handle(c echo.Context, pool *Pool) error {
 			Error: "timeout",
 			Title: title,
 			Meta:  "",
+			Unix:  configs.GetUnix(),
 		})
 	}
 }
