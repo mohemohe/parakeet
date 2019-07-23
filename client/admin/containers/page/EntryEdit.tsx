@@ -77,7 +77,14 @@ export class EntryEdit extends React.Component<IProps, IState> {
                         InputLabelProps={{shrink: true}}
                     />
                 </FormControl>
-                <SimpleMDE onChange={(body) => this.props.EntryStore!.setEntry({...entry, body})} value={entry.body} className={styles.simpleMDE} options={{spellChecker: false}}/>
+                <SimpleMDE
+                    className={styles.simpleMDE}
+                    onChange={(body) => this.props.EntryStore!.setEntry({...entry, body})}
+                    value={entry.body}
+                    options={{
+                        spellChecker: false,
+                        previewClass: ["editor-preview", "markdown-body"],
+                    }}/>
                 <Button onClick={() => this.props.EntryStore!.putEntry()} variant={"contained"} color={"primary"}>保存</Button>
             </div>
         );
