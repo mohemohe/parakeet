@@ -7,6 +7,8 @@ import CardHeader from "@material-ui/core/CardHeader";
 import ReactMarkdown from "react-markdown";
 import {Link} from "react-router-dom";
 
+const breaks = require("remark-breaks");
+
 interface IProps extends CardProps {
     entry: IEntry
 }
@@ -45,7 +47,7 @@ export class Entry extends React.Component<IProps, {}> {
         return (
             <Card {...this.props} className={styles.root} elevation={6}>
                 <CardHeader className={styles.title} title={<Link to={`/entry/${entry._id}`}>{entry.title}</Link>} subheader={`公開: ${created.toLocaleString()}, 更新: ${modified.toLocaleString()}`}/>
-                <ReactMarkdown source={entry.body} className={`markdown-body ${styles.body}`} escapeHtml={false}/>
+                <ReactMarkdown source={entry.body} className={`markdown-body ${styles.body}`} plugins={[[breaks]]} escapeHtml={false}/>
             </Card>
         )
     }
