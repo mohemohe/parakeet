@@ -33,6 +33,15 @@ const styles = {
             },
         },
     }),
+    subheader: style({
+        display: "flex",
+        flexWrap: "wrap",
+        $nest: {
+            "& > *": {
+                marginRight: "1em",
+            },
+        },
+    }),
     body: style({
         padding: "1rem",
     }),
@@ -46,7 +55,15 @@ export class Entry extends React.Component<IProps, {}> {
 
         return (
             <Card {...this.props} className={styles.root} elevation={6}>
-                <CardHeader className={styles.title} title={<Link to={`/entry/${entry._id}`}>{entry.title}</Link>} subheader={`公開: ${created.toLocaleString()}, 更新: ${modified.toLocaleString()}`}/>
+                <CardHeader
+                    className={styles.title}
+                    title={<Link to={`/entry/${entry._id}`}>{entry.title}</Link>}
+                    subheader={
+                        <div className={styles.subheader}>
+                            <div>公開: {created.toLocaleString()},</div>
+                            <div>更新: {modified.toLocaleString()}</div>
+                        </div>
+                    }/>
                 <ReactMarkdown source={entry.body} className={`markdown-body ${styles.body}`} plugins={[[breaks]]} escapeHtml={false}/>
             </Card>
         )
