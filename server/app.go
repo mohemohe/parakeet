@@ -14,6 +14,8 @@ import (
 )
 
 func main() {
+	initEnv()
+
 	e := echo.New()
 	initEcho(e)
 	initTemplate(e)
@@ -62,4 +64,9 @@ func initTemplate(e *echo.Echo) {
 	goingtpl.EnableCache(configs.GetEnv().Echo.Env != "debug")
 	t := &templates.Template{}
 	e.Renderer = t
+}
+
+func initEnv() {
+	_ = configs.GetEnv()
+	_ = configs.GetUnix()
 }

@@ -92,7 +92,7 @@ func UpsertEntry(c echo.Context) error {
 			if notifyMastodon["baseurl"] != "" && notifyMastodon["token"] != "" && notifyMastodon["template"] != "" {
 				status := notifyMastodon["template"].(string)
 				status = strings.ReplaceAll(status, "%ENTRY_TITLE%", entry.Title)
-				status = strings.ReplaceAll(status, "%ENTRY_URL%", c.Scheme()+"://"+c.Request().Host + "/entry/" + entry.Id.Hex())
+				status = strings.ReplaceAll(status, "%ENTRY_URL%", c.Scheme()+"://"+c.Request().Host+"/entry/"+entry.Id.Hex())
 				_ = util.PostMastodon(status, notifyMastodon["baseurl"].(string), notifyMastodon["token"].(string))
 			}
 		}

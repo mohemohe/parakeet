@@ -11,6 +11,7 @@ type Result struct {
 	Title string `json:"title"`
 	Meta  string `json:"meta"`
 	State string `json:"state"`
+	Unix  int64  `json:"-"`
 }
 
 func (r Result) RawApp() template.HTML {

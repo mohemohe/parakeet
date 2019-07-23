@@ -17,6 +17,6 @@
 {{end}}
 <div id="app">{{ .RawApp }}</div>
 {{if .State}}<script>window.__INITIAL_STATE__ = JSON.parse("{{ .State }}");</script>{{end}}
-<script async src="/public/js/guest/csr.js"></script>
+<script async src="/public/js/guest/csr.js?t={{ .Unix }}"></script>
 </body>
 </html>
