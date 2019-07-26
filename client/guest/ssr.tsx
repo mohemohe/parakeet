@@ -14,7 +14,8 @@ interface ISSROptions {
 }
 
 function SSR(options: ISSROptions, callback: (result: any) => void) {
-    console.log("SSR from js");
+    const start = Date.now();
+    console.log("SSR start");
 
     const serverStyleSheets = new ServerStyleSheets();
     const app = ReactDOMServer.renderToString(
@@ -26,7 +27,7 @@ function SSR(options: ISSROptions, callback: (result: any) => void) {
     const customStyle = getStyles();
     const style = materialStyle + customStyle ;
 
-    console.log("SSR complete");
+    console.log("SSR complete, elapsed:", Date.now() - start, "ms");
 
     callback({
         app,
