@@ -42,9 +42,17 @@ export default class Router extends React.Component<IProps, IState> {
         const history = this.props.isSSR ? createMemoryHistory() : createBrowserHistory();
         this.history = syncHistoryWithStore(history, this.props.RouterStore!);
         this.history.replace(this.props.pathname);
+        this.pathname = this.props.pathname;
+        this.history.subscribe((location, action) => {
+            if (location.pathname != this.pathname) {
+                this.pathname = location.pathname;
+                window.scrollTo(0, 0);
+            }
+        })
     }
 
     private history: MobxReactRouter.SynchronizedHistory;
+    private pathname: string;
 
     public render() {
         const s = (
