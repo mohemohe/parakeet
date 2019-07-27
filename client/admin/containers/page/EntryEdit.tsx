@@ -64,6 +64,17 @@ export class EntryEdit extends React.Component<IProps, IState> {
         } else {
             pageTitle += "作成";
         }
+
+        const insertReadMore = {
+            name: "ReadMore",
+            action: (editor: any) => {
+                const current = editor.value();
+                editor.value(current + "\n" + "<!-- more -->" + "\n");
+            },
+            className: "fa fa-minus-square",
+            title: "Insert 'Read More'",
+        };
+
         return (
             <div>
                 <TitleBar>{pageTitle}</TitleBar>
@@ -84,6 +95,14 @@ export class EntryEdit extends React.Component<IProps, IState> {
                     options={{
                         spellChecker: false,
                         previewClass: ["editor-preview", "markdown-body"],
+                        toolbar: [
+                            "bold", "italic", "strikethrough", "|",
+                            "heading-smaller", "heading-bigger", "|",
+                            "code", "quote", "unordered-list", "ordered-list", "table", "|",
+                            "link", "image", insertReadMore, "|",
+                            "preview", "side-by-side", "fullscreen", "|",
+                            "guide",
+                        ],
                     }}/>
                 <Button onClick={() => this.props.EntryStore!.putEntry()} variant={"contained"} color={"primary"}>保存</Button>
             </div>
