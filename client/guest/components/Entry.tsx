@@ -5,11 +5,13 @@ import {COLORS} from "../constants/Style";
 import Card, {CardProps} from "@material-ui/core/Card";
 import ReactMarkdown from "react-markdown";
 import {Link} from "react-router-dom";
+import {LinkButton} from "../../common/components/LinkButton";
 
 const breaks = require("remark-breaks");
 
 interface IProps extends CardProps {
     entry: IEntry
+    stopToReadMore: boolean;
 }
 
 const styles = {
@@ -49,6 +51,11 @@ const styles = {
     body: style({
         padding: "1rem",
     }),
+    readMore: style({
+        display: "flex",
+        justifyContent: "flex-end",
+        padding: "1rem",
+    }),
 };
 
 export class Entry extends React.Component<IProps, {}> {
@@ -56,6 +63,13 @@ export class Entry extends React.Component<IProps, {}> {
         const { entry } = this.props;
         const created = new Date(entry._created);
         const modified = new Date(entry._modified);
+
+        let body = entry.body;
+        let showReadMore = false;
+        if (this.props.stopToReadMore && body.includes("<!-- more -->")) {
+            body = body.split("<!-- more -->").shift() || body;
+            showReadMore = true;
+        }
 
         return (
             <Card {...this.props} className={styles.root} elevation={6}>
@@ -68,7 +82,13 @@ export class Entry extends React.Component<IProps, {}> {
                         <div>更新: {modified.toLocaleString()}</div>
                     </div>
                 </div>
-                <ReactMarkdown source={entry.body} className={`markdown-body ${styles.body}`} plugins={[[breaks]]} escapeHtml={false}/>
+                <ReactMarkdown source={body} className={`markdown-body ${styles.body}`} plugins={[[breaks]]} escapeHtml={false}/>
+                {showReadMore ?
+                    <div className={styles.readMore}>
+                        <LinkButton to={`/entry/${entry._id}`} buttonProps={{variant: "contained", color: "primary"}}>続きを読む</LinkButton>
+                    </div> :
+                    undefined
+                }
             </Card>
         )
     }
