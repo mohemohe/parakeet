@@ -2,6 +2,7 @@ package ssr
 
 import (
 	"encoding/json"
+	"github.com/globalsign/mgo/bson"
 	"github.com/labstack/echo/v4"
 	"github.com/mohemohe/parakeet/server/configs"
 	"github.com/mohemohe/parakeet/server/models"
@@ -96,10 +97,19 @@ func initializeState(c echo.Context) (map[string]interface{}, *models.Entry) {
 	entry := &models.Entry{
 		Tag: make([]string, 0),
 	}
-	if path == "/" {
+
+	enableEntriesSSR := true
+	enableEntrySSR := true
+	kv := models.GetKVS(models.KVServerSideRendering)
+	if kv != nil {
+		enableEntriesSSR = kv.Value.(bson.M)["entries"].(bool)
+		enableEntrySSR = kv.Value.(bson.M)["entry"].(bool)
+	}
+
+	if enableEntriesSSR && path == "/" {
 		entries = models.GetEntries(10, 1)
 	}
-	if strings.HasPrefix(path, "/entries/") {
+	if enableEntriesSSR && strings.HasPrefix(path, "/entries/") {
 		r := regexp.MustCompile(`^/entries/(\d+)`).FindAllStringSubmatch(path, -1)
 		if len(r) == 1 && len(r[0]) == 2 {
 			if page, err := strconv.Atoi(r[0][1]); err == nil {
@@ -107,7 +117,7 @@ func initializeState(c echo.Context) (map[string]interface{}, *models.Entry) {
 			}
 		}
 	}
-	if strings.HasPrefix(path, "/entry/") {
+	if enableEntrySSR && strings.HasPrefix(path, "/entry/") {
 		r := regexp.MustCompile(`^/entry/(.*)`).FindAllStringSubmatch(path, -1)
 		if len(r) == 1 && len(r[0]) == 2 {
 			entry = models.GetEntryById(r[0][1])

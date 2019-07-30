@@ -27,6 +27,16 @@ type (
 		Token    string `json:"token"`
 		Template string `json:"template"`
 	}
+	ServerSideRendering struct {
+		Entries  bool `json:"entries"`
+		Entry    bool `json:"entry"`
+	}
+)
+
+const (
+	KVSiteTitle = "site_title"
+	KVNotifyMastodon = "notify_mastodon"
+	KVServerSideRendering = "server_side_rendering"
 )
 
 func InitDB() {
@@ -42,11 +52,15 @@ func InitDB() {
 		}
 	}
 
-	setDefaultConfig("site_title", "parakeet")
-	setDefaultConfig("notify_mastodon", NotifyMastodon{
+	setDefaultConfig(KVSiteTitle, "parakeet")
+	setDefaultConfig(KVNotifyMastodon, NotifyMastodon{
 		BaseURL:  "",
 		Token:    "",
 		Template: "ブログを書きました: %ENTRY_TITLE% %ENTRY_URL%",
+	})
+	setDefaultConfig(KVServerSideRendering, ServerSideRendering{
+		Entries: true,
+		Entry: true,
 	})
 
 	user := GetUserByEmail("root")

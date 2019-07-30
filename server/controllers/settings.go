@@ -14,7 +14,7 @@ type (
 )
 
 func GetSiteTitle(c echo.Context) error {
-	kv := models.GetKVS("site_title")
+	kv := models.GetKVS(models.KVSiteTitle)
 	if kv == nil {
 		panic("db error")
 	}
@@ -28,7 +28,7 @@ func SetSiteTitle(c echo.Context) error {
 		panic("bind error")
 	}
 
-	reqBody.Key = "site_title"
+	reqBody.Key = models.KVSiteTitle
 	if err := models.SetKVS(reqBody.Key, reqBody.Value); err != nil {
 		panic(err)
 	}
@@ -37,7 +37,7 @@ func SetSiteTitle(c echo.Context) error {
 }
 
 func GetNotifyMastodon(c echo.Context) error {
-	kv := models.GetKVS("notify_mastodon")
+	kv := models.GetKVS(models.KVNotifyMastodon)
 	if kv == nil {
 		panic("db error")
 	}
@@ -51,12 +51,37 @@ func SetNotifyMastodon(c echo.Context) error {
 		panic("bind error")
 	}
 
-	if err := models.SetKVS("notify_mastodon", reqBody); err != nil {
+	if err := models.SetKVS(models.KVNotifyMastodon, reqBody); err != nil {
 		panic(err)
 	}
 
 	return c.JSON(http.StatusOK, &models.KV{
-		Key:   "notify_mastodon",
+		Key:   models.KVNotifyMastodon,
+		Value: reqBody,
+	})
+}
+
+func GetServerSideRendering(c echo.Context) error {
+	kv := models.GetKVS(models.KVServerSideRendering)
+	if kv == nil {
+		panic("db error")
+	}
+
+	return c.JSON(http.StatusOK, kv)
+}
+
+func SetServerSideRendering(c echo.Context) error {
+	reqBody := new(models.ServerSideRendering)
+	if err := c.Bind(reqBody); err != nil {
+		panic("bind error")
+	}
+
+	if err := models.SetKVS(models.KVServerSideRendering, reqBody); err != nil {
+		panic(err)
+	}
+
+	return c.JSON(http.StatusOK, &models.KV{
+		Key:   models.KVServerSideRendering,
 		Value: reqBody,
 	})
 }

@@ -57,6 +57,8 @@ func initEcho(e *echo.Echo) {
 	e.PUT("/api/v1/settings/site/title", controllers.SetSiteTitle, middlewares.Authorized)
 	e.GET("/api/v1/settings/notify/mastodon", controllers.GetNotifyMastodon, middlewares.Authorized)
 	e.PUT("/api/v1/settings/notify/mastodon", controllers.SetNotifyMastodon, middlewares.Authorized)
+	e.GET("/api/v1/settings/render/server", controllers.GetServerSideRendering, middlewares.Authorized)
+	e.PUT("/api/v1/settings/render/server", controllers.SetServerSideRendering, middlewares.Authorized)
 }
 
 func initTemplate(e *echo.Echo) {

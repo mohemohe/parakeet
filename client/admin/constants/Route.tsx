@@ -13,6 +13,7 @@ import {UserEdit} from "../containers/page/UserEdit";
 import {EntryEdit} from "../containers/page/EntryEdit";
 import {SiteSetting} from "../containers/page/settings/Site";
 import {NotifySetting} from "../containers/page/settings/Notify";
+import {RenderSetting} from "../containers/page/settings/Render";
 
 export interface IRouteInfo {
     name: string;
@@ -111,6 +112,13 @@ export const ROUTES: IRouteInfo[] = [
                 name: "サイト情報",
                 path: "/settings/site",
                 component: SiteSetting,
+                showLeftNav: true,
+                permission: [1],
+            },
+            {
+                name: "SSR",
+                path: "/settings/render",
+                component: RenderSetting,
                 showLeftNav: true,
                 permission: [1],
             },
