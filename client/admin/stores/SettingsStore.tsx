@@ -8,6 +8,11 @@ export interface INotifyMastodon extends IModel {
     template: string;
 }
 
+export interface IRender extends IModel {
+    entries: boolean;
+    entry: boolean;
+}
+
 export class SettingsStore extends StoreBase {
     @observable
     public siteTitle: string;
@@ -15,11 +20,15 @@ export class SettingsStore extends StoreBase {
     @observable
     public notifyMastodon: INotifyMastodon;
 
+    @observable
+    public render: IRender;
+
     constructor() {
         super();
 
         this.siteTitle = "";
         this.notifyMastodon = {} as INotifyMastodon;
+        this.render = {} as IRender;
     }
 
     @action
@@ -142,6 +151,68 @@ export class SettingsStore extends StoreBase {
             this.setState(State.DONE);
         } catch (e) {
             this.tryShowToast("Mastodon通知の保存に失敗しました");
+            console.error(e);
+            this.setState(State.ERROR);
+        }
+    }
+
+    @action
+    public async getRender() {
+        this.setMode(Mode.GET);
+        this.setState(State.RUNNING);
+
+        try {
+            const url = `${this.apiBasePath}v1/settings/render/server`;
+            const response = await fetch(url, {
+                method: "GET",
+                headers: this.generateFetchHeader(),
+            });
+
+            if (response.status !== 200) {
+                throw new Error();
+            }
+
+            const result = await response.json();
+            this.render = result.value;
+
+            this.setState(State.DONE);
+        } catch (e) {
+            this.tryShowToast("レンダリング設定の取得に失敗しました");
+            console.error(e);
+            this.setState(State.ERROR);
+        }
+    }
+
+    @action
+    public setRender(render: IRender) {
+        this.render = render;
+    }
+
+    @action
+    public async putRender() {
+        this.setMode(Mode.GET);
+        this.setState(State.RUNNING);
+
+        try {
+            const url = `${this.apiBasePath}v1/settings/render/server`;
+            const response = await fetch(url, {
+                method: "PUT",
+                headers: this.generateFetchHeader(),
+                body: JSON.stringify(this.render),
+            });
+
+            if (response.status !== 200) {
+                throw new Error();
+            }
+
+            const result = await response.json();
+            this.render = result.value;
+
+            this.tryShowToast("レンダリング設定を編集しました");
+            stores.AuthStore.checkAuth();
+            this.setState(State.DONE);
+        } catch (e) {
+            this.tryShowToast("レンダリング設定の保存に失敗しました");
             console.error(e);
             this.setState(State.ERROR);
         }
