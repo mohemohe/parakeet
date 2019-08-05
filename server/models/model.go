@@ -34,6 +34,9 @@ type (
 )
 
 const (
+	KVCacheSize = "cache_size" // TODO:
+	KVEnableMongoDBQueryCache = "mongo_db_query_cache"
+	KVEnableSSRPageCache = "ssr_page_cache"
 	KVSiteTitle = "site_title"
 	KVNotifyMastodon = "notify_mastodon"
 	KVServerSideRendering = "server_side_rendering"
@@ -62,6 +65,8 @@ func InitDB() {
 		Entries: true,
 		Entry: true,
 	})
+	setDefaultConfig(KVEnableMongoDBQueryCache, true)
+	setDefaultConfig(KVEnableSSRPageCache, false)
 
 	user := GetUserByEmail("root")
 	if user == nil {

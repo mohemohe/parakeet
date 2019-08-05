@@ -34,7 +34,7 @@ export class EntryStore extends StoreBase {
         this.setState(State.RUNNING);
 
         try {
-            const url = `${this.apiBasePath}v1/entries?page=${page}`;
+            const url = `${this.apiBasePath}v1/entries?limit=10&page=${page}`;
             const response = await fetch(url, {
                 method: "GET",
                 headers: this.generateFetchHeader(),

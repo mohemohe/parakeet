@@ -14,6 +14,7 @@ import {EntryEdit} from "../containers/page/EntryEdit";
 import {SiteSetting} from "../containers/page/settings/Site";
 import {NotifySetting} from "../containers/page/settings/Notify";
 import {RenderSetting} from "../containers/page/settings/Render";
+import {CacheSetting} from "../containers/page/settings/Cache";
 
 export interface IRouteInfo {
     name: string;
@@ -119,6 +120,13 @@ export const ROUTES: IRouteInfo[] = [
                 name: "SSR",
                 path: "/settings/render",
                 component: RenderSetting,
+                showLeftNav: true,
+                permission: [1],
+            },
+            {
+                name: "キャッシュ",
+                path: "/settings/cache",
+                component: CacheSetting,
                 showLeftNav: true,
                 permission: [1],
             },

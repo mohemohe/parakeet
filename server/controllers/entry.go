@@ -23,7 +23,7 @@ type (
 func GetEntries(c echo.Context) error {
 	limit, err := strconv.Atoi(c.QueryParam("limit"))
 	if err != nil {
-		limit = 10
+		limit = 5
 	}
 	page, err := strconv.Atoi(c.QueryParam("page"))
 	if err != nil {

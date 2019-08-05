@@ -25,10 +25,10 @@ export class EntryStore extends StoreBase {
         this.entry = entry || {} as IEntry;
         this.info = paginate || {
             current: 1,
-            perPage: 10,
-            recordsOnPage: 10,
+            perPage: 5,
+            recordsOnPage: 5,
             totalPages: 1,
-            totalRecords: 10,
+            totalRecords: 5,
         };
     }
 
