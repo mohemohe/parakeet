@@ -85,3 +85,63 @@ func SetServerSideRendering(c echo.Context) error {
 		Value: reqBody,
 	})
 }
+
+func GetMongoDBQueryCache(c echo.Context) error {
+	kv := models.GetKVS(models.KVEnableMongoDBQueryCache)
+	if kv == nil {
+		panic("db error")
+	}
+	return c.JSON(http.StatusOK, kv)
+}
+
+func SetGetMongoDBQueryCache(c echo.Context) error {
+	reqBody := new(models.KV)
+	if err := c.Bind(reqBody); err != nil {
+		panic("bind error")
+	}
+
+	enabled := reqBody.Value.(bool)
+
+	if err := models.SetKVS(models.KVEnableMongoDBQueryCache, enabled); err != nil {
+		panic(err)
+	}
+
+	if !enabled {
+		models.PurgeCache()
+	}
+
+	return c.JSON(http.StatusOK, &models.KV{
+		Key:   models.KVEnableMongoDBQueryCache,
+		Value: reqBody.Value,
+	})
+}
+
+func GetSSRPageCache(c echo.Context) error {
+	kv := models.GetKVS(models.KVEnableSSRPageCache)
+	if kv == nil {
+		panic("db error")
+	}
+	return c.JSON(http.StatusOK, kv)
+}
+
+func SetSSRPageCache(c echo.Context) error {
+	reqBody := new(models.KV)
+	if err := c.Bind(reqBody); err != nil {
+		panic("bind error")
+	}
+
+	enabled := reqBody.Value.(bool)
+
+	if err := models.SetKVS(models.KVEnableSSRPageCache, enabled); err != nil {
+		panic(err)
+	}
+
+	if !enabled {
+		models.PurgeCache()
+	}
+
+	return c.JSON(http.StatusOK, &models.KV{
+		Key:   models.KVEnableSSRPageCache,
+		Value: reqBody.Value,
+	})
+}

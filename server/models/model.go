@@ -34,7 +34,7 @@ type (
 )
 
 const (
-	KVCacheSize = "cache_size"
+	KVCacheSize = "cache_size" // TODO:
 	KVEnableMongoDBQueryCache = "mongo_db_query_cache"
 	KVEnableSSRPageCache = "ssr_page_cache"
 	KVSiteTitle = "site_title"
