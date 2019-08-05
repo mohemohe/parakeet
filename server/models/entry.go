@@ -4,6 +4,7 @@ import (
 	"github.com/globalsign/mgo/bson"
 	"github.com/go-bongo/bongo"
 	"github.com/mohemohe/parakeet/server/models/connection"
+	"strconv"
 )
 
 type (
@@ -22,44 +23,71 @@ type (
 )
 
 func GetEntryById(id string) *Entry {
-	conn := connection.Mongo()
+	cacheKey := "entry:" + id
 
-	entry := &Entry{}
+	entry := new(Entry)
+	if err := GetCache(cacheKey, entry); err == nil {
+		return entry
+	}
+
+	conn := connection.Mongo()
 	err := conn.Collection(collections.Entries).FindById(bson.ObjectIdHex(id), entry)
 	if err != nil {
 		return nil
+	}
+
+	if kv := GetKVS(KVEnableMongoDBQueryCache); kv != nil {
+		if kv.Value.(bool) == true {
+			_ = SetCache(cacheKey, entry)
+		}
 	}
 
 	return entry
 }
 
 func GetEntries(perPage int, page int) *Entries {
-	conn := connection.Mongo()
+	cacheKey := "entries:" + strconv.Itoa(perPage) + ":" + strconv.Itoa(page)
 
-	result := conn.Collection(collections.Entries).Find(bson.M{})
-	if result == nil {
+	entries := new(Entries)
+	if err := GetCache(cacheKey, entries); err == nil {
+		return entries
+	}
+
+	conn := connection.Mongo()
+	find := conn.Collection(collections.Entries).Find(bson.M{})
+	if find == nil {
 		return nil
 	}
-	result.Query.Sort("-_created")
-	info, err := result.Paginate(perPage, page)
+	find.Query.Sort("-_created")
+	info, err := find.Paginate(perPage, page)
 	if err != nil {
 		return nil
 	}
-	entries := make([]Entry, info.RecordsOnPage)
+	entryArray := make([]Entry, info.RecordsOnPage)
 	for i := 0; i < info.RecordsOnPage; i++ {
-		_ = result.Next(&entries[i])
+		_ = find.Next(&entryArray[i])
 	}
 
-	return &Entries{
+	entries = &Entries{
 		Info:    info,
-		Entries: entries,
+		Entries: entryArray,
 	}
+
+	if kv := GetKVS(KVEnableMongoDBQueryCache); kv != nil {
+		if kv.Value.(bool) == true {
+			_ = SetCache(cacheKey, entries)
+		}
+	}
+
+	return entries
 }
 
 func UpsertEntry(entry *Entry) error {
+	PurgeCache()
 	return connection.Mongo().Collection(collections.Entries).Save(entry)
 }
 
 func DeleteEntry(entry *Entry) error {
+	PurgeCache()
 	return connection.Mongo().Collection(collections.Entries).DeleteDocument(entry)
 }

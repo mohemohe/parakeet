@@ -45,7 +45,7 @@ func Handle(c echo.Context, pool *Pool) error {
 	}
 
 	title := "parakeet"
-	titleKV := models.GetKVS("site_title")
+	titleKV := models.GetKVS(models.KVSiteTitle)
 	if titleKV != nil && titleKV.Value != "" {
 		title = titleKV.Value.(string)
 	}
