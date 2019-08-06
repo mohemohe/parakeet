@@ -4,7 +4,12 @@ import (
 	"errors"
 	"github.com/mohemohe/parakeet/server/models/connection"
 	"github.com/mohemohe/parakeet/server/util"
+	"github.com/sirupsen/logrus"
 	"time"
+)
+
+const (
+	purgeCacheEvent = "purge_cache"
 )
 
 func GetCache(key string, ptr interface{}) error {
@@ -23,5 +28,18 @@ func SetCache(key string, value interface{}) error {
 }
 
 func PurgeCache() {
-	connection.PurgeDsCache()
+	go Publish(purgeCacheEvent, "")
+}
+
+func subscribePurgeCacheEvent() {
+	ch := Subscribe(purgeCacheEvent)
+	defer UnSubscribe(purgeCacheEvent, ch)
+
+	for {
+		<- *ch
+		util.Logger().WithFields(logrus.Fields{
+			"event": purgeCacheEvent,
+		}).Info("published")
+		connection.PurgeDsCache()
+	}
 }

@@ -20,7 +20,9 @@ type Message struct {
 
 func InitPubSub() error {
 	defer func() {
-		recover()
+		if err := recover(); err != nil {
+			util.Logger().Warn(err)
+		}
 	}()
 	return connection.Mongo().Session.DB(configs.GetEnv().Mongo.Database).C(collections.PubSub).Create(&mgo.CollectionInfo{
 		Capped:   true,
