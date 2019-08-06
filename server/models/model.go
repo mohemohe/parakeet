@@ -83,6 +83,8 @@ func InitDB() {
 		}
 	}
 
+	go subscribePurgeCacheEvent()
+
 	util.Logger().Info("DB initialized")
 }
 
