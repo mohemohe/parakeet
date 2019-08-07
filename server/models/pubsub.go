@@ -5,7 +5,6 @@ import (
 	"github.com/globalsign/mgo"
 	"github.com/globalsign/mgo/bson"
 	"github.com/mohemohe/parakeet/server/configs"
-	"github.com/mohemohe/parakeet/server/models/connection"
 	"github.com/mohemohe/parakeet/server/util"
 	"github.com/sirupsen/logrus"
 	"net"
@@ -24,7 +23,9 @@ func InitPubSub() error {
 			util.Logger().Warn(err)
 		}
 	}()
-	return connection.Mongo().Session.DB(configs.GetEnv().Mongo.Database).C(collections.PubSub).Create(&mgo.CollectionInfo{
+	session := mustSession()
+	defer session.SetMode(mgo.SecondaryPreferred, true)
+	return session.DB(configs.GetEnv().Mongo.Database).C(collections.PubSub).Create(&mgo.CollectionInfo{
 		Capped:   true,
 		MaxBytes: 1024 * 1024 * 16,
 		MaxDocs:  1024,
@@ -33,9 +34,12 @@ func InitPubSub() error {
 
 var events = map[string][]*chan string{}
 
-func StartPubSub() {
+func session() (*mgo.Session, error) {
 	// bongoのプールを使うとCloneしても何故か2秒くらいかかるからmgoで直接dialする
 	dialInfo, err := mgo.ParseURL(configs.GetEnv().Mongo.Address)
+	if err != nil {
+		return nil, err
+	}
 	if configs.GetEnv().Mongo.SSL {
 		tlsConfig := &tls.Config{}
 		dialInfo.DialServer = func(addr *mgo.ServerAddr) (net.Conn, error) {
@@ -43,12 +47,20 @@ func StartPubSub() {
 			return conn, err
 		}
 	}
-	session, err := mgo.DialWithInfo(dialInfo)
-	if err != nil {
-		util.Logger().Fatal("mgo dial error")
-	}
+	return mgo.DialWithInfo(dialInfo)
+}
 
-	tail := session.DB(configs.GetEnv().Mongo.Database).C(collections.PubSub).Find(bson.M{}).Tail(10 * time.Second)
+func mustSession() *mgo.Session {
+	session, err := session()
+	if err != nil {
+		panic(err)
+	}
+	session.SetMode(mgo.Strong, true)
+	return session
+}
+
+func StartPubSub() {
+	tail := mustSession().DB(configs.GetEnv().Mongo.Database).C(collections.PubSub).Find(bson.M{}).Tail(10 * time.Second)
 	defer func() {
 		tail.Close()
 	}()
@@ -74,6 +86,7 @@ func StartPubSub() {
 		}
 
 		if tail.Err() != nil {
+			util.Logger().WithField("error", tail.Err()).Warn("tail error")
 			tail.Close()
 			break
 		}
@@ -85,7 +98,10 @@ func StartPubSub() {
 }
 
 func Publish(event string, body string) error {
-	return connection.Mongo().Session.DB(configs.GetEnv().Mongo.Database).C(collections.PubSub).Insert(&Message{
+	session := mustSession()
+	session.SetMode(mgo.Strong, true)
+	defer session.SetMode(mgo.SecondaryPreferred, true)
+	return session.DB(configs.GetEnv().Mongo.Database).C(collections.PubSub).Insert(&Message{
 		Event:     event,
 		Body:      body,
 		Timestamp: time.Now(),
