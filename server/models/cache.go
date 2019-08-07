@@ -2,10 +2,11 @@ package models
 
 import (
 	"errors"
+	"time"
+
 	"github.com/mohemohe/parakeet/server/models/connection"
 	"github.com/mohemohe/parakeet/server/util"
 	"github.com/sirupsen/logrus"
-	"time"
 )
 
 const (
@@ -24,10 +25,11 @@ func SetCache(key string, value interface{}) error {
 	if err != nil {
 		return err
 	}
-	return connection.DsCache().Set(key, v, 365 * 24 * time.Hour)
+	return connection.DsCache().Set(key, v, 10*time.Minute)
 }
 
 func PurgeCache() {
+	go connection.PurgeDsCache()
 	go func() {
 		if err := Publish(purgeCacheEvent, ""); err != nil {
 			util.Logger().Warn(err)
@@ -40,7 +42,7 @@ func subscribePurgeCacheEvent() {
 	defer UnSubscribe(purgeCacheEvent, ch)
 
 	for {
-		<- *ch
+		<-*ch
 		util.Logger().WithFields(logrus.Fields{
 			"event": purgeCacheEvent,
 		}).Info("published")
