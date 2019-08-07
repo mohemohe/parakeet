@@ -28,7 +28,11 @@ func SetCache(key string, value interface{}) error {
 }
 
 func PurgeCache() {
-	go Publish(purgeCacheEvent, "")
+	go func() {
+		if err := Publish(purgeCacheEvent, ""); err != nil {
+			util.Logger().Warn(err)
+		}
+	}()
 }
 
 func subscribePurgeCacheEvent() {
