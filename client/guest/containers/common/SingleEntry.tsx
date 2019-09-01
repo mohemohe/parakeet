@@ -39,7 +39,7 @@ export class SingleEntry extends React.Component<IProps, IState> {
     public render() {
         return (
             <div className={styles.root}>
-                <Entry entry={this.props.EntryStore!.entry} stopToReadMore={false}/>
+                <Entry entry={this.props.EntryStore!.entry} stopToReadMore={false} syntaxHighlighting={!this.props.EntryStore!.isSSR}/>
             </div>
         );
     }

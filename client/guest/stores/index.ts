@@ -17,19 +17,11 @@ let cached: {
 };
 
 export default function createStore(isSSR: boolean, ssrState: ISSRState) {
-    if (!isSSR) {
-        cached = {
-            ToastStore: new ToastStore(),
-            RouterStore: new RouterStore(),
-            EntryStore: new EntryStore(JSON.parse(ssrState.entryStore.entries), JSON.parse(ssrState.entryStore.entry), JSON.parse(ssrState.entryStore.paginate)),
-        };
-    } else {
-        cached = {
-            ToastStore: new ToastStore(),
-            RouterStore: new RouterStore(),
-            EntryStore: new EntryStore(JSON.parse(ssrState.entryStore.entries), JSON.parse(ssrState.entryStore.entry), JSON.parse(ssrState.entryStore.paginate)),
-        };
-    }
+    cached = {
+        ToastStore: new ToastStore(),
+        RouterStore: new RouterStore(),
+        EntryStore: new EntryStore(JSON.parse(ssrState.entryStore.entries), JSON.parse(ssrState.entryStore.entry), JSON.parse(ssrState.entryStore.paginate), isSSR),
+    };
     return cached;
 };
 
