@@ -61,23 +61,14 @@ func UpsertEntry(c echo.Context) error {
 	enableNotify := false
 
 	id := c.Param("id")
-	if id != "" && id != "undefined" {
+	if id == "" || id == "undefined" {
+		enableNotify = true
+	} else {
 		current := models.GetEntryById(id)
 		if current != nil {
-			current.Title = entry.Title
-			current.Tag = entry.Tag
-			current.Body = entry.Body
-			current.Author = entry.Author
 			entry = current
+			entry.SetIsNew(false) // HACK: force update
 		}
-	} else {
-		entry = &models.Entry{
-			Title:  entry.Title,
-			Tag:    entry.Tag,
-			Body:   entry.Body,
-			Author: entry.Author,
-		}
-		enableNotify = true
 	}
 
 	if err := models.UpsertEntry(entry); err != nil {
