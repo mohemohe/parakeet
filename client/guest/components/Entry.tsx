@@ -6,12 +6,15 @@ import Card, {CardProps} from "@material-ui/core/Card";
 import ReactMarkdown from "react-markdown";
 import {Link} from "react-router-dom";
 import {LinkButton} from "../../common/components/LinkButton";
+import {Prism} from "./Prism";
+import {Plain} from "./Plain";
 
 const breaks = require("remark-breaks");
 
 interface IProps extends CardProps {
     entry: IEntry
     stopToReadMore: boolean;
+    syntaxHighlighting: boolean;
 }
 
 const styles = {
@@ -74,6 +77,13 @@ export class Entry extends React.Component<IProps, {}> {
             showReadMore = true;
         }
 
+        let renderers;
+        if (this.props.syntaxHighlighting) {
+            renderers = {code: Prism};
+        } else {
+            renderers = {code: Plain};
+        }
+
         return (
             <Card {...this.props} className={styles.root} elevation={6}>
                 <div className={styles.title}>
@@ -88,7 +98,13 @@ export class Entry extends React.Component<IProps, {}> {
                         {modified ? <div>更新: {modified.toLocaleString()}</div> : <></>}
                     </div>
                 </div>
-                <ReactMarkdown source={body} className={`markdown-body ${styles.body}`} plugins={[[breaks]]} escapeHtml={false}/>
+                <ReactMarkdown
+                    source={body}
+                    className={`markdown-body ${styles.body}`}
+                    plugins={[[breaks]]}
+                    escapeHtml={false}
+                    renderers={renderers}
+                />
                 {showReadMore ?
                     <div className={styles.readMore}>
                         <LinkButton to={`/entry/${entry._id}`} buttonProps={{variant: "contained", color: "primary"}}>続きを読む</LinkButton>

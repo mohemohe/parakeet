@@ -18,7 +18,10 @@ export class EntryStore extends StoreBase {
     @observable
     public entry: IEntry;
 
-    constructor(entries?: IEntry[], entry?: IEntry, paginate?: IPagitane) {
+    @observable
+    public isSSR: boolean;
+
+    constructor(entries?: IEntry[], entry?: IEntry, paginate?: IPagitane, isSSR?: boolean) {
         super();
 
         this.entries = entries || [];
@@ -30,6 +33,7 @@ export class EntryStore extends StoreBase {
             totalPages: 1,
             totalRecords: 5,
         };
+        this.isSSR = isSSR || false;
     }
 
     @action
