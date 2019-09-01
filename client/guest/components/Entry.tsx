@@ -62,7 +62,10 @@ export class Entry extends React.Component<IProps, {}> {
     public render() {
         const { entry } = this.props;
         const created = new Date(entry._created);
-        const modified = new Date(entry._modified);
+        let modified: Date | undefined;
+        if (entry._modified !== "") {
+            modified = new Date(entry._modified);
+        }
 
         let body = entry.body;
         let showReadMore = false;
@@ -78,8 +81,11 @@ export class Entry extends React.Component<IProps, {}> {
                         <Link to={`/entry/${entry._id}`}>{entry.title}</Link>
                     </h2>
                     <div className={styles.subheader}>
-                        <div>公開: {created.toLocaleString()},</div>
-                        <div>更新: {modified.toLocaleString()}</div>
+                        <div>
+                            公開: {created.toLocaleString()}
+                            {modified ? "," : ""}
+                        </div>
+                        {modified ? <div>更新: {modified.toLocaleString()}</div> : <></>}
                     </div>
                 </div>
                 <ReactMarkdown source={body} className={`markdown-body ${styles.body}`} plugins={[[breaks]]} escapeHtml={false}/>

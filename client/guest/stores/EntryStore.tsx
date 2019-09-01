@@ -1,4 +1,4 @@
-import {action, observable} from "mobx";
+import {action, computed, observable} from "mobx";
 import StoreBase, {IModel, IPagitane, Mode, State} from "./StoreBase";
 
 export interface IEntry extends IModel {
@@ -60,6 +60,18 @@ export class EntryStore extends StoreBase {
         }
     }
 
+    @computed
+    public get formattedEntries() {
+        return this.entries.map((entry) => {
+            entry._created = new Date(entry._created).toLocaleString();
+            entry._modified = new Date(entry._modified).toLocaleString();
+            if (entry._created === entry._modified) {
+                entry._modified = "";
+            }
+            return entry;
+        });
+    }
+
     @action
     public async getEntry(id: string) {
         this.setMode(Mode.GET);
@@ -86,5 +98,14 @@ export class EntryStore extends StoreBase {
             console.error(e);
             this.setState(State.ERROR);
         }
+    }
+
+    @computed
+    public get formattedEntry() {
+        return {
+            ...this.entry,
+            _created: new Date(this.entry._created).toLocaleString(),
+            _modified: this.entry._created !== this.entry._modified ? new Date(this.entry._modified).toLocaleString() : "",
+        } as IEntry;
     }
 }
