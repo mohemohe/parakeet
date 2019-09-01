@@ -2,11 +2,11 @@ package models
 
 import (
 	"github.com/globalsign/mgo"
+	"github.com/mobilusoss/mgo-pubsub"
 	"github.com/mohemohe/parakeet/server/configs"
 	"github.com/mohemohe/parakeet/server/models/connection"
 	"github.com/mohemohe/parakeet/server/util"
 	"github.com/sirupsen/logrus"
-	"strings"
 )
 
 var collections = struct {
@@ -42,18 +42,21 @@ const (
 	KVServerSideRendering = "server_side_rendering"
 )
 
+var pubsub *mgo_pubsub.PubSub
+
 func InitDB() {
 	ensureIndex(collections.KVS, getIndex([]string{"key"}, true, false))
 
-	if err := InitPubSub(); err == nil {
-		go StartPubSub()
+	if p, err := mgo_pubsub.NewPubSub(configs.GetEnv().Mongo.Address, configs.GetEnv().Mongo.Database, "pubsub"); err != nil {
+		util.Logger().WithField("error", err).Fatalln("pubsub connection error")
 	} else {
-		if strings.HasSuffix(err.Error(), "already exists") {
-			go StartPubSub()
-		} else {
-			util.Logger().Error(err)
-		}
+		pubsub = p
 	}
+
+	if err := pubsub.Initialize(); err != nil {
+		util.Logger().WithField("error", err).Fatalln("pubsub initialize error")
+	}
+	go pubsub.StartPubSub()
 
 	setDefaultConfig(KVSiteTitle, "parakeet")
 	setDefaultConfig(KVNotifyMastodon, NotifyMastodon{
