@@ -47,6 +47,8 @@ github.com/mattn/go-isatty v0.0.4 h1:bnP0vzxcAdeI1zdubAl5PjU6zsERjGZb7raWodagDYs
 github.com/mattn/go-isatty v0.0.4/go.mod h1:M+lRXTBqGeGNdLjl/ufCoiOlB5xdOkqRJdNxMWT7Zi4=
 github.com/mitchellh/mapstructure v1.1.2 h1:fmNYVwqnSfB9mZU6OS2O6GsXM+wcskZDuKQzvN1EDeE=
 github.com/mitchellh/mapstructure v1.1.2/go.mod h1:FVVH3fgwuzCH5S8UJGiWEs2h04kUh9fWfEaFds41c1Y=
+github.com/mobilusoss/mgo-pubsub v0.0.0-20190823080606-0dd0f1cb10a2 h1:MFlFbOA0/7dPcKkpDoknqLNn5pVJjczE9W60YcKLxUc=
+github.com/mobilusoss/mgo-pubsub v0.0.0-20190823080606-0dd0f1cb10a2/go.mod h1:6aD7D74HEQT6gf7Vbj4na+ebX+yJDAitOBfBivrmB0Q=
 github.com/neko-neko/echo-logrus v1.1.0 h1:WHSHKtxdzlP7+xBC8DNoz9ER1oJBSp17C3/BAWmdanI=
 github.com/neko-neko/echo-logrus v1.1.0/go.mod h1:9YOl65UM0Kri6tLtLNRa7eZw9FrQgMPxyVZbPW93ruU=
 github.com/neko-neko/echo-logrus/v2 v2.0.0 h1:wbXbcBQF9As4ED5TZdnWGXDAJAMZadEHk95bClTIXFc=
