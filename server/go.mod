@@ -18,6 +18,7 @@ require (
 	github.com/kr/pretty v0.1.0 // indirect
 	github.com/labstack/echo/v4 v4.0.0
 	github.com/mitchellh/mapstructure v1.1.2
+	github.com/mobilusoss/mgo-pubsub v0.0.0-20190823080606-0dd0f1cb10a2
 	github.com/neko-neko/echo-logrus/v2 v2.0.0
 	github.com/olebedev/gojax v0.0.0-20170318114811-bb153be84336
 	github.com/oleiade/reflections v1.0.0 // indirect

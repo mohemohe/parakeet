@@ -31,18 +31,21 @@ func SetCache(key string, value interface{}) error {
 func PurgeCache() {
 	go connection.PurgeDsCache()
 	go func() {
-		if err := Publish(purgeCacheEvent, ""); err != nil {
+		if err := pubsub.Publish(purgeCacheEvent, ""); err != nil {
 			util.Logger().Warn(err)
 		}
 	}()
 }
 
 func subscribePurgeCacheEvent() {
-	ch := Subscribe(purgeCacheEvent)
-	defer UnSubscribe(purgeCacheEvent, ch)
+	ch := pubsub.Subscribe(purgeCacheEvent)
+	defer pubsub.UnSubscribe(purgeCacheEvent, ch)
 
 	for {
-		<-*ch
+		_, ok := <-*ch
+		if !ok {
+			break
+		}
 		util.Logger().WithFields(logrus.Fields{
 			"event": purgeCacheEvent,
 		}).Info("published")
