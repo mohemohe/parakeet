@@ -20,7 +20,7 @@ export class SettingsStore extends StoreBase {
     @observable
     public notifyMastodon: INotifyMastodon;
 
-    @observable
+    @observable.shallow
     public render: IRender;
 
     @observable
