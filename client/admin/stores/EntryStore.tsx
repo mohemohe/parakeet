@@ -58,10 +58,15 @@ export class EntryStore extends StoreBase {
     @computed
     public get editableEntries() {
         return this.entries.map((entry) => {
-            entry._created = new Date(entry._created).toLocaleString();
-            entry._modified = new Date(entry._modified).toLocaleString();
             if (entry._created === entry._modified) {
                 entry._modified = "";
+            } else {
+                if (entry._modified) {
+                    entry._modified = new Date(entry._modified).toLocaleString();
+                }
+            }
+            if (entry._created) {
+                entry._created = new Date(entry._created).toLocaleString();
             }
             return {
                 ...entry,
@@ -129,5 +134,10 @@ export class EntryStore extends StoreBase {
     @action
     public async setEntry(entry: IEntry) {
         this.entry = entry;
+    }
+
+    @action
+    public async resetEntry() {
+        this.entry = {} as IEntry;
     }
 }
