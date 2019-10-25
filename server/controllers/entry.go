@@ -66,7 +66,8 @@ func UpsertEntry(c echo.Context) error {
 	} else {
 		current := models.GetEntryById(id)
 		if current != nil {
-			entry = current
+			entry.Id = current.Id
+			entry.Created = current.Created
 			entry.SetIsNew(false) // HACK: force update
 		}
 	}
