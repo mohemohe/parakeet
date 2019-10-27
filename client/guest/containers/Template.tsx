@@ -20,12 +20,19 @@ const styles = {
     columns: style({
         display: "flex",
         flexDirection: "row",
+        flexWrap: "wrap",
+        justifyContent: "space-around",
     }),
     main: style({
+        width: "100%",
         maxWidth: 920,
+        margin: "0 0.5rem 1rem 0.5rem",
     }),
     side: style({
-        flex: 1,
+        flexGrow: 9999,
+        margin: "0 0.5rem",
+        maxWidth: 920,
+        minWidth: 260,
     }),
 };
 
