@@ -1,12 +1,14 @@
 import * as React from "react";
 import {inject, observer} from "mobx-react";
-import {EntryStore} from "../../stores/EntryStore";
+import {SettingsStore} from "../../stores/SettingsStore";
 import {style} from "typestyle";
 import {EmotionalCard} from "../../components/EmotionalCard";
 import ReactMarkdown from "react-markdown";
 
+const breaks = require("remark-breaks");
+
 interface IProps extends React.ComponentClass<HTMLDivElement> {
-    EntryStore?: EntryStore;
+    SettingsStore?: SettingsStore;
 }
 
 interface IState extends React.ComponentState {
@@ -28,7 +30,7 @@ const styles = {
     }),
 };
 
-@inject("EntryStore")
+@inject("SettingsStore")
 @observer
 export class SideColumn extends React.Component<IProps, IState> {
     constructor(props: IProps, state: IState) {
@@ -36,14 +38,11 @@ export class SideColumn extends React.Component<IProps, IState> {
     }
 
     public componentDidMount() {
+        this.props.SettingsStore!.getSideNavContents();
     }
 
     public render() {
-        const contents = [
-            "<h1>うんこ</h1>",
-            "<marquee>うんこ</marquee>",
-            "<s>うんこ</s>"
-        ];
+        const contents = this.props.SettingsStore!.sideNavContents;
         return (
             <div className={styles.root}>
                 {contents.map((content, index) => {
@@ -53,6 +52,7 @@ export class SideColumn extends React.Component<IProps, IState> {
                                 key={index}
                                 source={content}
                                 className={`markdown-body`}
+                                plugins={[[breaks]]}
                                 escapeHtml={false}
                             />
                         </EmotionalCard>

@@ -55,6 +55,8 @@ func initEcho(e *echo.Echo) {
 	e.DELETE("/api/v1/entries/:id", controllers.DeleteEntry, middlewares.Authorized)
 	e.GET("/api/v1/settings/site/title", controllers.GetSiteTitle)
 	e.PUT("/api/v1/settings/site/title", controllers.SetSiteTitle, middlewares.Authorized)
+	e.GET("/api/v1/settings/site/sidenav", controllers.GetSideNavContents)
+	e.PUT("/api/v1/settings/site/sidenav", controllers.SetSideNavContents, middlewares.Authorized)
 	e.GET("/api/v1/settings/notify/mastodon", controllers.GetNotifyMastodon, middlewares.Authorized)
 	e.PUT("/api/v1/settings/notify/mastodon", controllers.SetNotifyMastodon, middlewares.Authorized)
 	e.GET("/api/v1/settings/render/server", controllers.GetServerSideRendering, middlewares.Authorized)

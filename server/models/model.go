@@ -37,6 +37,7 @@ const (
 	KVCacheSize = "cache_size" // TODO:
 	KVEnableMongoDBQueryCache = "mongo_db_query_cache"
 	KVEnableSSRPageCache = "ssr_page_cache"
+	KVSideNavContents = "side_nav_contents"
 	KVSiteTitle = "site_title"
 	KVNotifyMastodon = "notify_mastodon"
 	KVServerSideRendering = "server_side_rendering"
@@ -59,6 +60,7 @@ func InitDB() {
 	go pubsub.StartPubSub()
 
 	setDefaultConfig(KVSiteTitle, "parakeet")
+	setDefaultConfig(KVSideNavContents, []string{})
 	setDefaultConfig(KVNotifyMastodon, NotifyMastodon{
 		BaseURL:  "",
 		Token:    "",

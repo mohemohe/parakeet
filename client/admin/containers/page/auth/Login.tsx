@@ -3,7 +3,7 @@ import { style } from "typestyle";
 import { Redirect } from "react-router-dom";
 import { inject, observer } from "mobx-react";
 import { Card, CardActions, CardContent, Button, Typography, TextField } from "@material-ui/core";
-import { Send } from "@material-ui/icons";
+import SendIcon from "@material-ui/icons/Send";
 import { COLORS } from "../../../constants/Style";
 import {AuthStore, AuthStatus} from "../../../stores/AuthStore";
 
@@ -108,7 +108,7 @@ export class LoginPage extends React.Component<IProps, IState> {
             <div className={styles.root}>
                 <form className={styles.loginCardWrapper} onSubmit={(e) => this.onSubmit(e)}>
                     <Card className={styles.loginCard}>
-                        <Typography variant="headline">
+                        <Typography variant={"subtitle1"}>
                             parakeet ログイン
                         </Typography>
                         <CardContent className={styles.loginInputs}>
@@ -135,7 +135,7 @@ export class LoginPage extends React.Component<IProps, IState> {
                         <CardActions className={styles.loginActions}>
                             <div className={styles.loginButtons}>
                                 <Button fullWidth variant="contained" classes={{root: styles.loginButton}} onClick={() => this.props.AuthStore!.login(this.state.email, this.state.password)} type={"submit"}>
-                                    <Send/>
+                                    <SendIcon/>
                                     <span style={{marginLeft: ".5rem"}}>ログイン</span>
                                 </Button>
                             </div>
