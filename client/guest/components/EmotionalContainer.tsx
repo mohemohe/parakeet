@@ -13,6 +13,7 @@ const styles = {
         zIndex: 1,
         flex: 1,
     }),
+
 };
 
 export class EmotionalContainer extends React.Component<IProps, {}> {

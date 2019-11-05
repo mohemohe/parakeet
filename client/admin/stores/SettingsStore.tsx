@@ -18,9 +18,12 @@ export class SettingsStore extends StoreBase {
     public siteTitle: string;
 
     @observable
-    public notifyMastodon: INotifyMastodon;
+    public sideNavContents: string[];
 
     @observable
+    public notifyMastodon: INotifyMastodon;
+
+    @observable.shallow
     public render: IRender;
 
     @observable
@@ -33,6 +36,7 @@ export class SettingsStore extends StoreBase {
         super();
 
         this.siteTitle = "";
+        this.sideNavContents = [];
         this.notifyMastodon = {} as INotifyMastodon;
         this.render = {} as IRender;
         this.mongoDbQueryCache = false;
@@ -97,6 +101,73 @@ export class SettingsStore extends StoreBase {
             this.setState(State.DONE);
         } catch (e) {
             this.tryShowToast("サイト情報の保存に失敗しました");
+            console.error(e);
+            this.setState(State.ERROR);
+        }
+    }
+
+    @action
+    public async getSideNavContents() {
+        this.setMode(Mode.GET);
+        this.setState(State.RUNNING);
+
+        try {
+            const url = `${this.apiBasePath}v1/settings/site/sidenav`;
+            const response = await fetch(url, {
+                method: "GET",
+                headers: this.generateFetchHeader(false),
+            });
+
+            if (response.status !== 200) {
+                throw new Error();
+            }
+            const result = await response.json();
+            if (result.value.length == 0) {
+                this.sideNavContents = [""];
+            } else {
+                this.sideNavContents = result.value;
+            }
+
+            this.setState(State.DONE);
+        } catch (e) {
+            this.tryShowToast("サイドバーコンテンツの取得に失敗しました");
+            console.error(e);
+            this.setState(State.ERROR);
+        }
+    }
+
+    @action
+    public setSideNavContents(sideNavContents: string[]) {
+        this.sideNavContents = sideNavContents
+    }
+
+    @action
+    public async putSideNavContents() {
+        this.setMode(Mode.GET);
+        this.setState(State.RUNNING);
+
+        try {
+            const url = `${this.apiBasePath}v1/settings/site/sidenav`;
+            const response = await fetch(url, {
+                method: "PUT",
+                headers: this.generateFetchHeader(),
+                body: JSON.stringify({
+                    key: "",
+                    value: this.sideNavContents,
+                }),
+            });
+
+            if (response.status !== 200) {
+                throw new Error();
+            }
+            const result = await response.json();
+            this.sideNavContents = result.value;
+
+            this.tryShowToast("サイドバーコンテンツを編集しました");
+            stores.AuthStore.checkAuth();
+            this.setState(State.DONE);
+        } catch (e) {
+            this.tryShowToast("サイドバーコンテンツの保存に失敗しました");
             console.error(e);
             this.setState(State.ERROR);
         }
