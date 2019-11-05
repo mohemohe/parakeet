@@ -28,6 +28,14 @@ const styles = {
             },
         }
     }),
+    markdown: style({
+        $nest: {
+            "& *": {
+                maxWidth: "fit-content",
+                minHeight: "fit-content",
+            },
+        },
+    }),
 };
 
 @inject("SettingsStore")
@@ -43,15 +51,24 @@ export class SideColumn extends React.Component<IProps, IState> {
 
     public render() {
         const contents = this.props.SettingsStore!.sideNavContents;
+        const scriptRegex = /<script>(.*?)<\/script>/gsi;
         return (
             <div className={styles.root}>
                 {contents.map((content, index) => {
+                    const script = scriptRegex.exec(content);
+                    if (script) {
+                        try {
+                            (window as any).eval(script[1] || "");
+                        } catch (e) {
+                            console.error("script evaluate error:", e);
+                        }
+                    }
                     return (
                         <EmotionalCard>
                             <ReactMarkdown
                                 key={index}
                                 source={content}
-                                className={`markdown-body`}
+                                className={`markdown-body ${styles.markdown}`}
                                 plugins={[[breaks]]}
                                 escapeHtml={false}
                             />
