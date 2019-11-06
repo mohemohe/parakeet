@@ -34,6 +34,11 @@ const styles = {
                 maxWidth: "fit-content",
                 minHeight: "fit-content",
             },
+            "& img": {
+                maxWidth: "100%",
+                minHeight: "unset",
+                height: "auto",
+            }
         },
     }),
 };
