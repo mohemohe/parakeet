@@ -47,6 +47,7 @@ var pubsub *mgo_pubsub.PubSub
 
 func InitDB() {
 	ensureIndex(collections.KVS, getIndex([]string{"key"}, true, false))
+	ensureIndex(collections.Entries, getIndex([]string{"draft"}, false, true))
 
 	if p, err := mgo_pubsub.NewPubSub(configs.GetEnv().Mongo.Address, configs.GetEnv().Mongo.Database, "pubsub"); err != nil {
 		util.Logger().WithField("error", err).Fatalln("pubsub connection error")

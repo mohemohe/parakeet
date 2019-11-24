@@ -1,6 +1,7 @@
 import {action, computed, observable} from "mobx";
 import StoreBase, {IModel, IPagitane, Mode, State} from "./StoreBase";
 import React from "react";
+import Edit from "@material-ui/icons/Edit";
 import stores from "../../admin/stores";
 import {LinkButton} from "../../common/components/LinkButton";
 
@@ -8,6 +9,7 @@ export interface IEntry extends IModel {
     title: string;
     tags: string[];
     body: string;
+    draft: boolean;
 }
 
 export class EntryStore extends StoreBase {
@@ -24,7 +26,9 @@ export class EntryStore extends StoreBase {
         super();
 
         this.entries = [];
-        this.entry = {} as IEntry;
+        this.entry = {
+            draft: false,
+        } as IEntry;
         this.info = {} as IPagitane;
     }
 
@@ -34,7 +38,7 @@ export class EntryStore extends StoreBase {
         this.setState(State.RUNNING);
 
         try {
-            const url = `${this.apiBasePath}v1/entries?limit=10&page=${page}`;
+            const url = `${this.apiBasePath}v1/entries?draft=1&limit=10&page=${page}`;
             const response = await fetch(url, {
                 method: "GET",
                 headers: this.generateFetchHeader(),
@@ -68,6 +72,7 @@ export class EntryStore extends StoreBase {
             if (entry._created) {
                 entry._created = new Date(entry._created).toLocaleString();
             }
+            (entry as any)._draft = entry.draft ? <Edit/> : undefined;
             return {
                 ...entry,
                 path: <LinkButton to={`/entries/${entry._id}`} buttonProps={{variant: "contained", color: "primary"}}>編集</LinkButton>,
@@ -138,6 +143,8 @@ export class EntryStore extends StoreBase {
 
     @action
     public async resetEntry() {
-        this.entry = {} as IEntry;
+        this.entry = {
+            draft: false,
+        } as IEntry;
     }
 }

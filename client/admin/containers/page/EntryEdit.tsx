@@ -5,7 +5,7 @@ import {inject, observer} from "mobx-react";
 import {EntryStore, IEntry} from "../../stores/EntryStore";
 import {RouteComponentProps} from "react-router";
 import {style} from "typestyle";
-import {Button, FormControl} from "@material-ui/core";
+import {Button, FormControl, FormControlLabel, Switch} from "@material-ui/core";
 import {ValidatableTextField} from "../../components/ValidatableTextField";
 import {TitleBar} from "../../../common/components/TitleBar";
 
@@ -61,9 +61,10 @@ export class EntryEdit extends React.Component<IProps, IState> {
     }
 
     public render() {
-        const entry = this.props.EntryStore!.entry;
+        const {entry} = this.props.EntryStore!;
+        const {_id, body, title, draft} = entry;
         let pageTitle = "エントリー";
-        if (entry._id) {
+        if (_id) {
             pageTitle += "編集";
         } else {
             pageTitle += "作成";
@@ -88,14 +89,25 @@ export class EntryEdit extends React.Component<IProps, IState> {
                         fullWidth={true}
                         validators={[]}
                         onChangeValue={(event) => this.props.EntryStore!.setEntry({...entry, title: event.target.value})}
-                        value={entry.title}
+                        value={title}
                         InputLabelProps={{shrink: true}}
                     />
                 </FormControl>
+                <FormControlLabel
+                    className={styles.control}
+                    control={
+                        <Switch
+                            checked={draft}
+                            onChange={(event) => this.props.EntryStore!.setEntry({...entry, draft: event.target.checked})}
+                            color="primary"
+                        />
+                    }
+                    label="下書き"
+                />
                 <SimpleMDE
                     className={styles.simpleMDE}
                     onChange={(body) => this.props.EntryStore!.setEntry({...entry, body})}
-                    value={entry.body}
+                    value={body}
                     options={{
                         spellChecker: false,
                         previewClass: ["editor-preview", "markdown-body"],
