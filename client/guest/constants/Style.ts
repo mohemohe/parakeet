@@ -16,6 +16,11 @@ export const COLORS = {
     ClarityBlack: "rgba(0, 0, 0, .40)",
 };
 
+export const DARK_COLORS = {
+    BackGround: "#37373e",
+    PaperBackGround: "#2b2c2d",
+};
+
 export const SIZES = {
     Emotional: {
         wrapHeight: 128,
