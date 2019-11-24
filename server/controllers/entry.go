@@ -29,13 +29,17 @@ func GetEntries(c echo.Context) error {
 	if err != nil {
 		page = 1
 	}
+	draft, err := strconv.Atoi(c.QueryParam("draft"))
+	if err != nil {
+		draft = 0
+	}
 
-	users := models.GetEntries(limit, page)
-	if users == nil {
+	entry := models.GetEntries(limit, page, draft != 0)
+	if entry == nil {
 		panic("db error")
 	}
 
-	return c.JSON(http.StatusOK, users)
+	return c.JSON(http.StatusOK, entry)
 }
 
 func GetEntry(c echo.Context) error {
@@ -69,12 +73,19 @@ func UpsertEntry(c echo.Context) error {
 			entry.Id = current.Id
 			entry.Created = current.Created
 			entry.SetIsNew(false) // HACK: force update
+			if current.Draft && !entry.Draft {
+				enableNotify = true
+			}
 		}
 	}
 
 	if err := models.UpsertEntry(entry); err != nil {
 		enableNotify = false
 		panic(err)
+	}
+
+	if entry.Draft {
+		enableNotify = false
 	}
 
 	if enableNotify {

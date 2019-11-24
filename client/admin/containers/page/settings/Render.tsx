@@ -37,7 +37,7 @@ export class RenderSetting extends React.Component<IProps, IState> {
     }
 
     public render() {
-        const r = this.props.SettingsStore!.render;
+        const {entries, entry} = this.props.SettingsStore!.render;
         const loading = this.props.SettingsStore!.state === State.RUNNING;
 
         return (
@@ -48,8 +48,8 @@ export class RenderSetting extends React.Component<IProps, IState> {
                     disabled={loading}
                     control={
                         <Switch
-                            checked={r.entries}
-                            onChange={(event) => this.props.SettingsStore!.setRender({...r, entries: event.target.checked})}
+                            checked={entries}
+                            onChange={(event) => this.props.SettingsStore!.setRender({...this.props.SettingsStore!.render, entries: event.target.checked})}
                             color="primary"
                         />
                     }
@@ -60,8 +60,8 @@ export class RenderSetting extends React.Component<IProps, IState> {
                     disabled={loading}
                     control={
                         <Switch
-                            checked={r.entry}
-                            onChange={(event) => this.props.SettingsStore!.setRender({...r, entry: event.target.checked})}
+                            checked={entry}
+                            onChange={(event) => this.props.SettingsStore!.setRender({...this.props.SettingsStore!.render, entry: event.target.checked})}
                             color="primary"
                         />
                     }

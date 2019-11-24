@@ -14,6 +14,7 @@ type (
 		Tag                []string      `bson:"tag" json:"tag"`
 		Body               string        `bson:"body" json:"body"`
 		Author             bson.ObjectId `bson:"author" json:"author"`
+		Draft              bool          `bson:"draft" json:"draft"`
 	}
 
 	Entries struct {
@@ -45,7 +46,7 @@ func GetEntryById(id string) *Entry {
 	return entry
 }
 
-func GetEntries(perPage int, page int) *Entries {
+func GetEntries(perPage int, page int, includeDraft bool) *Entries {
 	cacheKey := "entries:" + strconv.Itoa(perPage) + ":" + strconv.Itoa(page)
 
 	entries := new(Entries)
@@ -53,8 +54,15 @@ func GetEntries(perPage int, page int) *Entries {
 		return entries
 	}
 
+	query := bson.M{}
+	if !includeDraft {
+		query["draft"] = bson.M{
+			"$ne": true,
+		}
+	}
+
 	conn := connection.Mongo()
-	find := conn.Collection(collections.Entries).Find(bson.M{})
+	find := conn.Collection(collections.Entries).Find(query)
 	if find == nil {
 		return nil
 	}

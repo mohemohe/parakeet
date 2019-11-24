@@ -38,7 +38,10 @@ export class SettingsStore extends StoreBase {
         this.siteTitle = "";
         this.sideNavContents = [];
         this.notifyMastodon = {} as INotifyMastodon;
-        this.render = {} as IRender;
+        this.render = {
+            entries: false,
+            entry: false,
+        } as IRender;
         this.mongoDbQueryCache = false;
         this.ssrPageCache = false;
     }
