@@ -7,7 +7,7 @@ import MobxReactRouter, {syncHistoryWithStore, RouterStore} from "mobx-react-rou
 import Toast from "./common/Toast";
 import Notfound from "./page/NotFound";
 import Index from "./page/Index";
-import {COLORS} from "../constants/Style";
+import {COLORS, DARK_COLORS} from "../constants/Style";
 import {SingleEntry} from "./common/SingleEntry";
 import {Template} from "./Template";
 import EntriesList from "./page/EntriesList";
@@ -30,6 +30,11 @@ const styles = {
         minHeight: "100vh",
         width: "100%",
         maxWidth: "100%",
+        $nest: {
+            ["@media (prefers-color-scheme: dark)"]: {
+                background: DARK_COLORS.BackGround,
+            },
+        },
     }),
 };
 

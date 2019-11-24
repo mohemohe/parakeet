@@ -4,6 +4,7 @@ import {SettingsStore} from "../../stores/SettingsStore";
 import {style} from "typestyle";
 import {EmotionalCard} from "../../components/EmotionalCard";
 import ReactMarkdown from "react-markdown";
+import {COLORS, DARK_COLORS} from "../../constants/Style";
 
 const breaks = require("remark-breaks");
 
@@ -30,6 +31,10 @@ const styles = {
     }),
     markdown: style({
         $nest: {
+            ["@media (prefers-color-scheme: dark)"]: {
+                background: `${DARK_COLORS.PaperBackGround} !important`,
+                color: `${COLORS.EmotionalWhite} !important`,
+            },
             "& *": {
                 maxWidth: "fit-content",
                 minHeight: "fit-content",

@@ -1,7 +1,7 @@
 import * as React from "react";
 import {style} from "typestyle";
 import {IEntry} from "../stores/EntryStore";
-import {COLORS} from "../constants/Style";
+import {COLORS, DARK_COLORS} from "../constants/Style";
 import Card, {CardProps} from "@material-ui/core/Card";
 import ReactMarkdown from "react-markdown";
 import {Link} from "react-router-dom";
@@ -22,6 +22,12 @@ const styles = {
         margin: "3rem 0",
         borderRadius: "8px 8px 4px 4px !important",
         overflow: "visible !important",
+        $nest: {
+            ["@media (prefers-color-scheme: dark)"]: {
+                background: `${DARK_COLORS.PaperBackGround} !important`,
+                color: `${COLORS.EmotionalWhite} !important`,
+            },
+        },
     }),
     title: style({
         background: COLORS.BaseColor,
@@ -53,6 +59,12 @@ const styles = {
     }),
     body: style({
         padding: "1rem",
+        $nest: {
+            ["@media (prefers-color-scheme: dark)"]: {
+                background: `${DARK_COLORS.PaperBackGround} !important`,
+                color: `${COLORS.EmotionalWhite} !important`,
+            },
+        },
     }),
     readMore: style({
         display: "flex",
