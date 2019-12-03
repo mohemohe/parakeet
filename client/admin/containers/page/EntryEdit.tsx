@@ -5,7 +5,8 @@ import {inject, observer} from "mobx-react";
 import {EntryStore, IEntry} from "../../stores/EntryStore";
 import {RouteComponentProps} from "react-router";
 import {style} from "typestyle";
-import {Button, FormControl, FormControlLabel, Switch} from "@material-ui/core";
+import {Fab, FormControl, FormControlLabel, Switch} from "@material-ui/core";
+import Save from "@material-ui/icons/Save";
 import {ValidatableTextField} from "../../components/ValidatableTextField";
 import {TitleBar} from "../../../common/components/TitleBar";
 
@@ -32,6 +33,12 @@ const styles = {
                 zIndex: 1000,
             },
         },
+    }),
+    saveButton: style({
+        position: "fixed",
+        zIndex: 9999,
+        bottom: "1rem",
+        right: "1rem",
     }),
 };
 
@@ -120,7 +127,9 @@ export class EntryEdit extends React.Component<IProps, IState> {
                             "guide",
                         ],
                     }}/>
-                <Button onClick={() => this.props.EntryStore!.putEntry()} variant={"contained"} color={"primary"}>保存</Button>
+                <Fab className={styles.saveButton} color={"primary"} onClick={() => this.props.EntryStore!.putEntry()}>
+                    <Save/>
+                </Fab>
             </div>
         );
     }
