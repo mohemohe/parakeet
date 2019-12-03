@@ -16,8 +16,12 @@ export class SettingsStore extends StoreBase {
     }
 
     @action
-    public async getSideNavContents() {
+    public async getSideNavContents(force: boolean = false) {
         if (this.isSSR) {
+            return;
+        }
+
+        if (this.sideNavContents.length !== 0 && !force) {
             return;
         }
 
@@ -35,7 +39,7 @@ export class SettingsStore extends StoreBase {
             }
             const result = await response.json();
             if (result.value.length == 0) {
-                this.sideNavContents = [""];
+                this.sideNavContents = [];
             } else {
                 this.sideNavContents = result.value;
             }
