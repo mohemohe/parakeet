@@ -2,11 +2,10 @@ package models
 
 import (
 	"errors"
-	"time"
-
 	"github.com/mohemohe/parakeet/server/models/connection"
 	"github.com/mohemohe/parakeet/server/util"
 	"github.com/sirupsen/logrus"
+	"time"
 )
 
 const (
@@ -25,7 +24,7 @@ func SetCache(key string, value interface{}) error {
 	if err != nil {
 		return err
 	}
-	return connection.DsCache().Set(key, v, 10*time.Minute)
+	return connection.DsCache().Set(key, v, 365 * 24 * time.Hour)
 }
 
 func PurgeCache() {
