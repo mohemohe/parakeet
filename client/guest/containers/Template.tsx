@@ -1,13 +1,16 @@
 import * as React from "react";
+import {inject, observer} from "mobx-react";
 import {Header} from "../components/Header";
 import {EmotionalContainer} from "../components/EmotionalContainer";
 import {Footer} from "../components/Footer";
 import {style} from "typestyle";
 import {SIZES} from "../constants/Style";
 import {SideColumn} from "./common/SideColumn";
+import {SettingsStore} from '../stores/SettingsStore';
 
 export interface IProps {
     title: string;
+    SettingsStore?: SettingsStore;
 }
 
 const styles = {
@@ -36,20 +39,29 @@ const styles = {
     }),
 };
 
-
+@inject("SettingsStore")
+@observer
 export class Template extends React.Component<IProps, {}> {
+    public componentDidMount() {
+        this.props.SettingsStore!.getSideNavContents();
+    }
+
     public render() {
         return (
             <>
-                <Header {...this.props}/>
+                <Header title={this.props.title}/>
                 <EmotionalContainer maxWidth={"lg"}>
                     <div className={styles.columns}>
                         <div className={styles.main}>
                             {this.props.children}
                         </div>
-                        <div className={styles.side}>
-                            <SideColumn/>
-                        </div>
+                        {
+                            this.props.SettingsStore!.sideNavContents.filter((content) => content.length !== 0).length !== 0 ?
+                                <div className={styles.side}>
+                                    <SideColumn/>
+                                </div> :
+                                undefined
+                        }
                     </div>
                 </EmotionalContainer>
                 <Footer/>

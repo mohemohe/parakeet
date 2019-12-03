@@ -66,6 +66,9 @@ export class EntryStore extends StoreBase {
 
     @computed
     public get formattedEntries() {
+        if (this.entries.length === 0) {
+            return [];
+        }
         return this.entries.map((entry) => {
             entry._created = new Date(entry._created).toLocaleString();
             entry._modified = new Date(entry._modified).toLocaleString();
