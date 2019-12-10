@@ -1,4 +1,4 @@
-# parakeet
+![](https://i.imgur.com/wDFyOTX.png)
 
 [![Build Status](https://cloud.drone.io/api/badges/mohemohe/parakeet/status.svg)](https://cloud.drone.io/mohemohe/parakeet)
 [![Go Report Card](https://goreportcard.com/badge/github.com/mohemohe/parakeet)](https://goreportcard.com/report/github.com/mohemohe/parakeet)
@@ -39,5 +39,7 @@ Admin page is [/admin](http://127.0.0.1:1323/admin) and default root password is
 | SIGN_SECRET   | {jwt secret}                                                                                                              |
 
 ## License
+
+Icons made by [Zlatko Najdenovski](https://www.flaticon.com/authors/zlatko-najdenovski) from [www.flaticon.com](https://www.flaticon.com/)
 
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fmohemohe%2Fparakeet.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fmohemohe%2Fparakeet?ref=badge_large)
