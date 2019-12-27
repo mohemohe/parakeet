@@ -29,12 +29,9 @@ func GetEntries(c echo.Context) error {
 	if err != nil {
 		page = 1
 	}
-	draft, err := strconv.Atoi(c.QueryParam("draft"))
-	if err != nil {
-		draft = 0
-	}
+	includeDraft := c.Get("User") != nil
 
-	entry := models.GetEntries(limit, page, draft != 0)
+	entry := models.GetEntries(limit, page, includeDraft)
 	if entry == nil {
 		panic("db error")
 	}
@@ -44,11 +41,12 @@ func GetEntries(c echo.Context) error {
 
 func GetEntry(c echo.Context) error {
 	id := c.Param("id")
-	entry := models.GetEntryById(id)
-	if entry == nil {
-		panic("the user not found")
-	}
+	includeDraft := c.Get("User") != nil
 
+	entry := models.GetEntryById(id, includeDraft)
+	if entry == nil {
+		return c.NoContent(http.StatusNotFound)
+	}
 	return c.JSON(http.StatusOK, EntryResponse{
 		Entry: entry,
 	})
@@ -68,7 +66,7 @@ func UpsertEntry(c echo.Context) error {
 	if id == "" || id == "undefined" {
 		enableNotify = true
 	} else {
-		current := models.GetEntryById(id)
+		current := models.GetEntryById(id, true)
 		if current != nil {
 			entry.Id = current.Id
 			entry.Created = current.Created
@@ -108,7 +106,7 @@ func UpsertEntry(c echo.Context) error {
 
 func DeleteEntry(c echo.Context) error {
 	id := c.Param("id")
-	entry := models.GetEntryById(id)
+	entry := models.GetEntryById(id, true)
 	if entry == nil {
 		panic("the user not found")
 	}
