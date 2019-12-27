@@ -63,10 +63,6 @@ export class EntryEdit extends React.Component<IProps, IState> {
         }
     }
 
-    public componentWillUnmount() {
-        this.props.EntryStore!.resetEntry();
-    }
-
     public render() {
         const {entry} = this.props.EntryStore!;
         const {_id, body, title, draft} = entry;

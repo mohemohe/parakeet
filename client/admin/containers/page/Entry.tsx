@@ -25,6 +25,7 @@ export class Entry extends React.Component<IProps, IState> {
     private index: number;
 
     public componentDidMount() {
+        this.props.EntryStore!.resetEntry();
         this.props.EntryStore!.getEntries(this.index);
     }
 

@@ -66,7 +66,7 @@ export class EntryStore extends StoreBase {
 
     @computed
     public get formattedEntries() {
-        if (this.entries.length === 0) {
+        if (!this.entries || this.entries.length === 0) {
             return [];
         }
         return this.entries.map((entry) => {
