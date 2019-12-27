@@ -22,7 +22,7 @@ require (
 	github.com/neko-neko/echo-logrus/v2 v2.0.0
 	github.com/olebedev/gojax v0.0.0-20170318114811-bb153be84336
 	github.com/oleiade/reflections v1.0.0 // indirect
-	github.com/pkg/errors v0.8.1 // indirect
+	github.com/pkg/errors v0.8.1
 	github.com/playree/goingtpl v0.0.0-20180728103816-063435765262
 	github.com/sirupsen/logrus v1.4.1
 	github.com/smartystreets/goconvey v0.0.0-20190330032615-68dc04aab96a // indirect

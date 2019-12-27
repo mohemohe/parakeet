@@ -2,11 +2,13 @@ package ssr
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/globalsign/mgo/bson"
 	"github.com/labstack/echo/v4"
 	"github.com/mohemohe/parakeet/server/configs"
 	"github.com/mohemohe/parakeet/server/models"
 	"github.com/mohemohe/parakeet/server/util"
+	"github.com/pkg/errors"
 	"net/http"
 	"regexp"
 	"strconv"
@@ -17,9 +19,10 @@ import (
 func Handle(c echo.Context, pool *Pool) error {
 	defer func() {
 		if r := recover(); r != nil {
-			_ = c.Render(http.StatusInternalServerError, "ssr.html", Result{
-				Error: r.(string),
-				Unix:  configs.GetUnix(),
+			fmt.Printf("%+v\n", errors.WithStack(r.(error)))
+			_ = c.Render(http.StatusInternalServerError, "ssr.html", map[string]interface{}{
+				"Error": r,
+				"Unix":  configs.GetUnix(),
 			})
 		}
 	}()
@@ -71,7 +74,7 @@ func Handle(c echo.Context, pool *Pool) error {
 			})
 		}
 		if len(res.Error) == 0 {
-			if entry.Title != "" {
+			if entry != nil && entry.Title != "" {
 				res.Title = entry.Title + " - " + res.Title
 			}
 			return c.Render(http.StatusOK, "ssr.html", res)
@@ -120,7 +123,7 @@ func initializeState(c echo.Context) (map[string]interface{}, *models.Entry) {
 	if enableEntrySSR && strings.HasPrefix(path, "/entry/") {
 		r := regexp.MustCompile(`^/entry/(.*)`).FindAllStringSubmatch(path, -1)
 		if len(r) == 1 && len(r[0]) == 2 {
-			entry = models.GetEntryById(r[0][1])
+			entry = models.GetEntryById(r[0][1], false)
 		}
 	}
 

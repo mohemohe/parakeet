@@ -23,12 +23,17 @@ type (
 	}
 )
 
-func GetEntryById(id string) *Entry {
+func GetEntryById(id string, includeDraft bool) *Entry {
 	cacheKey := "entry:" + id
 
 	entry := new(Entry)
 	if err := GetCache(cacheKey, entry); err == nil {
-		return entry
+		if entry.Draft {
+			if includeDraft {
+				return entry
+			}
+			return nil
+		}
 	}
 
 	conn := connection.Mongo()
@@ -43,6 +48,12 @@ func GetEntryById(id string) *Entry {
 		}
 	}
 
+	if entry.Draft {
+		if includeDraft {
+			return entry
+		}
+		return nil
+	}
 	return entry
 }
 
