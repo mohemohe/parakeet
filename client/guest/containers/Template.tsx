@@ -32,7 +32,7 @@ const styles = {
         margin: "0 0.5rem 1rem 0.5rem",
     }),
     side: style({
-        flexGrow: 9999,
+        flex: 1,
         margin: "0 0.5rem",
         maxWidth: 920,
         minWidth: 260,
