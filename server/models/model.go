@@ -68,22 +68,22 @@ func InitDB() {
 
 	setDefaultConfig(KVSiteTitle, "parakeet")
 	setDefaultConfig(KVSideNavContents, []string{})
-	setDefaultConfig(KVNotifyMastodon, NotifyMastodon{
+	setDefaultConfig(KVNotifyMastodon, util.StructToJsonMap(NotifyMastodon{
 		BaseURL:  "",
 		Token:    "",
 		Template: "ブログを書きました: %ENTRY_TITLE% %ENTRY_URL%",
-	})
-	setDefaultConfig(KVServerSideRendering, ServerSideRendering{
+	}))
+	setDefaultConfig(KVServerSideRendering, util.StructToJsonMap(ServerSideRendering{
 		Entries: true,
 		Entry:   true,
-	})
+	}))
 	setDefaultConfig(KVEnableMongoDBQueryCache, true)
 	setDefaultConfig(KVEnableSSRPageCache, false)
-	setDefaultConfig(KVCloudflare, Cloudflare{
+	setDefaultConfig(KVCloudflare, util.StructToJsonMap(Cloudflare{
 		Enable:   false,
 		ZoneID:   "",
 		APIToken: "",
-	})
+	}))
 
 	user := GetUserByEmail("root")
 	if user == nil {

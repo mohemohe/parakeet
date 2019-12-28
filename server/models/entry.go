@@ -62,6 +62,9 @@ func GetEntries(perPage int, page int, includeDraft bool) *Entries {
 
 	entries := new(Entries)
 	if err := GetCache(cacheKey, entries); err == nil {
+		if len(entries.Entries) == 0 {
+			entries.Entries = []Entry{}
+		}
 		return entries
 	}
 
@@ -85,6 +88,9 @@ func GetEntries(perPage int, page int, includeDraft bool) *Entries {
 	entryArray := make([]Entry, info.RecordsOnPage)
 	for i := 0; i < info.RecordsOnPage; i++ {
 		_ = find.Next(&entryArray[i])
+	}
+	if len(entryArray) == 0 {
+		entryArray = []Entry{}
 	}
 
 	entries = &Entries{

@@ -38,7 +38,7 @@ export class SettingsStore extends StoreBase {
     @observable
     public ssrPageCache: boolean;
 
-    @observable
+    @observable.shallow
     public cloudflare: ICloudflare;
 
     constructor() {

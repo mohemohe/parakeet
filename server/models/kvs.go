@@ -35,6 +35,7 @@ func GetKVS(key string) *KV {
 func SetKVS(key string, value interface{}) error {
 	_, err := connection.Mongo().Collection(collections.KVS).Collection().Upsert(bson.M{"key": key}, bson.M{"key": key, "value": value})
 	if err == nil {
+		PurgeInternalCache()
 		_ = SetCache("kvs:"+key, value)
 	}
 	return err
