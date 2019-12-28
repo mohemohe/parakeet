@@ -3,6 +3,7 @@ package controllers
 import (
 	"github.com/labstack/echo/v4"
 	"github.com/mohemohe/parakeet/server/models"
+	"github.com/mohemohe/parakeet/server/util"
 	"net/http"
 )
 
@@ -187,7 +188,7 @@ func SetCloudflare(c echo.Context) error {
 		panic("bind error")
 	}
 
-	if err := models.SetKVS(models.KVCloudflare, reqBody); err != nil {
+	if err := models.SetKVS(models.KVCloudflare, util.StructToJsonMap(reqBody)); err != nil {
 		panic(err)
 	}
 

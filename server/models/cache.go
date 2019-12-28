@@ -28,13 +28,17 @@ func SetCache(key string, value interface{}) error {
 	return connection.DsCache().Set(key, v, 365*24*time.Hour)
 }
 
+func PurgeInternalCache() {
+	connection.PurgeDsCache()
+
+	if err := pubsub.Publish(purgeCacheEvent, ""); err != nil {
+		util.Logger().Warn(err)
+	}
+}
+
 func PurgeCache() {
 	go func() {
-		connection.PurgeDsCache()
-
-		if err := pubsub.Publish(purgeCacheEvent, ""); err != nil {
-			util.Logger().Warn(err)
-		}
+		PurgeInternalCache()
 
 		if kv := GetKVS(KVCloudflare); kv != nil {
 			v := new(Cloudflare)
