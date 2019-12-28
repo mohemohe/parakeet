@@ -65,6 +65,8 @@ func initEcho(e *echo.Echo) {
 	e.PUT("/api/v1/settings/cache/mongodb", controllers.SetGetMongoDBQueryCache, middlewares.Authorize, middlewares.Authorized)
 	e.GET("/api/v1/settings/cache/page", controllers.GetSSRPageCache, middlewares.Authorize, middlewares.Authorized)
 	e.PUT("/api/v1/settings/cache/page", controllers.SetSSRPageCache, middlewares.Authorize, middlewares.Authorized)
+	e.GET("/api/v1/settings/cache/cloudflare", controllers.GetCloudflare, middlewares.Authorize, middlewares.Authorized)
+	e.PUT("/api/v1/settings/cache/cloudflare", controllers.SetCloudflare, middlewares.Authorize, middlewares.Authorized)
 }
 
 func initTemplate(e *echo.Echo) {

@@ -28,19 +28,25 @@ type (
 		Template string `json:"template"`
 	}
 	ServerSideRendering struct {
-		Entries  bool `json:"entries"`
-		Entry    bool `json:"entry"`
+		Entries bool `json:"entries"`
+		Entry   bool `json:"entry"`
+	}
+	Cloudflare struct {
+		Enable   bool   `json:"enable"`
+		ZoneID   string `json:"zone_id"`
+		APIToken string `json:"api_token"`
 	}
 )
 
 const (
-	KVCacheSize = "cache_size" // TODO:
+	KVCacheSize               = "cache_size" // TODO:
 	KVEnableMongoDBQueryCache = "mongo_db_query_cache"
-	KVEnableSSRPageCache = "ssr_page_cache"
-	KVSideNavContents = "side_nav_contents"
-	KVSiteTitle = "site_title"
-	KVNotifyMastodon = "notify_mastodon"
-	KVServerSideRendering = "server_side_rendering"
+	KVEnableSSRPageCache      = "ssr_page_cache"
+	KVSideNavContents         = "side_nav_contents"
+	KVSiteTitle               = "site_title"
+	KVNotifyMastodon          = "notify_mastodon"
+	KVServerSideRendering     = "server_side_rendering"
+	KVCloudflare              = "cloudflare"
 )
 
 var pubsub *mgo_pubsub.PubSub
@@ -69,10 +75,15 @@ func InitDB() {
 	})
 	setDefaultConfig(KVServerSideRendering, ServerSideRendering{
 		Entries: true,
-		Entry: true,
+		Entry:   true,
 	})
 	setDefaultConfig(KVEnableMongoDBQueryCache, true)
 	setDefaultConfig(KVEnableSSRPageCache, false)
+	setDefaultConfig(KVCloudflare, Cloudflare{
+		Enable:   false,
+		ZoneID:   "",
+		APIToken: "",
+	})
 
 	user := GetUserByEmail("root")
 	if user == nil {
