@@ -171,3 +171,28 @@ func SetSideNavContents(c echo.Context) error {
 		Value: reqBody.Value,
 	})
 }
+
+func GetCloudflare(c echo.Context) error {
+	kv := models.GetKVS(models.KVCloudflare)
+	if kv == nil {
+		panic("db error")
+	}
+
+	return c.JSON(http.StatusOK, kv)
+}
+
+func SetCloudflare(c echo.Context) error {
+	reqBody := new(models.Cloudflare)
+	if err := c.Bind(reqBody); err != nil {
+		panic("bind error")
+	}
+
+	if err := models.SetKVS(models.KVCloudflare, reqBody); err != nil {
+		panic(err)
+	}
+
+	return c.JSON(http.StatusOK, &models.KV{
+		Key:   models.KVCloudflare,
+		Value: reqBody,
+	})
+}

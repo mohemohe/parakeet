@@ -13,6 +13,12 @@ export interface IRender extends IModel {
     entry: boolean;
 }
 
+export interface ICloudflare extends IModel {
+    enable: boolean;
+    zone_id: string;
+    api_token: string;
+}
+
 export class SettingsStore extends StoreBase {
     @observable
     public siteTitle: string;
@@ -32,6 +38,9 @@ export class SettingsStore extends StoreBase {
     @observable
     public ssrPageCache: boolean;
 
+    @observable
+    public cloudflare: ICloudflare;
+
     constructor() {
         super();
 
@@ -44,6 +53,11 @@ export class SettingsStore extends StoreBase {
         } as IRender;
         this.mongoDbQueryCache = false;
         this.ssrPageCache = false;
+        this.cloudflare = {
+            enable: false,
+            zone_id: "",
+            api_token: "",
+        } as ICloudflare;
     }
 
     @action
@@ -417,6 +431,68 @@ export class SettingsStore extends StoreBase {
 
             const result = await response.json();
             this.ssrPageCache = result.value;
+
+            this.tryShowToast("キャッシュ設定を編集しました");
+            stores.AuthStore.checkAuth();
+            this.setState(State.DONE);
+        } catch (e) {
+            this.tryShowToast("キャッシュ設定の保存に失敗しました");
+            console.error(e);
+            this.setState(State.ERROR);
+        }
+    }
+
+    @action
+    public async getCloudflare() {
+        this.setMode(Mode.GET);
+        this.setState(State.RUNNING);
+
+        try {
+            const url = `${this.apiBasePath}v1/settings/cache/cloudflare`;
+            const response = await fetch(url, {
+                method: "GET",
+                headers: this.generateFetchHeader(),
+            });
+
+            if (response.status !== 200) {
+                throw new Error();
+            }
+
+            const result = await response.json();
+            this.cloudflare = result.value;
+
+            this.setState(State.DONE);
+        } catch (e) {
+            this.tryShowToast("キャッシュ設定の取得に失敗しました");
+            console.error(e);
+            this.setState(State.ERROR);
+        }
+    }
+
+    @action
+    public setCloudflare(cloudflare: ICloudflare) {
+        this.cloudflare = cloudflare;
+    }
+
+    @action
+    public async putCloudflare() {
+        this.setMode(Mode.UPDATE);
+        this.setState(State.RUNNING);
+
+        try {
+            const url = `${this.apiBasePath}v1/settings/cache/cloudflare`;
+            const response = await fetch(url, {
+                method: "PUT",
+                headers: this.generateFetchHeader(),
+                body: JSON.stringify(this.cloudflare),
+            });
+
+            if (response.status !== 200) {
+                throw new Error();
+            }
+
+            const result = await response.json();
+            this.cloudflare = result.value;
 
             this.tryShowToast("キャッシュ設定を編集しました");
             stores.AuthStore.checkAuth();
