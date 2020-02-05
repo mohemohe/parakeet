@@ -9,7 +9,7 @@ type Result struct {
 	App   string `json:"app"`
 	Style string `json:"style"`
 	Title string `json:"title"`
-	Meta  string `json:"meta"`
+	Meta  template.HTML `json:"meta"`
 	State string `json:"state"`
 	Unix  int64  `json:"-"`
 }
