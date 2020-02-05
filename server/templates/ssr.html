@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="generator" content="parakeet; https://github.com/mohemohe/parakeet">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>{{ .Title }}</title>
-    <link href="https://unpkg.com/ress/dist/ress.min.css" rel="stylesheet" type="text/css">
-    <link href="https://unpkg.com/github-markdown-css@3.0.1/github-markdown.css" rel="stylesheet" type="text/css">
-    {{ .RawStyle }}
-    {{ .Meta }}
+<meta charset="UTF-8">
+<meta name="generator" content="parakeet; https://github.com/mohemohe/parakeet">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{{ .Title }}</title>
+<link href="https://unpkg.com/ress/dist/ress.min.css" rel="stylesheet" type="text/css">
+<link href="https://unpkg.com/github-markdown-css@3.0.1/github-markdown.css" rel="stylesheet" type="text/css">
+{{ .RawStyle }}
+{{ .Meta }}
 </head>
 <body>
 {{if .Error}}
