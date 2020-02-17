@@ -1,10 +1,11 @@
-![](https://i.imgur.com/wDFyOTX.png)
+![](https://i.imgur.com/ONTIffX.png)
 
 [![Build Status](https://cloud.drone.io/api/badges/mohemohe/parakeet/status.svg)](https://cloud.drone.io/mohemohe/parakeet)
 [![Go Report Card](https://goreportcard.com/badge/github.com/mohemohe/parakeet)](https://goreportcard.com/report/github.com/mohemohe/parakeet)
 [![codebeat badge](https://codebeat.co/badges/78e7a889-e831-4bad-bd22-43b4290cc956)](https://codebeat.co/projects/github-com-mohemohe-parakeet-master)
 [![GitHub](https://img.shields.io/github/license/mohemohe/parakeet.svg)](https://github.com/mohemohe/parakeet/blob/master/LICENSE)
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fmohemohe%2Fparakeet.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fmohemohe%2Fparakeet?ref=badge_shield)
+[![MicroBadger Size](https://img.shields.io/microbadger/image-size/mohemohe/parakeet)](https://hub.docker.com/r/mohemohe/parakeet)
 
 Fast weblog built in golang and top of echo.  
 Supports React SSR and hydrate.
@@ -26,7 +27,7 @@ Admin page is [/admin](http://127.0.0.1:1323/admin) and default root password is
 ## Production usage
 
 1. Create MongoDB via [Atlas](https://cloud.mongodb.com)
-2. Deploy [mohemohe/parakeet](https://cloud.docker.com/u/mohemohe/repository/docker/mohemohe/parakeet) in any Docker (e.g. swarm, k8s, Amazon ECS ...) and set below environment variables
+2. Deploy [mohemohe/parakeet](https://hub.docker.com/r/mohemohe/parakeet) in any Docker (e.g. swarm, k8s, Amazon ECS ...) and set below environment variables
 
 ### Environment variables
 
