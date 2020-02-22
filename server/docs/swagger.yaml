@@ -1,0 +1,583 @@
+basePath: /api
+definitions:
+  controllers.AuthRequest:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    type: object
+  controllers.AuthResponse:
+    properties:
+      token:
+        type: string
+      user:
+        $ref: '#/definitions/models.User'
+        type: object
+    type: object
+  controllers.EntryResponse:
+    properties:
+      entry:
+        $ref: '#/definitions/models.Entry'
+        type: object
+    type: object
+  controllers.Setting:
+    properties:
+      key:
+        type: string
+      value:
+        type: object
+    type: object
+  middlewares.EmptyJson:
+    type: object
+  models.Cloudflare:
+    properties:
+      api_token:
+        type: string
+      enable:
+        type: boolean
+      zone_id:
+        type: string
+    type: object
+  models.Entries:
+    properties:
+      entries:
+        items:
+          $ref: '#/definitions/models.Entry'
+        type: array
+      info:
+        type: string
+    type: object
+  models.Entry:
+    properties:
+      author:
+        type: string
+      body:
+        type: string
+      draft:
+        type: boolean
+      tag:
+        items:
+          type: string
+        type: array
+      title:
+        type: string
+    type: object
+  models.KV:
+    properties:
+      key:
+        type: string
+      value:
+        type: object
+    type: object
+  models.NotifyMastodon:
+    properties:
+      baseurl:
+        type: string
+      template:
+        type: string
+      token:
+        type: string
+    type: object
+  models.ServerSideRendering:
+    properties:
+      entries:
+        type: boolean
+      entry:
+        type: boolean
+    type: object
+  models.User:
+    properties:
+      email:
+        type: string
+      name:
+        type: string
+      role:
+        type: integer
+    type: object
+info:
+  contact: {}
+  description: |-
+    ### Fast weblog built in golang and top of echo. supports React SSR and hydrate.
+    labstack/echoを使った高速なブログエンジン。
+    Reactのサーバーサイドレンダリングとクライアントサイドの引き継ぎを実装。
+    （ぶっちゃけ速いかと言われるとSSR有効時はそうでもない）
+  license:
+    name: WTFPL
+    url: https://github.com/mohemohe/parakeet/blob/master/LICENSE
+  title: parakeet REST API
+  version: 1.0 Draft
+paths:
+  /v1/auth:
+    get:
+      description: アクセストークンが有効か判定します
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.AuthResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/middlewares.EmptyJson'
+      security:
+      - AccessToken: []
+      summary: status
+      tags:
+      - auth
+    post:
+      consumes:
+      - application/json
+      description: メールアドレスとパスワードを送信してアクセストークンを取得します
+      parameters:
+      - description: Body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.AuthRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.AuthResponse'
+      summary: login
+      tags:
+      - auth
+  /v1/entries:
+    get:
+      description: エントリー一覧を取得します
+      parameters:
+      - default: 1
+        description: ページネーションのページ数
+        in: query
+        name: page
+        type: integer
+      - default: 5
+        description: 1ページごとの件数
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Entries'
+      summary: list entries
+      tags:
+      - entry
+    post:
+      description: エントリーを作成します
+      parameters:
+      - description: Body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/models.Entry'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.EntryResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/middlewares.EmptyJson'
+      security:
+      - AccessToken: []
+      summary: create entry
+      tags:
+      - entry
+  /v1/entries/{id}:
+    delete:
+      description: エントリーを削除します
+      parameters:
+      - description: エントリーの 'Mongo ObjectID'
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/middlewares.EmptyJson'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/middlewares.EmptyJson'
+        "404": {}
+      security:
+      - AccessToken: []
+      summary: delete entry
+      tags:
+      - entry
+    get:
+      description: エントリー一覧を取得します
+      parameters:
+      - description: エントリーの 'Mongo ObjectID'
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.EntryResponse'
+        "404": {}
+      summary: get entry
+      tags:
+      - entry
+    put:
+      description: エントリーを更新します
+      parameters:
+      - description: エントリーの 'Mongo ObjectID'
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/models.Entry'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.EntryResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/middlewares.EmptyJson'
+        "404": {}
+      security:
+      - AccessToken: []
+      summary: update entry
+      tags:
+      - entry
+  /v1/settings/cache/cloudflare:
+    get:
+      description: Cloudflareのキャッシュ削除設定を取得します
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.KV'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/middlewares.EmptyJson'
+      security:
+      - AccessToken: []
+      summary: get Cloudflare purge info
+      tags:
+      - setting
+    put:
+      description: Cloudflareのキャッシュ削除設定を更新します
+      parameters:
+      - description: Body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/models.Cloudflare'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.KV'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/middlewares.EmptyJson'
+      security:
+      - AccessToken: []
+      summary: set Cloudflare purge info
+      tags:
+      - setting
+  /v1/settings/cache/mongodb:
+    get:
+      description: MongoDB クエリーのキャッシュ設定を取得します
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.KV'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/middlewares.EmptyJson'
+      security:
+      - AccessToken: []
+      summary: get MongoDB query cache
+      tags:
+      - setting
+    put:
+      description: MongoDB クエリーのキャッシュ設定を更新します
+      parameters:
+      - description: Body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/models.KV'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.KV'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/middlewares.EmptyJson'
+      security:
+      - AccessToken: []
+      summary: set MongoDB query cache
+      tags:
+      - setting
+  /v1/settings/cache/page:
+    get:
+      description: サーバーサイドレンダリングで生成したHTMLのキャッシュ設定を取得します
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.KV'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/middlewares.EmptyJson'
+      security:
+      - AccessToken: []
+      summary: get SSR-ed page cache
+      tags:
+      - setting
+    put:
+      description: サーバーサイドレンダリングで生成したHTMLのキャッシュ設定を更新します
+      parameters:
+      - description: Body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/models.KV'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.KV'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/middlewares.EmptyJson'
+      security:
+      - AccessToken: []
+      summary: set SSR-ed page cache
+      tags:
+      - setting
+  /v1/settings/notify/mastodon:
+    get:
+      description: Mastodonの通知設定を取得します
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.KV'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/middlewares.EmptyJson'
+      security:
+      - AccessToken: []
+      summary: get mastodon notification
+      tags:
+      - setting
+    put:
+      description: Mastodonの通知設定を更新します
+      parameters:
+      - description: Body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/models.NotifyMastodon'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.KV'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/middlewares.EmptyJson'
+      security:
+      - AccessToken: []
+      summary: set mastodon notification
+      tags:
+      - setting
+  /v1/settings/render/server:
+    get:
+      description: サーバーサイドレンダリングの設定を取得します
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.KV'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/middlewares.EmptyJson'
+      security:
+      - AccessToken: []
+      summary: get SSR
+      tags:
+      - setting
+    put:
+      description: サーバーサイドレンダリングの設定を更新します
+      parameters:
+      - description: Body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/models.ServerSideRendering'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.KV'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/middlewares.EmptyJson'
+      security:
+      - AccessToken: []
+      summary: set SSR
+      tags:
+      - setting
+  /v1/settings/site/sidenav:
+    get:
+      description: サイドバー コンテンツの設定を取得します
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.KV'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/middlewares.EmptyJson'
+      security:
+      - AccessToken: []
+      summary: get side nav contents
+      tags:
+      - setting
+    put:
+      description: サイドバー コンテンツの設定を更新します
+      parameters:
+      - description: Body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/models.KV'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.KV'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/middlewares.EmptyJson'
+      security:
+      - AccessToken: []
+      summary: set side nav contents
+      tags:
+      - setting
+  /v1/settings/site/title:
+    get:
+      description: サイト名を取得します
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.KV'
+      summary: get site title
+      tags:
+      - setting
+    put:
+      description: サイト名を設定します
+      parameters:
+      - description: Body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.Setting'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.KV'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/middlewares.EmptyJson'
+      security:
+      - AccessToken: []
+      summary: set site title
+      tags:
+      - setting
+securityDefinitions:
+  AccessToken:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

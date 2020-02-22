@@ -14,6 +14,12 @@ type (
 	}
 )
 
+// @Tags setting
+// @Summary get site title
+// @Description サイト名を取得します
+// @Produce json
+// @Success 200 {object} models.KV
+// @Router /v1/settings/site/title [get]
 func GetSiteTitle(c echo.Context) error {
 	kv := models.GetKVS(models.KVSiteTitle)
 	if kv == nil {
@@ -23,6 +29,15 @@ func GetSiteTitle(c echo.Context) error {
 	return c.JSON(http.StatusOK, kv)
 }
 
+// @Tags setting
+// @Summary set site title
+// @Description サイト名を設定します
+// @Produce json
+// @Security AccessToken
+// @Param Body body Setting true "Body"
+// @Success 200 {object} models.KV
+// @Failure 401 {object} middlewares.EmptyJson
+// @Router /v1/settings/site/title [put]
 func SetSiteTitle(c echo.Context) error {
 	reqBody := new(Setting)
 	if err := c.Bind(reqBody); err != nil {
@@ -37,6 +52,14 @@ func SetSiteTitle(c echo.Context) error {
 	return c.JSON(http.StatusOK, reqBody)
 }
 
+// @Tags setting
+// @Summary get mastodon notification
+// @Description Mastodonの通知設定を取得します
+// @Produce json
+// @Security AccessToken
+// @Success 200 {object} models.KV
+// @Failure 401 {object} middlewares.EmptyJson
+// @Router /v1/settings/notify/mastodon [get]
 func GetNotifyMastodon(c echo.Context) error {
 	kv := models.GetKVS(models.KVNotifyMastodon)
 	if kv == nil {
@@ -46,6 +69,15 @@ func GetNotifyMastodon(c echo.Context) error {
 	return c.JSON(http.StatusOK, kv)
 }
 
+// @Tags setting
+// @Summary set mastodon notification
+// @Description Mastodonの通知設定を更新します
+// @Produce json
+// @Security AccessToken
+// @Param Body body models.NotifyMastodon true "Body"
+// @Success 200 {object} models.KV
+// @Failure 401 {object} middlewares.EmptyJson
+// @Router /v1/settings/notify/mastodon [put]
 func SetNotifyMastodon(c echo.Context) error {
 	reqBody := new(models.NotifyMastodon)
 	if err := c.Bind(reqBody); err != nil {
@@ -62,6 +94,14 @@ func SetNotifyMastodon(c echo.Context) error {
 	})
 }
 
+// @Tags setting
+// @Summary get SSR
+// @Description サーバーサイドレンダリングの設定を取得します
+// @Produce json
+// @Security AccessToken
+// @Success 200 {object} models.KV
+// @Failure 401 {object} middlewares.EmptyJson
+// @Router /v1/settings/render/server [get]
 func GetServerSideRendering(c echo.Context) error {
 	kv := models.GetKVS(models.KVServerSideRendering)
 	if kv == nil {
@@ -71,6 +111,15 @@ func GetServerSideRendering(c echo.Context) error {
 	return c.JSON(http.StatusOK, kv)
 }
 
+// @Tags setting
+// @Summary set SSR
+// @Description サーバーサイドレンダリングの設定を更新します
+// @Produce json
+// @Security AccessToken
+// @Param Body body models.ServerSideRendering true "Body"
+// @Success 200 {object} models.KV
+// @Failure 401 {object} middlewares.EmptyJson
+// @Router /v1/settings/render/server [put]
 func SetServerSideRendering(c echo.Context) error {
 	reqBody := new(models.ServerSideRendering)
 	if err := c.Bind(reqBody); err != nil {
@@ -87,6 +136,14 @@ func SetServerSideRendering(c echo.Context) error {
 	})
 }
 
+// @Tags setting
+// @Summary get MongoDB query cache
+// @Description MongoDB クエリーのキャッシュ設定を取得します
+// @Produce json
+// @Security AccessToken
+// @Success 200 {object} models.KV
+// @Failure 401 {object} middlewares.EmptyJson
+// @Router /v1/settings/cache/mongodb [get]
 func GetMongoDBQueryCache(c echo.Context) error {
 	kv := models.GetKVS(models.KVEnableMongoDBQueryCache)
 	if kv == nil {
@@ -95,6 +152,15 @@ func GetMongoDBQueryCache(c echo.Context) error {
 	return c.JSON(http.StatusOK, kv)
 }
 
+// @Tags setting
+// @Summary set MongoDB query cache
+// @Description MongoDB クエリーのキャッシュ設定を更新します
+// @Produce json
+// @Security AccessToken
+// @Param Body body models.KV true "Body"
+// @Success 200 {object} models.KV
+// @Failure 401 {object} middlewares.EmptyJson
+// @Router /v1/settings/cache/mongodb [put]
 func SetGetMongoDBQueryCache(c echo.Context) error {
 	reqBody := new(models.KV)
 	if err := c.Bind(reqBody); err != nil {
@@ -117,6 +183,14 @@ func SetGetMongoDBQueryCache(c echo.Context) error {
 	})
 }
 
+// @Tags setting
+// @Summary get SSR-ed page cache
+// @Description サーバーサイドレンダリングで生成したHTMLのキャッシュ設定を取得します
+// @Produce json
+// @Security AccessToken
+// @Success 200 {object} models.KV
+// @Failure 401 {object} middlewares.EmptyJson
+// @Router /v1/settings/cache/page [get]
 func GetSSRPageCache(c echo.Context) error {
 	kv := models.GetKVS(models.KVEnableSSRPageCache)
 	if kv == nil {
@@ -125,6 +199,15 @@ func GetSSRPageCache(c echo.Context) error {
 	return c.JSON(http.StatusOK, kv)
 }
 
+// @Tags setting
+// @Summary set SSR-ed page cache
+// @Description サーバーサイドレンダリングで生成したHTMLのキャッシュ設定を更新します
+// @Produce json
+// @Security AccessToken
+// @Param Body body models.KV true "Body"
+// @Success 200 {object} models.KV
+// @Failure 401 {object} middlewares.EmptyJson
+// @Router /v1/settings/cache/page [put]
 func SetSSRPageCache(c echo.Context) error {
 	reqBody := new(models.KV)
 	if err := c.Bind(reqBody); err != nil {
@@ -147,6 +230,14 @@ func SetSSRPageCache(c echo.Context) error {
 	})
 }
 
+// @Tags setting
+// @Summary get side nav contents
+// @Description サイドバー コンテンツの設定を取得します
+// @Produce json
+// @Security AccessToken
+// @Success 200 {object} models.KV
+// @Failure 401 {object} middlewares.EmptyJson
+// @Router /v1/settings/site/sidenav [get]
 func GetSideNavContents(c echo.Context) error {
 	kv := models.GetKVS(models.KVSideNavContents)
 	if kv == nil {
@@ -155,6 +246,15 @@ func GetSideNavContents(c echo.Context) error {
 	return c.JSON(http.StatusOK, kv)
 }
 
+// @Tags setting
+// @Summary set side nav contents
+// @Description サイドバー コンテンツの設定を更新します
+// @Produce json
+// @Security AccessToken
+// @Param Body body models.KV true "Body"
+// @Success 200 {object} models.KV
+// @Failure 401 {object} middlewares.EmptyJson
+// @Router /v1/settings/site/sidenav [put]
 func SetSideNavContents(c echo.Context) error {
 	reqBody := new(models.KV)
 	if err := c.Bind(reqBody); err != nil {
@@ -173,6 +273,14 @@ func SetSideNavContents(c echo.Context) error {
 	})
 }
 
+// @Tags setting
+// @Summary get Cloudflare purge info
+// @Description Cloudflareのキャッシュ削除設定を取得します
+// @Produce json
+// @Security AccessToken
+// @Success 200 {object} models.KV
+// @Failure 401 {object} middlewares.EmptyJson
+// @Router /v1/settings/cache/cloudflare [get]
 func GetCloudflare(c echo.Context) error {
 	kv := models.GetKVS(models.KVCloudflare)
 	if kv == nil {
@@ -182,6 +290,15 @@ func GetCloudflare(c echo.Context) error {
 	return c.JSON(http.StatusOK, kv)
 }
 
+// @Tags setting
+// @Summary set Cloudflare purge info
+// @Description Cloudflareのキャッシュ削除設定を更新します
+// @Produce json
+// @Security AccessToken
+// @Param Body body models.Cloudflare true "Body"
+// @Success 200 {object} models.KV
+// @Failure 401 {object} middlewares.EmptyJson
+// @Router /v1/settings/cache/cloudflare [put]
 func SetCloudflare(c echo.Context) error {
 	reqBody := new(models.Cloudflare)
 	if err := c.Bind(reqBody); err != nil {

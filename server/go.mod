@@ -3,6 +3,7 @@ module github.com/mohemohe/parakeet/server
 go 1.12
 
 require (
+	github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/dlclark/regexp2 v1.1.6 // indirect
 	github.com/dop251/goja v0.0.0-20190429205339-8d6ee3d16611
@@ -15,7 +16,6 @@ require (
 	github.com/go-bongo/go-dotaccess v0.0.0-20150208020959-ae070a2d2a38 // indirect
 	github.com/go-sourcemap/sourcemap v2.1.2+incompatible // indirect
 	github.com/kelseyhightower/envconfig v1.3.0
-	github.com/kr/pretty v0.1.0 // indirect
 	github.com/labstack/echo/v4 v4.0.0
 	github.com/mitchellh/mapstructure v1.1.2
 	github.com/mobilusoss/mgo-pubsub v0.0.0-20190823080606-0dd0f1cb10a2
@@ -26,10 +26,9 @@ require (
 	github.com/playree/goingtpl v0.0.0-20180728103816-063435765262
 	github.com/sirupsen/logrus v1.4.1
 	github.com/smartystreets/goconvey v0.0.0-20190330032615-68dc04aab96a // indirect
+	github.com/swaggo/echo-swagger v0.0.0-20191205130555-62f81ea88919
+	github.com/swaggo/swag v1.6.5
 	github.com/usk81/base65536 v0.0.0-20160323075052-2e37cfaaa044
-	golang.org/x/crypto v0.0.0-20190308221718-c2843e01d9a2
-	golang.org/x/text v0.3.2 // indirect
-	gopkg.in/check.v1 v1.0.0-20180628173108-788fd7840127 // indirect
+	golang.org/x/crypto v0.0.0-20190611184440-5c40567a22f8
 	gopkg.in/elazarl/goproxy.v1 v1.0.0-20180725130230-947c36da3153 // indirect
-	gopkg.in/yaml.v2 v2.2.2 // indirect
 )

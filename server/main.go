@@ -10,9 +10,25 @@ import (
 	"github.com/mohemohe/parakeet/server/templates"
 	"github.com/neko-neko/echo-logrus/v2/log"
 	"github.com/playree/goingtpl"
+	"github.com/swaggo/echo-swagger"
+	"net/http"
 	"strings"
+
+	_ "github.com/mohemohe/parakeet/server/docs"
 )
 
+// @title parakeet REST API
+// @version 1.0 Draft
+// @description ### Fast weblog built in golang and top of echo. supports React SSR and hydrate.
+// @description labstack/echoを使った高速なブログエンジン。
+// @description Reactのサーバーサイドレンダリングとクライアントサイドの引き継ぎを実装。
+// @description （ぶっちゃけ速いかと言われるとSSR有効時はそうでもない）
+// @license.name WTFPL
+// @license.url https://github.com/mohemohe/parakeet/blob/master/LICENSE
+// @BasePath /api
+// @securityDefinitions.apikey AccessToken
+// @in header
+// @name Authorization
 func main() {
 	initEnv()
 
@@ -28,13 +44,14 @@ func initEcho(e *echo.Echo) {
 	e.Use(middleware.Recover())
 	e.Logger = log.Logger()
 	e.Use(middleware.Logger())
+	e.Use(middleware.CORS())
 	if configs.GetEnv().Echo.Env == "debug" {
 		e.Logger.SetLevel(0)
 	}
 	e.Static("/public", "public")
 	e.Use(middlewares.SSRWithConfig(middlewares.SSRConfig{
 		Skipper: func(c echo.Context) bool {
-			return strings.HasPrefix(c.Path(), "/public") || strings.HasPrefix(c.Path(), "/admin") || strings.HasPrefix(c.Path(), "/api") || c.Path() == "/favicon.ico"
+			return strings.HasPrefix(c.Path(), "/public") || strings.HasPrefix(c.Path(), "/admin") || strings.HasPrefix(c.Path(), "/api") || strings.HasPrefix(c.Path(), "/swagger") || c.Path() == "/favicon.ico"
 		},
 		Handler: e,
 	}))
@@ -67,6 +84,14 @@ func initEcho(e *echo.Echo) {
 	e.PUT("/api/v1/settings/cache/page", controllers.SetSSRPageCache, middlewares.Authorize, middlewares.Authorized)
 	e.GET("/api/v1/settings/cache/cloudflare", controllers.GetCloudflare, middlewares.Authorize, middlewares.Authorized)
 	e.PUT("/api/v1/settings/cache/cloudflare", controllers.SetCloudflare, middlewares.Authorize, middlewares.Authorized)
+
+	e.GET("/swagger", func(c echo.Context) error {
+		return c.Redirect(http.StatusFound, "/swagger/index.html")
+	})
+	e.GET("/swagger/", func(c echo.Context) error {
+		return c.Redirect(http.StatusFound, "/swagger/index.html")
+	})
+	e.GET("/swagger/*", echoSwagger.WrapHandler)
 }
 
 func initTemplate(e *echo.Echo) {

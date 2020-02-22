@@ -18,6 +18,14 @@ type (
 	}
 )
 
+// @Tags auth
+// @Summary login
+// @Description メールアドレスとパスワードを送信してアクセストークンを取得します
+// @Accept json
+// @Produce json
+// @Param Body body AuthRequest true "Body"
+// @Success 200 {object} AuthResponse
+// @Router /v1/auth [post]
 func AuthLogin(c echo.Context) error {
 	authRequest := new(AuthRequest)
 	if err := c.Bind(authRequest); err != nil {
@@ -35,6 +43,14 @@ func AuthLogin(c echo.Context) error {
 	})
 }
 
+// @Tags auth
+// @Summary status
+// @Description アクセストークンが有効か判定します
+// @Produce json
+// @Security AccessToken
+// @Success 200 {object} AuthResponse
+// @Failure 401 {object} middlewares.EmptyJson
+// @Router /v1/auth [get]
 func AuthCheck(c echo.Context) error {
 	user := c.Get("User").(*models.User)
 	return c.JSON(http.StatusOK, AuthResponse{
