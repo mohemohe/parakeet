@@ -55,7 +55,7 @@ func Handle(c echo.Context, pool *Pool) error {
 	}
 	initialState, entry := initializeState(c)
 	ch := js.Exec(map[string]interface{}{
-		"url":     c.Request().URL.String(),
+		"url":     c.Request().URL.Path,
 		"title":   title,
 		"headers": map[string][]string(c.Request().Header),
 		"state":   initialState,
