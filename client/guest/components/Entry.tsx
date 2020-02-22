@@ -73,7 +73,23 @@ const styles = {
     }),
 };
 
+const more = "<!-- more -->";
+
 export class Entry extends React.Component<IProps, {}> {
+    public componentDidUpdate(prevProps: Readonly<IProps>, prevState: Readonly<{}>, snapshot?: any) {
+        if (!this.props.stopToReadMore && this.props.syntaxHighlighting) {
+            const {search} = window.location;
+            if (search.includes("scroll=more")) {
+                const moreElem = document.querySelector("#entry_more");
+                if (moreElem) {
+                    moreElem.scrollIntoView({
+                        behavior: "smooth",
+                    });
+                }
+            }
+        }
+    }
+
     public render() {
         const { entry } = this.props;
         const created = new Date(entry._created);
@@ -84,9 +100,11 @@ export class Entry extends React.Component<IProps, {}> {
 
         let body = entry.body;
         let showReadMore = false;
-        if (this.props.stopToReadMore && body.includes("<!-- more -->")) {
-            body = body.split("<!-- more -->").shift() || body;
+        if (this.props.stopToReadMore && body.includes(more)) {
+            body = body.split(more).shift() || body;
             showReadMore = true;
+        } else {
+            body = body.replace(more, `<div id="entry_more"></div>`);
         }
 
         let renderers;
@@ -116,10 +134,11 @@ export class Entry extends React.Component<IProps, {}> {
                     plugins={[[breaks]]}
                     escapeHtml={false}
                     renderers={renderers}
+
                 />
                 {showReadMore ?
                     <div className={styles.readMore}>
-                        <LinkButton to={`/entry/${entry._id}`} buttonProps={{variant: "contained", color: "primary"}}>続きを読む</LinkButton>
+                        <LinkButton to={`/entry/${entry._id}?scroll=more`} buttonProps={{variant: "contained", color: "primary"}}>続きを読む</LinkButton>
                     </div> :
                     undefined
                 }
