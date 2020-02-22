@@ -30,6 +30,7 @@ export class Footer extends React.Component<IProps, {}> {
                 <Container maxWidth={"xl"} className={styles.inner}>
                     <p><a href="https://github.com/mohemohe/parakeet">GitHub</a></p>
                     <p><a href="/admin">管理画面</a></p>
+                    <p><a href="/swagger">swagger</a></p>
                 </Container>
             </div>
         )
