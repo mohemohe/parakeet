@@ -5,13 +5,13 @@ import (
 )
 
 type Result struct {
-	Error string `json:"error"`
-	App   string `json:"app"`
-	Style string `json:"style"`
-	Title string `json:"title"`
+	Error string        `json:"error"`
+	App   string        `json:"app"`
+	Style string        `json:"style"`
+	Title string        `json:"title"`
 	Meta  template.HTML `json:"meta"`
-	State string `json:"state"`
-	Unix  int64  `json:"-"`
+	State string        `json:"state"`
+	Unix  int64         `json:"-"`
 }
 
 func (r Result) RawApp() template.HTML {

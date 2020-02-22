@@ -14,12 +14,16 @@ type (
 	EntryResponse struct {
 		Entry *models.Entry `json:"entry"`
 	}
-
-	EntriesResponse struct {
-		Entries *[]models.Entries `json:"entries"`
-	}
 )
 
+// @Tags entry
+// @Summary list entries
+// @Description エントリー一覧を取得します
+// @Produce json
+// @Param page query int false "ページネーションのページ数" default(1)
+// @Param limit query int false "1ページごとの件数" default(5)
+// @Success 200 {object} models.Entries
+// @Router /v1/entries [get]
 func GetEntries(c echo.Context) error {
 	limit, err := strconv.Atoi(c.QueryParam("limit"))
 	if err != nil {
@@ -39,6 +43,14 @@ func GetEntries(c echo.Context) error {
 	return c.JSON(http.StatusOK, entry)
 }
 
+// @Tags entry
+// @Summary get entry
+// @Description エントリー一覧を取得します
+// @Produce json
+// @Param id path string true "エントリーの 'Mongo ObjectID'"
+// @Success 200 {object} EntryResponse
+// @Success 404
+// @Router /v1/entries/{id} [get]
 func GetEntry(c echo.Context) error {
 	id := c.Param("id")
 	includeDraft := c.Get("User") != nil
@@ -52,6 +64,31 @@ func GetEntry(c echo.Context) error {
 	})
 }
 
+// @Tags entry
+// @Summary create entry
+// @Description エントリーを作成します
+// @Produce json
+// @Security AccessToken
+// @Param Body body models.Entry true "Body"
+// @Success 200 {object} EntryResponse
+// @Failure 401 {object} middlewares.EmptyJson
+// @Router /v1/entries [post]
+func InsertEntry(c echo.Context) error {
+	// HACK: swag
+	return UpsertEntry(c)
+}
+
+// @Tags entry
+// @Summary update entry
+// @Description エントリーを更新します
+// @Produce json
+// @Security AccessToken
+// @Param id path string true "エントリーの 'Mongo ObjectID'"
+// @Param Body body models.Entry true "Body"
+// @Success 200 {object} EntryResponse
+// @Failure 404
+// @Failure 401 {object} middlewares.EmptyJson
+// @Router /v1/entries/{id} [put]
 func UpsertEntry(c echo.Context) error {
 	entry := new(models.Entry)
 	if err := c.Bind(entry); err != nil {
@@ -104,6 +141,16 @@ func UpsertEntry(c echo.Context) error {
 	})
 }
 
+// @Tags entry
+// @Summary delete entry
+// @Description エントリーを削除します
+// @Produce json
+// @Security AccessToken
+// @Param id path string true "エントリーの 'Mongo ObjectID'"
+// @Success 200 {object} middlewares.EmptyJson
+// @Failure 404
+// @Failure 401 {object} middlewares.EmptyJson
+// @Router /v1/entries/{id} [delete]
 func DeleteEntry(c echo.Context) error {
 	id := c.Param("id")
 	entry := models.GetEntryById(id, true)

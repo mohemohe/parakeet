@@ -76,11 +76,11 @@ func Handle(c echo.Context, pool *Pool) error {
 		if len(res.Error) == 0 {
 			if entry != nil && entry.Title != "" {
 				res.Title = entry.Title + " - " + res.Title
-				meta := `<meta property="og:title" content="`+ entry.Title +`" />` + "\n" +
-						`<meta property="og:url" content="`+ util.JoinURL(util.BaseURL(c), c.Request().URL.Path) +`" />` + "\n" +
-						`<meta property="og:type" content="article" />` + "\n" +
-						`<meta property="og:description" content="`+ strings.Split(entry.Body, "  ")[0] +`" />` + "\n" +
-						`<meta property="og:site" content="`+ title +`" />` + "\n"
+				meta := `<meta property="og:title" content="` + entry.Title + `" />` + "\n" +
+					`<meta property="og:url" content="` + util.JoinURL(util.BaseURL(c), c.Request().URL.Path) + `" />` + "\n" +
+					`<meta property="og:type" content="article" />` + "\n" +
+					`<meta property="og:description" content="` + strings.Split(entry.Body, "  ")[0] + `" />` + "\n" +
+					`<meta property="og:site" content="` + title + `" />` + "\n"
 				util.Logger().Debugln("meta generated:", meta)
 				res.Meta = template.HTML(meta)
 			}
