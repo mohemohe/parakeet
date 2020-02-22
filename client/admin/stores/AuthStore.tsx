@@ -91,20 +91,12 @@ export class AuthStore extends StoreBase {
 
     @computed
     public get name() {
-        if (this.userInfo) {
-            return this.userInfo.name;
-        } else {
-            return "";
-        }
+        return this.userInfo?.name || "";
     }
 
     @computed
     public get email() {
-        if (this.userInfo) {
-            return this.userInfo.email;
-        } else {
-            return "";
-        }
+        return this.userInfo?.email || "";
     }
 
     @computed
@@ -114,10 +106,6 @@ export class AuthStore extends StoreBase {
 
     @computed
     public get isRoot() {
-        if (this.userInfo) {
-            return this.userInfo.role === 1;
-        } else {
-            return false;
-        }
+        return this.userInfo?.role === 1 || false;
     }
 }

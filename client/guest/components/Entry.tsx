@@ -77,16 +77,10 @@ const more = "<!-- more -->";
 
 export class Entry extends React.Component<IProps, {}> {
     public componentDidUpdate(prevProps: Readonly<IProps>, prevState: Readonly<{}>, snapshot?: any) {
-        if (!this.props.stopToReadMore && this.props.syntaxHighlighting) {
-            const {search} = window.location;
-            if (search.includes("scroll=more")) {
-                const moreElem = document.querySelector("#entry_more");
-                if (moreElem) {
-                    moreElem.scrollIntoView({
-                        behavior: "smooth",
-                    });
-                }
-            }
+        if (!this.props.stopToReadMore && this.props.syntaxHighlighting && window.location.search.includes("scroll=more")) {
+            document.querySelector("#entry_more")?.scrollIntoView({
+                behavior: "smooth",
+            });
         }
     }
 
