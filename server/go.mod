@@ -4,6 +4,7 @@ go 1.12
 
 require (
 	github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751
+	github.com/cpuguy83/go-md2man/v2 v2.0.0 // indirect
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/dlclark/regexp2 v1.1.6 // indirect
 	github.com/dop251/goja v0.0.0-20190429205339-8d6ee3d16611
@@ -14,6 +15,7 @@ require (
 	github.com/globalsign/mgo v0.0.0-20181015135952-eeefdecb41b8
 	github.com/go-bongo/bongo v0.10.5-0.20180517124215-761759e31d8f
 	github.com/go-bongo/go-dotaccess v0.0.0-20150208020959-ae070a2d2a38 // indirect
+	github.com/go-openapi/spec v0.19.15 // indirect
 	github.com/go-sourcemap/sourcemap v2.1.2+incompatible // indirect
 	github.com/kelseyhightower/envconfig v1.3.0
 	github.com/labstack/echo/v4 v4.0.0
@@ -24,11 +26,15 @@ require (
 	github.com/oleiade/reflections v1.0.0 // indirect
 	github.com/pkg/errors v0.8.1
 	github.com/playree/goingtpl v0.0.0-20180728103816-063435765262
+	github.com/russross/blackfriday/v2 v2.1.0 // indirect
+	github.com/satori/go.uuid v1.2.0 // indirect
 	github.com/sirupsen/logrus v1.4.1
 	github.com/smartystreets/goconvey v0.0.0-20190330032615-68dc04aab96a // indirect
 	github.com/swaggo/echo-swagger v0.0.0-20191205130555-62f81ea88919
-	github.com/swaggo/swag v1.6.5
-	github.com/usk81/base65536 v0.0.0-20160323075052-2e37cfaaa044
-	golang.org/x/crypto v0.0.0-20190611184440-5c40567a22f8
+	github.com/swaggo/swag v1.6.9
+	github.com/urfave/cli v1.22.5 // indirect
+	github.com/urfave/cli/v2 v2.3.0 // indirect
+	golang.org/x/crypto v0.0.0-20200622213623-75b288015ac9
+	golang.org/x/tools v0.0.0-20201125231158-b5590deeca9b // indirect
 	gopkg.in/elazarl/goproxy.v1 v1.0.0-20180725130230-947c36da3153 // indirect
 )

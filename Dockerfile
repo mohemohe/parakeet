@@ -7,14 +7,16 @@ RUN apk --no-cache add alpine-sdk coreutils git tzdata nodejs upx util-linux yar
 SHELL ["/bin/zsh", "-c"]
 RUN cp -f /usr/share/zoneinfo/Asia/Tokyo /etc/localtime
 RUN go get -u -v github.com/pwaller/goupx
-RUN go get -u -v github.com/swaggo/swag/cmd/swag
+RUN wget https://github.com/swaggo/swag/releases/download/v1.6.9/swag_1.6.9_Linux_x86_64.tar.gz
+RUN tar xvzf swag_1.6.9_Linux_x86_64.tar.gz
+RUN chmod +x swag
 WORKDIR /go/src/$GOLANG_NAMESPACE/server
 ADD ./server/go.mod /go/src/$GOLANG_NAMESPACE/server/
 ADD ./server/go.sum /go/src/$GOLANG_NAMESPACE/server/
 ENV GO111MODULE=on
 RUN go mod download
 ADD . /go/src/$GOLANG_NAMESPACE/
-RUN swag init
+RUN /go/src/$GOLANG_NAMESPACE/swag init
 RUN go build -ldflags "\
       -w \
       -s \

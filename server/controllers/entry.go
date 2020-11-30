@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
+	"time"
 )
 
 type (
@@ -109,6 +110,8 @@ func UpsertEntry(c echo.Context) error {
 			entry.Created = current.Created
 			entry.SetIsNew(false) // HACK: force update
 			if current.Draft && !entry.Draft {
+				entry.Created = time.Now()
+				entry.Modified = time.Time{} // HACK: reset modified
 				enableNotify = true
 			}
 		}
