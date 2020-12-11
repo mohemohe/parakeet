@@ -38,7 +38,7 @@ export class SettingsStore extends StoreBase {
                 throw new Error();
             }
             const result = await response.json();
-            if (result.value.length == 0) {
+            if (!result.value || result.value.length == 0) {
                 this.sideNavContents = [];
             } else {
                 this.sideNavContents = result.value;
