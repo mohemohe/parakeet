@@ -1,0 +1,15 @@
+---
+version: "3.2"
+services:
+  parakeet:
+    # build: .
+    image: mohemohe/parakeet:latest
+    env_file:
+      - parakeet-production.env
+    networks:
+      - wan
+    ports:
+      - 127.0.0.1:1323:1323
+    restart: on-failure
+networks:
+  wan:
