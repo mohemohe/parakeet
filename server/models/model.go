@@ -2,7 +2,7 @@ package models
 
 import (
 	"github.com/globalsign/mgo"
-	"github.com/mobilusoss/mgo-pubsub"
+	"github.com/mohemohe/mgo-pubsub"
 	"github.com/mohemohe/parakeet/server/configs"
 	"github.com/mohemohe/parakeet/server/models/connection"
 	"github.com/mohemohe/parakeet/server/util"
