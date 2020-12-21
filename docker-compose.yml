@@ -2,8 +2,8 @@
 version: "3.2"
 services:
   parakeet:
-    # build: .
-    image: mohemohe/parakeet:latest
+    build: .
+    # image: mohemohe/parakeet:latest
     environment:
       - MONGO_ADDRESS=mongodb://mongo:27017
     networks:
@@ -15,7 +15,7 @@ services:
       - mongo
     restart: on-failure
   mongo:
-    image: mongo:4.0
+    image: mongo:4.4
     networks:
       - lan
     volumes:
