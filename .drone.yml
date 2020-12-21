@@ -4,13 +4,13 @@ name: default
 
 workspace:
   base: /go
-  path: src/github.com/mohemohe/parakeet
+  path: src/github.com/mi-24v/parakeet
 
 steps:
   - name: docker
     image: plugins/docker
     settings:
-      repo: mohemohe/parakeet
+      repo: mi-24v/parakeet
       username:
         from_secret: dockerhub_username
       password:
