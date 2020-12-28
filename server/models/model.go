@@ -27,6 +27,11 @@ type (
 		Token    string `json:"token"`
 		Template string `json:"template"`
 	}
+	NotifyMisskey struct {
+		BaseURL  string `json:"baseurl"`
+		Token    string `json:"token"`
+		Template string `json:"template"`
+	}
 	ServerSideRendering struct {
 		Entries bool `json:"entries"`
 		Entry   bool `json:"entry"`
@@ -45,6 +50,7 @@ const (
 	KVSideNavContents         = "side_nav_contents"
 	KVSiteTitle               = "site_title"
 	KVNotifyMastodon          = "notify_mastodon"
+	KVNotifyMisskey           = "notify_misskey"
 	KVServerSideRendering     = "server_side_rendering"
 	KVCloudflare              = "cloudflare"
 )
@@ -69,6 +75,11 @@ func InitDB() {
 	setDefaultConfig(KVSiteTitle, "parakeet")
 	setDefaultConfig(KVSideNavContents, []string{})
 	setDefaultConfig(KVNotifyMastodon, util.StructToJsonMap(NotifyMastodon{
+		BaseURL:  "",
+		Token:    "",
+		Template: "ブログを書きました: %ENTRY_TITLE% %ENTRY_URL%",
+	}))
+	setDefaultConfig(KVNotifyMisskey, util.StructToJsonMap(NotifyMisskey{
 		BaseURL:  "",
 		Token:    "",
 		Template: "ブログを書きました: %ENTRY_TITLE% %ENTRY_URL%",

@@ -76,6 +76,8 @@ func initEcho(e *echo.Echo) {
 	e.PUT("/api/v1/settings/site/sidenav", controllers.SetSideNavContents, middlewares.Authorize, middlewares.Authorized)
 	e.GET("/api/v1/settings/notify/mastodon", controllers.GetNotifyMastodon, middlewares.Authorize, middlewares.Authorized)
 	e.PUT("/api/v1/settings/notify/mastodon", controllers.SetNotifyMastodon, middlewares.Authorize, middlewares.Authorized)
+	e.GET("/api/v1/settings/notify/misskey", controllers.GetNotifyMisskey, middlewares.Authorize, middlewares.Authorized)
+	e.PUT("/api/v1/settings/notify/misskey", controllers.SetNotifyMisskey, middlewares.Authorize, middlewares.Authorized)
 	e.GET("/api/v1/settings/render/server", controllers.GetServerSideRendering, middlewares.Authorize, middlewares.Authorized)
 	e.PUT("/api/v1/settings/render/server", controllers.SetServerSideRendering, middlewares.Authorize, middlewares.Authorized)
 	e.GET("/api/v1/settings/cache/mongodb", controllers.GetMongoDBQueryCache, middlewares.Authorize, middlewares.Authorized)

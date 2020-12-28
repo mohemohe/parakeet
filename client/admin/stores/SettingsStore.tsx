@@ -2,7 +2,7 @@ import {action, observable} from "mobx";
 import StoreBase, {IModel, Mode, State} from "./StoreBase";
 import stores from "../../admin/stores";
 
-export interface INotifyMastodon extends IModel {
+export interface INotifyModel extends IModel {
     baseurl: string;
     token: string;
     template: string;
@@ -27,7 +27,10 @@ export class SettingsStore extends StoreBase {
     public sideNavContents: string[];
 
     @observable
-    public notifyMastodon: INotifyMastodon;
+    public notifyMastodon: INotifyModel;
+
+    @observable
+    public notifyMisskey: INotifyModel;
 
     @observable.shallow
     public render: IRender;
@@ -46,7 +49,8 @@ export class SettingsStore extends StoreBase {
 
         this.siteTitle = "";
         this.sideNavContents = [];
-        this.notifyMastodon = {} as INotifyMastodon;
+        this.notifyMastodon = {} as INotifyModel;
+        this.notifyMisskey = {} as INotifyModel;
         this.render = {
             entries: false,
             entry: false,
@@ -218,8 +222,8 @@ export class SettingsStore extends StoreBase {
     }
 
     @action
-    public setNotifyMastodon(notifyMastodon: INotifyMastodon) {
-        this.notifyMastodon = notifyMastodon
+    public setNotifyMastodon(notifyMastodon: INotifyModel) {
+        this.notifyMastodon = notifyMastodon;
     }
 
     @action
@@ -247,6 +251,68 @@ export class SettingsStore extends StoreBase {
             this.setState(State.DONE);
         } catch (e) {
             this.tryShowToast("Mastodon通知の保存に失敗しました");
+            console.error(e);
+            this.setState(State.ERROR);
+        }
+    }
+
+    @action
+    public async getNotifyMisskey() {
+        this.setMode(Mode.GET);
+        this.setState(State.RUNNING);
+
+        try {
+            const url = `${this.apiBasePath}v1/settings/notify/misskey`;
+            const response = await fetch(url, {
+                method: "GET",
+                headers: this.generateFetchHeader(),
+            });
+
+            if (response.status !== 200) {
+                throw new Error();
+            }
+
+            const result = await response.json();
+            this.notifyMisskey = result.value;
+
+            this.setState(State.DONE);
+        } catch (e) {
+            this.tryShowToast("Misskey通知の取得に失敗しました");
+            console.error(e);
+            this.setState(State.ERROR);
+        }
+    }
+
+    @action
+    public setNotifyMisskey(notifyMisskey: INotifyModel) {
+        this.notifyMisskey = notifyMisskey;
+    }
+
+    @action
+    public async putNotifyMisskey() {
+        this.setMode(Mode.GET);
+        this.setState(State.RUNNING);
+
+        try {
+            const url = `${this.apiBasePath}v1/settings/notify/misskey`;
+            const response = await fetch(url, {
+                method: "PUT",
+                headers: this.generateFetchHeader(),
+                body: JSON.stringify(this.notifyMisskey),
+            });
+
+            if (response.status !== 200) {
+                throw new Error();
+            }
+
+            const result = await response.json();
+            this.notifyMisskey = result.value;
+
+            this.tryShowToast("Misskey通知を編集しました");
+            stores.AuthStore.checkAuth();
+            this.setState(State.DONE);
+        } catch (e) {
+            this.tryShowToast("Misskey通知の保存に失敗しました");
             console.error(e);
             this.setState(State.ERROR);
         }
