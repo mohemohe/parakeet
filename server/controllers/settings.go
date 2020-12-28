@@ -95,6 +95,48 @@ func SetNotifyMastodon(c echo.Context) error {
 }
 
 // @Tags setting
+// @Summary get misskey notification
+// @Description Misskeyの通知設定を取得します
+// @Produce json
+// @Security AccessToken
+// @Success 200 {object} models.KV
+// @Failure 401 {object} middlewares.EmptyJson
+// @Router /v1/settings/notify/misskey [get]
+func GetNotifyMisskey(c echo.Context) error {
+	kv := models.GetKVS(models.KVNotifyMisskey)
+	if kv == nil {
+		panic("db error")
+	}
+
+	return c.JSON(http.StatusOK, kv)
+}
+
+// @Tags setting
+// @Summary set misskey notification
+// @Description Misskeyの通知設定を更新します
+// @Produce json
+// @Security AccessToken
+// @Param Body body models.NotifyMisskey true "Body"
+// @Success 200 {object} models.KV
+// @Failure 401 {object} middlewares.EmptyJson
+// @Router /v1/settings/notify/misskey [put]
+func SetNotifyMisskey(c echo.Context) error {
+	reqBody := new(models.NotifyMastodon)
+	if err := c.Bind(reqBody); err != nil {
+		panic("bind error")
+	}
+
+	if err := models.SetKVS(models.KVNotifyMisskey, reqBody); err != nil {
+		panic(err)
+	}
+
+	return c.JSON(http.StatusOK, &models.KV{
+		Key:   models.KVNotifyMisskey,
+		Value: reqBody,
+	})
+}
+
+// @Tags setting
 // @Summary get SSR
 // @Description サーバーサイドレンダリングの設定を取得します
 // @Produce json

@@ -19,6 +19,7 @@ require (
 	github.com/kelseyhightower/envconfig v1.3.0
 	github.com/labstack/echo/v4 v4.0.0
 	github.com/mitchellh/mapstructure v1.1.2
+	github.com/mohemohe/fetch v1.0.0
 	github.com/mohemohe/mgo-pubsub v0.0.0-20201211125819-c2e8968128ce
 	github.com/neko-neko/echo-logrus/v2 v2.0.0
 	github.com/olebedev/gojax v0.0.0-20170318114811-bb153be84336

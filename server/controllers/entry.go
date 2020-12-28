@@ -127,14 +127,25 @@ func UpsertEntry(c echo.Context) error {
 	}
 
 	if enableNotify {
-		kv := models.GetKVS("notify_mastodon")
-		if kv != nil {
-			notifyMastodon := kv.Value.(bson.M)
+		mastodon := models.GetKVS(models.KVNotifyMastodon)
+		if mastodon != nil {
+			notifyMastodon := mastodon.Value.(bson.M)
 			if notifyMastodon["baseurl"] != "" && notifyMastodon["token"] != "" && notifyMastodon["template"] != "" {
 				status := notifyMastodon["template"].(string)
 				status = strings.ReplaceAll(status, "%ENTRY_TITLE%", entry.Title)
 				status = strings.ReplaceAll(status, "%ENTRY_URL%", c.Scheme()+"://"+c.Request().Host+"/entry/"+entry.Id.Hex())
 				go util.PostMastodon(status, notifyMastodon["baseurl"].(string), notifyMastodon["token"].(string))
+			}
+		}
+
+		misskey := models.GetKVS(models.KVNotifyMisskey)
+		if misskey != nil {
+			notifyMisskey := misskey.Value.(bson.M)
+			if notifyMisskey["baseurl"] != "" && notifyMisskey["token"] != "" && notifyMisskey["template"] != "" {
+				status := notifyMisskey["template"].(string)
+				status = strings.ReplaceAll(status, "%ENTRY_TITLE%", entry.Title)
+				status = strings.ReplaceAll(status, "%ENTRY_URL%", c.Scheme()+"://"+c.Request().Host+"/entry/"+entry.Id.Hex())
+				go util.PostMisskey(status, notifyMisskey["baseurl"].(string), notifyMisskey["token"].(string))
 			}
 		}
 	}

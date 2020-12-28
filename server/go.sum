@@ -132,6 +132,8 @@ github.com/modern-go/concurrent v0.0.0-20180228061459-e0a39a4cb421/go.mod h1:6dJ
 github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd/go.mod h1:6dJC0mAP4ikYIbvyc7fijjWJddQyLn8Ig3JB5CqoB9Q=
 github.com/modern-go/reflect2 v0.0.0-20180701023420-4b7aa43c6742/go.mod h1:bx2lNnkwVCuqBIxFjflWJWanXIb3RllmbCylyMrvgv0=
 github.com/modern-go/reflect2 v1.0.1/go.mod h1:bx2lNnkwVCuqBIxFjflWJWanXIb3RllmbCylyMrvgv0=
+github.com/mohemohe/fetch v1.0.0 h1:8M8b6K7n/O/n5RGAx3y9C3arKS5xqnk3avCHy0DaGew=
+github.com/mohemohe/fetch v1.0.0/go.mod h1:YZO9on3y4rYS7RgqsuNpNOViUU9r8CouaaRW3Y4jDo8=
 github.com/mohemohe/mgo-pubsub v0.0.0-20201211125819-c2e8968128ce h1:NsHsygA0VqnZ+ji8lp9tbj8dhA3PIQxJH8mWREJZLz8=
 github.com/mohemohe/mgo-pubsub v0.0.0-20201211125819-c2e8968128ce/go.mod h1:/jM5WmLaDgexv1l6vk/qvIawf+WWbOMwhV65QpfEgJE=
 github.com/neko-neko/echo-logrus v1.1.0 h1:WHSHKtxdzlP7+xBC8DNoz9ER1oJBSp17C3/BAWmdanI=
