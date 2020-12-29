@@ -26,13 +26,13 @@ const styles = {
 export class Footer extends React.Component<IProps, {}> {
     public render() {
         return (
-            <div {...this.props} className={styles.root}>
+            <footer {...this.props} className={styles.root}>
                 <Container maxWidth={"xl"} className={styles.inner}>
                     <p><a href="https://github.com/mohemohe/parakeet">GitHub</a></p>
                     <p><a href="/admin">管理画面</a></p>
                     <p><a href="/swagger">swagger</a></p>
                 </Container>
-            </div>
+            </footer>
         )
     }
 }

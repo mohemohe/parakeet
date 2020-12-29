@@ -853,6 +853,13 @@
     "@parcel/utils" "^1.11.0"
     physical-cpu-count "^2.0.0"
 
+"@types/codeflask@^1.4.2":
+  version "1.4.2"
+  resolved "https://registry.yarnpkg.com/@types/codeflask/-/codeflask-1.4.2.tgz#dda415717f42fe196512e42a0b2e53690b39a4f8"
+  integrity sha512-kHiIcQK7E39stYCbUOid6iAyU99rM65/1eT4I8liCz1TcgXPZif48FGseRCI1MWpbNRStRXAMQXpv8kpkOsbEA==
+  dependencies:
+    "@types/prismjs" "*"
+
 "@types/codemirror@^0.0.65":
   version "0.0.65"
   resolved "https://registry.yarnpkg.com/@types/codemirror/-/codemirror-0.0.65.tgz#5f8d546d40c9d2acb1166167aae9e70d1b9a83b7"
@@ -877,6 +884,11 @@
   version "12.0.7"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-12.0.7.tgz#4f2563bad652b2acb1722d7e7aae2b0ff62d192c"
   integrity sha512-1YKeT4JitGgE4SOzyB9eMwO0nGVNkNEsm9qlIt1Lqm/tG2QEiSMTD4kS3aO6L+w5SClLVxALmIBESK6Mk5wX0A==
+
+"@types/prismjs@*", "@types/prismjs@^1.9.1":
+  version "1.16.2"
+  resolved "https://registry.yarnpkg.com/@types/prismjs/-/prismjs-1.16.2.tgz#c130c977191c988cb35e97585da5d580948cc2d2"
+  integrity sha512-1M/j21xgTde7RPtpJVQebW5rzrquj7S+wnqt4x9uWrIPpr0Ya/uXypcqC2aUQL5gtLXFCKSH7GnjfAijMdfbuA==
 
 "@types/prop-types@*":
   version "15.7.1"
@@ -1561,6 +1573,14 @@ code-point-at@^1.0.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/code-point-at/-/code-point-at-1.1.0.tgz#0d070b4d043a5bea33a2f1a40e2edb3d9a4ccf77"
   integrity sha1-DQcLTQQ6W+ozovGkDi7bPZpMz3c=
+
+codeflask@^1.4.1:
+  version "1.4.1"
+  resolved "https://registry.yarnpkg.com/codeflask/-/codeflask-1.4.1.tgz#c5229854e3f648377922a75f1145f7316030d3db"
+  integrity sha512-4vb2IbE/iwvP0Uubhd2ixVeysm3KNC2pl7SoDaisxq1juhZzvap3qbaX7B2CtpQVvv5V9sjcQK8hO0eTcY0V9Q==
+  dependencies:
+    "@types/prismjs" "^1.9.1"
+    prismjs "^1.14.0"
 
 codemirror-spell-checker@1.1.2:
   version "1.1.2"
@@ -4805,6 +4825,13 @@ prism-react-renderer@^0.1.7:
   resolved "https://registry.yarnpkg.com/prism-react-renderer/-/prism-react-renderer-0.1.7.tgz#dc273d0cb6e4a498ba0775094e9a8b01a3ad2eaa"
   integrity sha512-EhnM0sYfLK103ASK0ViSv0rta//ZGB0dBA9TiFyOvA+zOj5peLmGEG01sLEDwl9sMe+gSqncInafBe1VFTCMvA==
 
+prismjs@^1.14.0:
+  version "1.22.0"
+  resolved "https://registry.yarnpkg.com/prismjs/-/prismjs-1.22.0.tgz#73c3400afc58a823dd7eed023f8e1ce9fd8977fa"
+  integrity sha512-lLJ/Wt9yy0AiSYBf212kK3mM5L8ycwlyTlSxHBAneXLR0nzFMlZ5y7riFPF3E33zXOF2IH95xdY5jIyZbM9z/w==
+  optionalDependencies:
+    clipboard "^2.0.0"
+
 prismjs@^1.8.4, prismjs@~1.17.0:
   version "1.17.1"
   resolved "https://registry.yarnpkg.com/prismjs/-/prismjs-1.17.1.tgz#e669fcbd4cdd873c35102881c33b14d0d68519be"
@@ -4948,6 +4975,11 @@ rc@^1.2.7:
     ini "~1.3.0"
     minimist "^1.2.0"
     strip-json-comments "~2.0.1"
+
+react-codeflask@^0.0.5:
+  version "0.0.5"
+  resolved "https://registry.yarnpkg.com/react-codeflask/-/react-codeflask-0.0.5.tgz#d1e7c142d0f11592d28a767bbcb6cfe21cd865cd"
+  integrity sha512-feAdnKwBFi6RbPyQaAsYFusIF+LNcqNEM6nwxrMvJx+flDeFxtFjRE+50klfnSyVVYA97bNHPTVgAl4FG72sXA==
 
 react-dom@^16.8.6:
   version "16.8.6"

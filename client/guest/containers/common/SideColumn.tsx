@@ -18,7 +18,7 @@ interface IState extends React.ComponentState {
 const styles = {
     root: style({
         $nest: {
-            "& div": {
+            "& section": {
                 margin: "1rem 0",
             },
             "& :first-child": {
@@ -63,7 +63,7 @@ export class SideColumn extends React.Component<IProps, IState> {
         const contents = this.props.SettingsStore!.sideNavContents;
         const scriptRegex = /<script>(.*?)<\/script>/gsi;
         return (
-            <div className={styles.root}>
+            <div id={"side_container"} className={styles.root}>
                 {contents.map((content, index) => {
                     const script = scriptRegex.exec(content);
                     if (script) {
@@ -74,11 +74,11 @@ export class SideColumn extends React.Component<IProps, IState> {
                         }
                     }
                     return (
-                        <EmotionalCard>
+                        <EmotionalCard id={`side_content-${index+1}`} component={"section"}>
                             <ReactMarkdown
                                 key={index}
                                 source={content}
-                                className={`markdown-body ${styles.markdown}`}
+                                className={`side_content_body markdown-body ${styles.markdown}`}
                                 plugins={[[breaks]]}
                                 escapeHtml={false}
                             />

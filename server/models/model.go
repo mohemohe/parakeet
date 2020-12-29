@@ -53,6 +53,7 @@ const (
 	KVNotifyMisskey           = "notify_misskey"
 	KVServerSideRendering     = "server_side_rendering"
 	KVCloudflare              = "cloudflare"
+	KVCustomCSS               = "custom_css"
 )
 
 var pubsub *mgo_pubsub.PubSub
@@ -95,6 +96,7 @@ func InitDB() {
 		ZoneID:   "",
 		APIToken: "",
 	}))
+	setDefaultConfig(KVCustomCSS, "")
 
 	user := GetUserByEmail("root")
 	if user == nil {

@@ -53,16 +53,16 @@ export class Entries extends React.Component<IProps, IState> {
         const page = parseInt(`${this.props.match.params.id || 1}`, 10);
 
         return (
-            <div className={styles.root}>
+            <div id={"entries"} className={styles.root}>
                 {this.props.EntryStore!.formattedEntries.map((entry, index) => <Entry key={`${entry.title}_${index}`} entry={entry} stopToReadMore={true} syntaxHighlighting={!this.props.EntryStore!.isSSR}/>)}
 
-                <div className={styles.pager}>
+                <div id={"pager"} className={styles.pager}>
                     {page > 1 ?
-                        <LinkButton to={`/entries/${page - 1}`} buttonProps={{variant: "contained", color: "primary"}}>新しい投稿</LinkButton> :
+                        <LinkButton to={`/entries/${page - 1}`} id={"pager_newer_button"} buttonProps={{variant: "contained", color: "primary"}}>新しい投稿</LinkButton> :
                         <div/>
                     }
                     {this.props.EntryStore!.info.totalPages > page ?
-                        <LinkButton to={`/entries/${page + 1}`} buttonProps={{variant: "contained", color: "primary"}}>古い投稿</LinkButton> :
+                        <LinkButton to={`/entries/${page + 1}`} id={"pager_older_button"} buttonProps={{variant: "contained", color: "primary"}}>古い投稿</LinkButton> :
                         <div/>
                     }
                 </div>

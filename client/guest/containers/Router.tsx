@@ -71,7 +71,7 @@ export default class Router extends React.Component<IProps, IState> {
 
         return (
             <ReactRouter history={this.history}>
-                <div className={styles.root}>
+                <div id={"parakeet"} className={styles.root}>
                     <Template title={this.props.title}>
                         {this.props.isSSR ?
                             <StaticRouter location={this.props.RouterStore!.location} context={this.context || {}}>

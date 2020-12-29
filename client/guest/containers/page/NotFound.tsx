@@ -13,7 +13,7 @@ export default class Notfound extends React.Component<IProps, IState> {
 
     public render() {
         return (
-            <div>
+            <div className={"notfound"}>
                 <h2>404 not found.</h2>
                 <hr/>
             </div>

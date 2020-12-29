@@ -53,7 +53,15 @@ func Handle(c echo.Context, pool *Pool) error {
 	if titleKV != nil && titleKV.Value != "" {
 		title = titleKV.Value.(string)
 	}
-	initialState, entry := initializeState(c)
+	initialState, entry, shouldHandle := initializeState(c)
+
+	if !shouldHandle {
+		return c.Render(http.StatusOK, "ssr.html", Result{
+			Title: title,
+			Unix:  configs.GetUnix(),
+		})
+	}
+
 	ch := js.Exec(map[string]interface{}{
 		"url":     c.Request().URL.Path,
 		"title":   title,
@@ -100,7 +108,7 @@ func Handle(c echo.Context, pool *Pool) error {
 	}
 }
 
-func initializeState(c echo.Context) (map[string]interface{}, *models.Entry) {
+func initializeState(c echo.Context) (map[string]interface{}, *models.Entry, bool) {
 	path := c.Request().URL.Path
 
 	entries := &models.Entries{}
@@ -110,6 +118,7 @@ func initializeState(c echo.Context) (map[string]interface{}, *models.Entry) {
 
 	enableEntriesSSR := true
 	enableEntrySSR := true
+	shouldHandle := false
 	kv := models.GetKVS(models.KVServerSideRendering)
 	if kv != nil {
 		enableEntriesSSR = kv.Value.(bson.M)["entries"].(bool)
@@ -118,12 +127,14 @@ func initializeState(c echo.Context) (map[string]interface{}, *models.Entry) {
 
 	if enableEntriesSSR && path == "/" {
 		entries = models.GetEntries(5, 1, false)
+		shouldHandle = true
 	}
 	if enableEntriesSSR && strings.HasPrefix(path, "/entries/") {
 		r := regexp.MustCompile(`^/entries/(\d+)`).FindAllStringSubmatch(path, -1)
 		if len(r) == 1 && len(r[0]) == 2 {
 			if page, err := strconv.Atoi(r[0][1]); err == nil {
 				entries = models.GetEntries(5, page, false)
+				shouldHandle = true
 			}
 		}
 	}
@@ -131,6 +142,7 @@ func initializeState(c echo.Context) (map[string]interface{}, *models.Entry) {
 		r := regexp.MustCompile(`^/entry/(.*)`).FindAllStringSubmatch(path, -1)
 		if len(r) == 1 && len(r[0]) == 2 {
 			entry = models.GetEntryById(r[0][1], false)
+			shouldHandle = true
 		}
 	}
 
@@ -140,7 +152,7 @@ func initializeState(c echo.Context) (map[string]interface{}, *models.Entry) {
 			"paginate": toJson(entries.Info),
 			"entry":    toJson(entry),
 		},
-	}, entry
+	}, entry, shouldHandle
 }
 
 func toJson(t interface{}) (result string) {
