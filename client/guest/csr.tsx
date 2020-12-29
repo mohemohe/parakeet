@@ -21,7 +21,7 @@ if (!initialState) {
                 paginate: "{}",
             },
         },
-        title: "parakeet",
+        title: document.title,
     };
     (window as any).__INITIAL_STATE__ = initialState;
 
