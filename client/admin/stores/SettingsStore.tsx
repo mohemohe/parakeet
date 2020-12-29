@@ -44,6 +44,9 @@ export class SettingsStore extends StoreBase {
     @observable.shallow
     public cloudflare: ICloudflare;
 
+    @observable
+    public customCss: string;
+
     constructor() {
         super();
 
@@ -62,6 +65,7 @@ export class SettingsStore extends StoreBase {
             zone_id: "",
             api_token: "",
         } as ICloudflare;
+        this.customCss = "";
     }
 
     @action
@@ -565,6 +569,67 @@ export class SettingsStore extends StoreBase {
             this.setState(State.DONE);
         } catch (e) {
             this.tryShowToast("キャッシュ設定の保存に失敗しました");
+            console.error(e);
+            this.setState(State.ERROR);
+        }
+    }
+
+    @action
+    public async getCustomCss() {
+        this.setMode(Mode.GET);
+        this.setState(State.RUNNING);
+
+        try {
+            const url = `${this.apiBasePath}v1/settings/style/custom`;
+            const response = await fetch(url, {
+                method: "GET",
+            });
+
+            if (response.status !== 200) {
+                throw new Error();
+            }
+            this.customCss = await response.text();
+
+            this.setState(State.DONE);
+        } catch (e) {
+            this.tryShowToast("カスタムCSSの取得に失敗しました");
+            console.error(e);
+            this.setState(State.ERROR);
+        }
+    }
+
+    @action
+    public setCustomCss(css: string) {
+        this.customCss = css;
+    }
+
+    @action
+    public async putCustomCss() {
+        this.setMode(Mode.GET);
+        this.setState(State.RUNNING);
+
+        try {
+            const url = `${this.apiBasePath}v1/settings/style/custom`;
+            const response = await fetch(url, {
+                method: "PUT",
+                headers: this.generateFetchHeader(),
+                body: JSON.stringify({
+                    key: "",
+                    value: this.customCss,
+                }),
+            });
+
+            if (response.status !== 200) {
+                throw new Error();
+            }
+            const result = await response.json();
+            this.siteTitle = result.value;
+
+            this.tryShowToast("カスタムCSSを編集しました");
+            stores.AuthStore.checkAuth();
+            this.setState(State.DONE);
+        } catch (e) {
+            this.tryShowToast("カスタムCSSの保存に失敗しました");
             console.error(e);
             this.setState(State.ERROR);
         }

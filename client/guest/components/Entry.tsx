@@ -1,5 +1,5 @@
 import * as React from "react";
-import {style} from "typestyle";
+import {classes, style} from "typestyle";
 import {IEntry} from "../stores/EntryStore";
 import {COLORS, DARK_COLORS} from "../constants/Style";
 import Card, {CardProps} from "@material-ui/core/Card";
@@ -88,11 +88,11 @@ export class Entry extends React.Component<IProps, {}> {
         const { entry } = this.props;
         const created = new Date(entry._created);
         let modified: Date | undefined;
-        if (entry._modified !== "") {
+        if (entry._modified && entry._modified !== "") {
             modified = new Date(entry._modified);
         }
 
-        let body = entry.body;
+        let body = entry.body || "";
         let showReadMore = false;
         if (this.props.stopToReadMore && body.includes(more)) {
             body = body.split(more).shift() || body;
@@ -108,31 +108,36 @@ export class Entry extends React.Component<IProps, {}> {
             renderers = {code: Plain};
         }
 
+        const nextProps = { ...this.props };
+        delete nextProps.entry;
+        delete nextProps.stopToReadMore;
+        delete nextProps.syntaxHighlighting;
+
         return (
-            <Card {...this.props} className={styles.root} elevation={6}>
-                <div className={styles.title}>
-                    <h2 className={styles.link}>
+            <Card {...nextProps} className={classes("entry", styles.root)} elevation={6} component={"article"}>
+                <div className={classes("entry_header", styles.title)}>
+                    <h2 className={classes("entry_title", styles.link)}>
                         <Link to={`/entry/${entry._id}`}>{entry.title}</Link>
                     </h2>
-                    <div className={styles.subheader}>
-                        <div>
+                    <div className={classes("entry_datetime", styles.subheader)}>
+                        <div className={"entry_created"}>
                             公開: {created.toLocaleString()}
                             {modified ? "," : ""}
                         </div>
-                        {modified ? <div>更新: {modified.toLocaleString()}</div> : <></>}
+                        {modified ? <div className={"entry_updated"}>更新: {modified.toLocaleString()}</div> : <></>}
                     </div>
                 </div>
                 <ReactMarkdown
                     source={body}
-                    className={`markdown-body ${styles.body}`}
+                    className={classes("entry_body", "markdown-body", styles.body)}
                     plugins={[[breaks]]}
                     escapeHtml={false}
                     renderers={renderers}
 
                 />
                 {showReadMore ?
-                    <div className={styles.readMore}>
-                        <LinkButton to={`/entry/${entry._id}?scroll=more`} buttonProps={{variant: "contained", color: "primary"}}>続きを読む</LinkButton>
+                    <div className={classes("entry_readmore", styles.readMore)}>
+                        <LinkButton className={"entry_readmore_button"} to={`/entry/${entry._id}?scroll=more`} buttonProps={{variant: "contained", color: "primary"}}>続きを読む</LinkButton>
                     </div> :
                     undefined
                 }

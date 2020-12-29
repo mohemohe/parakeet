@@ -356,3 +356,47 @@ func SetCloudflare(c echo.Context) error {
 		Value: reqBody,
 	})
 }
+
+// @Tags setting
+// @Summary get custom style
+// @Description カスタムCSSを取得します
+// @Produce text/css
+// @Success 200
+// @Router /v1/settings/style/custom [get]
+func GetCustomCSS(c echo.Context) error {
+	kv := models.GetKVS(models.KVCustomCSS)
+	if kv == nil {
+		panic("db error")
+	}
+
+	res := c.Response()
+	res.Status = http.StatusOK
+	res.Header().Set("Content-Type", "text/css")
+	_, err :=  res.Write([]byte(kv.Value.(string)))
+	return err
+}
+
+// @Tags setting
+// @Summary set custom style
+// @Description カスタムCSSを設定します
+// @Produce json
+// @Security AccessToken
+// @Param Body body Setting true "Body"
+// @Success 200 {object} models.KV
+// @Failure 401 {object} middlewares.EmptyJson
+// @Router /v1/settings/style/custom [put]
+func SetCustomCSS(c echo.Context) error {
+	reqBody := new(Setting)
+	if err := c.Bind(reqBody); err != nil {
+		panic("bind error")
+	}
+
+	if err := models.SetKVS(models.KVCustomCSS, reqBody.Value); err != nil {
+		panic(err)
+	}
+
+	return c.JSON(http.StatusOK, &models.KV{
+		Key:   models.KVCustomCSS,
+		Value: reqBody,
+	})
+}

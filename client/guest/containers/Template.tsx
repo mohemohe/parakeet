@@ -50,14 +50,14 @@ export class Template extends React.Component<IProps, {}> {
         return (
             <>
                 <Header title={this.props.title}/>
-                <EmotionalContainer maxWidth={"lg"}>
-                    <div className={styles.columns}>
-                        <div className={styles.main}>
+                <EmotionalContainer maxWidth={"lg"} component={"main"}>
+                    <div id={"column_container"} className={styles.columns}>
+                        <div id={"main_column"} className={styles.main}>
                             {this.props.children}
                         </div>
                         {
                             this.props.SettingsStore!.sideNavContents.filter((content) => content.length !== 0).length !== 0 ?
-                                <div className={styles.side}>
+                                <div id={"side_column"} className={styles.side}>
                                     <SideColumn/>
                                 </div> :
                                 undefined

@@ -36,7 +36,7 @@ export class UserInfo extends React.Component<IProps, {}> {
             <div className={styles.root} {...this.props}>
                 <Identicon source={this.props.identicon} style={{width: 64, height: 64}}/>
                 <div className={styles.names}>
-                    <Typography variant={"title"}>
+                    <Typography variant={"subtitle1"}>
                         {this.props.name}
                     </Typography>
                     <p className={styles.role}>
