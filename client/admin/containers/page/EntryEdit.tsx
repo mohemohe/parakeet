@@ -5,10 +5,11 @@ import {inject, observer} from "mobx-react";
 import {EntryStore, IEntry} from "../../stores/EntryStore";
 import {RouteComponentProps} from "react-router";
 import {style} from "typestyle";
-import {Fab, FormControl, FormControlLabel, Switch} from "@material-ui/core";
+import {Box, Fab, FormControl, FormControlLabel, Switch} from "@material-ui/core";
 import Save from "@material-ui/icons/Save";
 import {ValidatableTextField} from "../../components/ValidatableTextField";
 import {TitleBar} from "../../../common/components/TitleBar";
+import {Container} from "../../../common/components/Container";
 
 interface IProps extends RouteComponentProps<{id: string}> {
     EntryStore?: EntryStore;
@@ -22,11 +23,23 @@ const styles = {
         display: "block",
     }),
     simpleMDE: style({
+        display: "flex",
+        flexDirection: "column",
+        width: "100%",
+
         $nest: {
             "& .fullscreen": {
                 zIndex: 1000,
             },
+            "& .CodeMirror": {
+                height: "300px !important",
+                flex: 1,
+            },
+            "& .editor-statusbar": {
+                marginRight: 64,
+            },
             "& .CodeMirror-fullscreen": {
+                height: "auto !important",
                 zIndex: 1000,
             },
             "& .CodeMirror-fullscreen + .editor-preview": {
@@ -76,57 +89,79 @@ export class EntryEdit extends React.Component<IProps, IState> {
         const insertReadMore = {
             name: "ReadMore",
             action: (editor: any) => {
-                const current = editor.value();
-                editor.value(current + "\n" + "<!-- more -->" + "\n");
+                const moreText = "\n" + "<!-- more -->" + "\n";
+
+                const codemirror = editor.codemirror;
+
+                // REF: https://stackoverflow.com/a/42675408
+                const selection = codemirror.getSelection();
+                if (selection.length > 0) {
+                    codemirror.replaceSelection("\n" + moreText + "\n");
+                    return;
+                }
+                const doc = codemirror.getDoc();
+                const cursor = doc.getCursor();
+                doc.replaceRange(moreText, cursor);
             },
             className: "fa fa-minus-square",
             title: "Insert 'Read More'",
         };
 
         return (
-            <div>
+            <>
                 <TitleBar>{pageTitle}</TitleBar>
-                <FormControl className={styles.control}>
-                    <ValidatableTextField
-                        label={"タイトル"}
-                        fullWidth={true}
-                        validators={[]}
-                        onChangeValue={(event) => this.props.EntryStore!.setEntry({...entry, title: event.target.value})}
-                        value={title}
-                        InputLabelProps={{shrink: true}}
-                    />
-                </FormControl>
-                <FormControlLabel
-                    className={styles.control}
-                    control={
-                        <Switch
-                            checked={draft}
-                            onChange={(event) => this.props.EntryStore!.setEntry({...entry, draft: event.target.checked})}
-                            color="primary"
+                <Container>
+                    <Box>
+                        <FormControl className={styles.control}>
+                            <ValidatableTextField
+                                label={"タイトル"}
+                                fullWidth={true}
+                                validators={[]}
+                                onChangeValue={(event) => this.props.EntryStore!.setEntry({...entry, title: event.target.value})}
+                                value={title}
+                                InputLabelProps={{shrink: true}}
+                            />
+                        </FormControl>
+                    </Box>
+
+                    <Box>
+                        <FormControlLabel
+                            className={styles.control}
+                            control={
+                                <Switch
+                                    checked={draft}
+                                    onChange={(event) => this.props.EntryStore!.setEntry({...entry, draft: event.target.checked})}
+                                    color="primary"
+                                />
+                            }
+                            label="下書き"
                         />
-                    }
-                    label="下書き"
-                />
-                <SimpleMDE
-                    className={styles.simpleMDE}
-                    onChange={(body) => this.props.EntryStore!.setEntry({...entry, body})}
-                    value={body}
-                    options={{
-                        spellChecker: false,
-                        previewClass: ["editor-preview", "markdown-body"],
-                        toolbar: [
-                            "bold", "italic", "strikethrough", "|",
-                            "heading-smaller", "heading-bigger", "|",
-                            "code", "quote", "unordered-list", "ordered-list", "table", "|",
-                            "link", "image", insertReadMore, "|",
-                            "preview", "side-by-side", "fullscreen", "|",
-                            "guide",
-                        ],
-                    }}/>
-                <Fab className={styles.saveButton} color={"primary"} onClick={() => this.props.EntryStore!.putEntry()}>
-                    <Save/>
-                </Fab>
-            </div>
+                    </Box>
+
+                    <Box display={"flex"} flex={1} width={"100%"}>
+                        <SimpleMDE
+                            className={styles.simpleMDE}
+                            onChange={(body) => this.props.EntryStore!.setEntry({...entry, body})}
+                            value={body}
+                            options={{
+                                spellChecker: false,
+                                previewClass: ["editor-preview", "markdown-body"],
+                                toolbar: [
+                                    "bold", "italic", "strikethrough", "|",
+                                    "heading-smaller", "heading-bigger", "|",
+                                    "code", "quote", "unordered-list", "ordered-list", "table", "|",
+                                    "link", "image", insertReadMore, "|",
+                                    "preview", "side-by-side", "fullscreen", "|",
+                                    "guide",
+                                ],
+                            }}/>
+                    </Box>
+
+                    <Fab className={styles.saveButton} color={"primary"} onClick={() => this.props.EntryStore!.putEntry()}>
+                        <Save/>
+                    </Fab>
+                </Container>
+            </>
         );
     }
 }

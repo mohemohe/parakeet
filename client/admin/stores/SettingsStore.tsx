@@ -11,6 +11,7 @@ export interface INotifyModel extends IModel {
 export interface IRender extends IModel {
     entries: boolean;
     entry: boolean;
+    timeout: number;
 }
 
 export interface ICloudflare extends IModel {
@@ -57,6 +58,7 @@ export class SettingsStore extends StoreBase {
         this.render = {
             entries: false,
             entry: false,
+            timeout: 3000,
         } as IRender;
         this.mongoDbQueryCache = false;
         this.ssrPageCache = false;
@@ -339,6 +341,9 @@ export class SettingsStore extends StoreBase {
             }
 
             const result = await response.json();
+            if (!result.value.timeout || result.value.timeout === 0) {
+                result.value.timeout = 3000;
+            }
             this.render = result.value;
 
             this.setState(State.DONE);
