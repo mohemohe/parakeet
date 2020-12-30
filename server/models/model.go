@@ -35,6 +35,7 @@ type (
 	ServerSideRendering struct {
 		Entries bool `json:"entries"`
 		Entry   bool `json:"entry"`
+		Timeout float64 `json:"timeout"`
 	}
 	Cloudflare struct {
 		Enable   bool   `json:"enable"`
@@ -88,6 +89,7 @@ func InitDB() {
 	setDefaultConfig(KVServerSideRendering, util.StructToJsonMap(ServerSideRendering{
 		Entries: true,
 		Entry:   true,
+		Timeout: 3000,
 	}))
 	setDefaultConfig(KVEnableMongoDBQueryCache, true)
 	setDefaultConfig(KVEnableSSRPageCache, false)

@@ -53,7 +53,7 @@ func Handle(c echo.Context, pool *Pool) error {
 	if titleKV != nil && titleKV.Value != "" {
 		title = titleKV.Value.(string)
 	}
-	initialState, entry, shouldHandle := initializeState(c)
+	initialState, entry, shouldHandle, timeout := initializeState(c)
 
 	if !shouldHandle {
 		return c.Render(http.StatusOK, "ssr.html", Result{
@@ -97,18 +97,16 @@ func Handle(c echo.Context, pool *Pool) error {
 			util.Logger().WithField("error", res.Error).Errorln("js result error")
 			return c.Render(http.StatusInternalServerError, "ssr.html", res)
 		}
-	case <-time.After(3 * time.Second):
-		util.Logger().Errorln("cant keep up!")
-		return c.Render(http.StatusInternalServerError, "ssr.html", Result{
-			Error: "timeout",
+	case <-time.After(time.Duration(timeout) * time.Millisecond):
+		util.Logger().Warn("cant keep up!", "fallback to CSR")
+		return c.Render(http.StatusOK, "ssr.html", Result{
 			Title: title,
-			Meta:  "",
 			Unix:  configs.GetUnix(),
 		})
 	}
 }
 
-func initializeState(c echo.Context) (map[string]interface{}, *models.Entry, bool) {
+func initializeState(c echo.Context) (map[string]interface{}, *models.Entry, bool, int) {
 	path := c.Request().URL.Path
 
 	entries := &models.Entries{}
@@ -118,11 +116,16 @@ func initializeState(c echo.Context) (map[string]interface{}, *models.Entry, boo
 
 	enableEntriesSSR := true
 	enableEntrySSR := true
+	timeout := 3000
 	shouldHandle := false
 	kv := models.GetKVS(models.KVServerSideRendering)
 	if kv != nil {
-		enableEntriesSSR = kv.Value.(bson.M)["entries"].(bool)
-		enableEntrySSR = kv.Value.(bson.M)["entry"].(bool)
+		value := kv.Value.(bson.M)
+		enableEntriesSSR = value["entries"].(bool)
+		enableEntrySSR = value["entry"].(bool)
+		if value["timeout"] != nil {
+			timeout = int(value["timeout"].(float64))
+		}
 	}
 
 	if enableEntriesSSR && path == "/" {
@@ -152,7 +155,7 @@ func initializeState(c echo.Context) (map[string]interface{}, *models.Entry, boo
 			"paginate": toJson(entries.Info),
 			"entry":    toJson(entry),
 		},
-	}, entry, shouldHandle
+	}, entry, shouldHandle, timeout
 }
 
 func toJson(t interface{}) (result string) {

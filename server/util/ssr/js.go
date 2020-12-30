@@ -88,7 +88,7 @@ func (this *JS) Exec(req map[string]interface{}) <-chan Result {
 			util.Logger().Errorln(err)
 		}
 	}()
-	this.EventLoop.RunOnLoop(func(runtime *goja.Runtime) {
+	go this.EventLoop.RunOnLoop(func(runtime *goja.Runtime) {
 		param := runtime.ToValue(req)
 		callback := runtime.ToValue(func(call goja.FunctionCall) goja.Value {
 			util.Logger().Debugln("inner callback")
