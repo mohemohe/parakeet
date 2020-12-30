@@ -89,8 +89,19 @@ export class EntryEdit extends React.Component<IProps, IState> {
         const insertReadMore = {
             name: "ReadMore",
             action: (editor: any) => {
-                const current = editor.value();
-                editor.value(current + "\n" + "<!-- more -->" + "\n");
+                const moreText = "\n" + "<!-- more -->" + "\n";
+
+                const codemirror = editor.codemirror;
+
+                // REF: https://stackoverflow.com/a/42675408
+                const selection = codemirror.getSelection();
+                if (selection.length > 0) {
+                    codemirror.replaceSelection("\n" + moreText + "\n");
+                    return;
+                }
+                const doc = codemirror.getDoc();
+                const cursor = doc.getCursor();
+                doc.replaceRange(moreText, cursor);
             },
             className: "fa fa-minus-square",
             title: "Insert 'Read More'",
