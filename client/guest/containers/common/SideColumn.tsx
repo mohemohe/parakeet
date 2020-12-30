@@ -61,11 +61,12 @@ export class SideColumn extends React.Component<IProps, IState> {
 
     public render() {
         const contents = this.props.SettingsStore!.sideNavContents;
-        const scriptRegex = /<script>(.*?)<\/script>/gsi;
         return (
             <div id={"side_container"} className={styles.root}>
                 {contents.map((content, index) => {
+                    const scriptRegex = /<script>(.*?)<\/script>/gsi;
                     const script = scriptRegex.exec(content);
+                    console.log("script:", content, script);
                     if (script) {
                         try {
                             (window as any).eval(script[1] || "");
