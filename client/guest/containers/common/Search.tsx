@@ -12,7 +12,7 @@ import {
     Fab, IconButton, List, ListItem, ListItemText,
     TextField, Typography
 } from "@material-ui/core";
-import {CloseOutlined} from "@material-ui/icons";
+import CloseOutlined from "@material-ui/icons/CloseOutlined";
 
 interface IProps {
     RouterStore?: RouterStore;
