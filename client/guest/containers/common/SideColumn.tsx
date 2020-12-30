@@ -43,7 +43,25 @@ const styles = {
                 maxWidth: "100%",
                 minHeight: "unset",
                 height: "auto",
-            }
+            },
+            "& h1": {
+                maxWidth: "100%",
+            },
+            "& h2": {
+                maxWidth: "100%",
+            },
+            "& h3": {
+                maxWidth: "100%",
+            },
+            "& h4": {
+                maxWidth: "100%",
+            },
+            "& h5": {
+                maxWidth: "100%",
+            },
+            "& h6": {
+                maxWidth: "100%",
+            },
         },
     }),
 };
