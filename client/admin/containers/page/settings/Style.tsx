@@ -6,8 +6,8 @@ import {FormControl, Button, Box, Typography} from "@material-ui/core";
 import {classes, style} from "typestyle";
 import {AuthStore} from "../../../stores/AuthStore";
 import {TitleBar} from "../../../../common/components/TitleBar";
-import { CodeFlaskReact } from "react-codeflask";
-import Card from "@material-ui/core/Card";
+import {Container} from "../../../../common/components/Container";
+import {CodeFlask} from "../../../components/CodeFlask";
 
 interface IProps extends RouteComponentProps<{id: string}> {
     AuthStore?: AuthStore;
@@ -21,17 +21,6 @@ const styles = {
     control: style({
         display: "flex",
         flex: 1,
-    }),
-    button: style({
-        marginTop: "1rem",
-    }),
-    codeflask: style({
-        $nest: {
-            "& > div": {
-                flex: 1,
-
-            },
-        },
     }),
 };
 
@@ -52,24 +41,31 @@ export class StyleSetting extends React.Component<IProps, IState> {
         return (
             <>
                 <TitleBar>外観</TitleBar>
-                <Box display={"flex"} flex={1} flexDirection={"column"}>
-                    <Typography variant="h6" gutterBottom>
-                        カスタムCSS
-                    </Typography>
-                    <Card elevation={2} className={classes(styles.control)}>
-                    <FormControl className={classes(styles.control, styles.codeflask)}>
-                        <CodeFlaskReact
-                            code={customCss}
-                            onChange={(css: string) => this.props.SettingsStore!.setCustomCss(css)}
-                        />
-                    </FormControl>
-                    </Card>
-                </Box>
-                <Box>
-                    <Button className={styles.button} variant={"contained"} color={"primary"} onClick={() => {
-                        this.props.SettingsStore!.putCustomCss();
-                    }}>保存</Button>
-                </Box>
+                <Container>
+                    <Box display={"flex"} flex={1} flexDirection={"column"} marginBottom={2}>
+                        <Typography variant="h6" gutterBottom>
+                            カスタムCSS
+                        </Typography>
+                        <FormControl className={classes(styles.control)}>
+                            <CodeFlask
+                                elevation={2}
+                                value={customCss}
+                                options={{
+                                    language: "css",
+                                    lineNumbers: true,
+                                    handleTabs: true,
+                                    tabSize: 2,
+                                }}
+                                onUpdate={(css: string) => this.props.SettingsStore!.setCustomCss(css)}
+                            />
+                        </FormControl>
+                    </Box>
+                    <Box display={"flex"} justifyContent={"flex-end"}>
+                        <Button variant={"contained"} color={"primary"} onClick={() => {
+                            this.props.SettingsStore!.putCustomCss();
+                        }}>保存</Button>
+                    </Box>
+                </Container>
             </>
         );
     }

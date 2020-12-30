@@ -38,7 +38,6 @@ const styles = {
         minHeight: "100%",
         width: "100%",
         maxWidth: "100%",
-        padding: "1rem",
         overflow: "auto",
     }),
     logout: style({
