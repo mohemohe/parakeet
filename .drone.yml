@@ -10,10 +10,10 @@ steps:
   - name: slack notification on start
     image: plugins/slack
     settings:
-    webhook:
-    from_secret: slack_webhook_url
-    template: >
-      {{repo.owner}}/{{repo.name}} ({{build.branch}}) x86_64 build #{{build.number}} start: {{build.link}}
+      webhook:
+        from_secret: slack_webhook_url
+      template: >
+        {{repo.owner}}/{{repo.name}} ({{build.branch}}) x86_64 build #{{build.number}} start: {{build.link}}
     when:
       branch:
         - master
@@ -33,14 +33,14 @@ steps:
   - name: slack notification on complete
     image: plugins/slack
     settings:
-    webhook:
-    from_secret: slack_webhook_url
-    template: >
-      {{#success build.status}}
-         {{repo.owner}}/{{repo.name}} ({{build.branch}}) x86_64 build #{{build.number}} succeeded: {{build.link}}
-      {{else}}
-      {{repo.owner}}/{{repo.name}} ({{build.branch}}) x86_64 build #{{build.number}} failed: {{build.link}}
-      {{/success}}
+      webhook:
+        from_secret: slack_webhook_url
+      template: >
+        {{#success build.status}}
+           {{repo.owner}}/{{repo.name}} ({{build.branch}}) x86_64 build #{{build.number}} succeeded: {{build.link}}
+        {{else}}
+        {{repo.owner}}/{{repo.name}} ({{build.branch}}) x86_64 build #{{build.number}} failed: {{build.link}}
+        {{/success}}
     when:
       branch:
         - master
@@ -64,10 +64,10 @@ steps:
   - name: slack notification on start
     image: plugins/slack
     settings:
-    webhook:
-    from_secret: slack_webhook_url
-    template: >
-      {{repo.owner}}/{{repo.name}} ({{build.branch}}) arm64 build #{{build.number}} start: {{build.link}}
+      webhook:
+        from_secret: slack_webhook_url
+      template: >
+        {{repo.owner}}/{{repo.name}} ({{build.branch}}) arm64 build #{{build.number}} start: {{build.link}}
     when:
       branch:
         - master
@@ -88,14 +88,14 @@ steps:
   - name: slack notification on complete
     image: plugins/slack
     settings:
-    webhook:
-    from_secret: slack_webhook_url
-    template: >
-      {{#success build.status}}
-         {{repo.owner}}/{{repo.name}} ({{build.branch}}) arm64 build #{{build.number}} succeeded: {{build.link}}
-      {{else}}
-      {{repo.owner}}/{{repo.name}} ({{build.branch}}) arm64 build #{{build.number}} failed: {{build.link}}
-      {{/success}}
+      webhook:
+        from_secret: slack_webhook_url
+      template: >
+        {{#success build.status}}
+           {{repo.owner}}/{{repo.name}} ({{build.branch}}) arm64 build #{{build.number}} succeeded: {{build.link}}
+        {{else}}
+        {{repo.owner}}/{{repo.name}} ({{build.branch}}) arm64 build #{{build.number}} failed: {{build.link}}
+        {{/success}}
     when:
       branch:
         - master
