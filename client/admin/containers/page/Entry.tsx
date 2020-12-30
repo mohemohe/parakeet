@@ -5,7 +5,7 @@ import {AutoTable} from "../../components/AutoTable";
 import {LinkButton} from "../../../common/components/LinkButton";
 import {TitleBar} from "../../../common/components/TitleBar";
 import {Container} from "../../../common/components/Container";
-import {Box} from "@material-ui/core";
+import {Box, Typography} from "@material-ui/core";
 
 
 interface IProps extends React.ClassAttributes<{}> {
@@ -49,13 +49,18 @@ export class Entry extends React.Component<IProps, IState> {
                     </Box>
                     <AutoTable
                         items={this.props.EntryStore!.editableEntries}
-                        order={["_id", "title", "_draft", "_created", "_modified", "path"]}
-                        replacer={new Map<string, string>([["_id", "ID"], ["title", "タイトル"], ["_draft", "下書き"], ["_created", "作成日時"], ["_modified", "更新日時"], ["path", " "]])}
+                        order={["_id", "title", "_find_count", "_draft", "_created", "_modified", "path"]}
+                        replacer={new Map<string, string>([["_id", "ID"], ["title", "タイトル"], ["_find_count", "表示回数"], ["_draft", "下書き"], ["_created", "作成日時"], ["_modified", "更新日時"], ["path", " "]])}
                         onClickBack={() => this.props.EntryStore!.getEntries(this.back)}
                         onClickForward={() => this.props.EntryStore!.getEntries(this.forward)}
                         disableBackButton={this.index === 1}
                         disableForwardButton={this.index === this.props.EntryStore!.info.totalPages}
                     />
+                    <Box>
+                        <Typography variant={"caption"}>
+                            表示回数は個別ページにアクセスされた段階でカウントされます
+                        </Typography>
+                    </Box>
                 </Container>
             </>
         );

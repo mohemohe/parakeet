@@ -48,6 +48,9 @@ export class SettingsStore extends StoreBase {
     @observable
     public customCss: string;
 
+    @observable
+    public mongoDbSearch: string;
+
     constructor() {
         super();
 
@@ -68,6 +71,7 @@ export class SettingsStore extends StoreBase {
             api_token: "",
         } as ICloudflare;
         this.customCss = "";
+        this.mongoDbSearch = "";
     }
 
     @action
@@ -628,13 +632,75 @@ export class SettingsStore extends StoreBase {
                 throw new Error();
             }
             const result = await response.json();
-            this.siteTitle = result.value;
+            this.customCss = result.value;
 
             this.tryShowToast("カスタムCSSを編集しました");
             stores.AuthStore.checkAuth();
             this.setState(State.DONE);
         } catch (e) {
             this.tryShowToast("カスタムCSSの保存に失敗しました");
+            console.error(e);
+            this.setState(State.ERROR);
+        }
+    }
+
+
+    @action
+    public async getMongoDbSearch() {
+        this.setMode(Mode.GET);
+        this.setState(State.RUNNING);
+
+        try {
+            const url = `${this.apiBasePath}v1/settings/search/mongodb`;
+            const response = await fetch(url, {
+                method: "GET",
+            });
+
+            if (response.status !== 200) {
+                throw new Error();
+            }
+            this.mongoDbSearch = await response.text();
+
+            this.setState(State.DONE);
+        } catch (e) {
+            this.tryShowToast("MongoDB検索設定の取得に失敗しました");
+            console.error(e);
+            this.setState(State.ERROR);
+        }
+    }
+
+    @action
+    public setMongoDbSearch(type: string) {
+        this.mongoDbSearch = type;
+    }
+
+    @action
+    public async putMongoDbSearch() {
+        this.setMode(Mode.GET);
+        this.setState(State.RUNNING);
+
+        try {
+            const url = `${this.apiBasePath}v1/settings/search/mongodb`;
+            const response = await fetch(url, {
+                method: "PUT",
+                headers: this.generateFetchHeader(),
+                body: JSON.stringify({
+                    key: "",
+                    value: this.mongoDbSearch,
+                }),
+            });
+
+            if (response.status !== 200) {
+                throw new Error();
+            }
+            const result = await response.json();
+            this.mongoDbSearch = result.value;
+
+            this.tryShowToast("MongoDB検索設定を編集しました");
+            stores.AuthStore.checkAuth();
+            this.setState(State.DONE);
+        } catch (e) {
+            this.tryShowToast("MongoDB検索設定の保存に失敗しました");
             console.error(e);
             this.setState(State.ERROR);
         }

@@ -36,6 +36,12 @@ export class SingleEntry extends React.Component<IProps, IState> {
         this.props.EntryStore!.getEntry(this.props.match.params.id);
     }
 
+    public UNSAFE_componentWillReceiveProps(nextProps: Readonly<IProps>, nextContext: any) {
+        if (this.props.match.params.id !== nextProps.match.params.id) {
+            this.props.EntryStore!.getEntry(nextProps.match.params.id);
+        }
+    }
+
     public render() {
         return (
             <div id={"entries"} className={styles.root}>

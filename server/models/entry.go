@@ -4,7 +4,9 @@ import (
 	"github.com/globalsign/mgo/bson"
 	"github.com/go-bongo/bongo"
 	"github.com/mohemohe/parakeet/server/models/connection"
+	"regexp"
 	"strconv"
+	"strings"
 )
 
 type (
@@ -15,6 +17,7 @@ type (
 		Body               string        `bson:"body" json:"body"`
 		Author             bson.ObjectId `bson:"author" json:"author"`
 		Draft              bool          `bson:"draft" json:"draft"`
+		FindCount          *int          `bson:"find_count" json:"find_count,omitempty"`
 	}
 
 	Entries struct {
@@ -23,7 +26,7 @@ type (
 	}
 )
 
-func GetEntryById(id string, includeDraft bool) *Entry {
+func GetEntryById(id string, includeDraft bool, shouldCount bool) *Entry {
 	cacheKey := "entry:" + id
 
 	entry := new(Entry)
@@ -54,11 +57,20 @@ func GetEntryById(id string, includeDraft bool) *Entry {
 		}
 		return nil
 	}
+	if shouldCount {
+		go func() {
+			conn.Collection(collections.Entries).Collection().UpdateId(bson.ObjectIdHex(id), bson.M{
+				"$inc": bson.M{
+					"find_count": 1,
+				},
+			})
+		}()
+	}
 	return entry
 }
 
-func GetEntries(perPage int, page int, includeDraft bool) *Entries {
-	cacheKey := "entries:" + strconv.Itoa(perPage) + ":" + strconv.Itoa(page)
+func GetEntries(perPage int, page int, search string, includeDraft bool) *Entries {
+	cacheKey := "entries:" + strconv.Itoa(perPage) + ":" + strconv.Itoa(page) + ":" + search
 
 	entries := new(Entries)
 	if err := GetCache(cacheKey, entries); err == nil {
@@ -72,6 +84,27 @@ func GetEntries(perPage int, page int, includeDraft bool) *Entries {
 	if !includeDraft {
 		query["draft"] = bson.M{
 			"$ne": true,
+		}
+	}
+
+	allowSearch := false
+	kv := GetKVS(KVMongoDBSearch)
+	if kv != nil {
+		allowSearch = kv.Value.(string) == "regex"
+	}
+	if allowSearch && search != "" {
+		word := strings.Split(search, " ")
+		titleCriteria := make([]bson.M, 0)
+		bodyCriteria := make([]bson.M, 0)
+		for _, v := range word {
+			regex := bson.RegEx{`.*` + regexp.QuoteMeta(v) + `.*`, ""}
+			titleCriteria = append(titleCriteria, bson.M{"title": regex})
+			bodyCriteria = append(bodyCriteria, bson.M{"body": regex})
+		}
+
+		query["$or"] = []bson.M{
+			{"$and": titleCriteria},
+			{"$and": bodyCriteria},
 		}
 	}
 

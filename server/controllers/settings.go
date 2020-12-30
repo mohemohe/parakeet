@@ -400,3 +400,43 @@ func SetCustomCSS(c echo.Context) error {
 		Value: reqBody,
 	})
 }
+
+// @Tags setting
+// @Summary get mongodb regex search
+// @Description MongoDBの検索設定を取得します
+// @Produce json
+// @Success 200
+// @Router /v1/settings/search/mongodb [get]
+func GetMongoDBSearch(c echo.Context) error {
+	kv := models.GetKVS(models.KVMongoDBSearch)
+	if kv == nil {
+		panic("db error")
+	}
+
+	return c.String(http.StatusOK, kv.Value.(string))
+}
+
+// @Tags setting
+// @Summary set mongodb regex search
+// @Description MongoDBの検索設定を設定します
+// @Produce json
+// @Security AccessToken
+// @Param Body body Setting true "Body"
+// @Success 200 {object} models.KV
+// @Failure 401 {object} middlewares.EmptyJson
+// @Router /v1/settings/search/mongodb [put]
+func SetMongoDBSearch(c echo.Context) error {
+	reqBody := new(Setting)
+	if err := c.Bind(reqBody); err != nil {
+		panic("bind error")
+	}
+
+	if err := models.SetKVS(models.KVMongoDBSearch, reqBody.Value); err != nil {
+		panic(err)
+	}
+
+	return c.JSON(http.StatusOK, &models.KV{
+		Key:   models.KVCustomCSS,
+		Value: reqBody,
+	})
+}

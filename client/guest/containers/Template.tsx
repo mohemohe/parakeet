@@ -7,10 +7,12 @@ import {style} from "typestyle";
 import {SIZES} from "../constants/Style";
 import {SideColumn} from "./common/SideColumn";
 import {SettingsStore} from '../stores/SettingsStore';
+import {Search} from "./common/Search";
 
 export interface IProps {
     title: string;
     SettingsStore?: SettingsStore;
+    showSearch: boolean;
 }
 
 const styles = {
@@ -44,6 +46,7 @@ const styles = {
 export class Template extends React.Component<IProps, {}> {
     public componentDidMount() {
         this.props.SettingsStore!.getSideNavContents();
+        this.props.SettingsStore!.getMongoDbSearch();
     }
 
     public render() {
@@ -65,6 +68,7 @@ export class Template extends React.Component<IProps, {}> {
                     </div>
                 </EmotionalContainer>
                 <Footer/>
+                {this.props.showSearch && <Search />}
             </>
         );
     }
