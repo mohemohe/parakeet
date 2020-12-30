@@ -15,8 +15,8 @@ steps:
     template: >
       {{repo.owner}}/{{repo.name}} ({{build.branch}}) x86_64 build #{{build.number}} start: {{build.link}}
     when:
-    branch:
-      - master
+      branch:
+        - master
 
   - name: docker
     image: plugins/docker
@@ -42,11 +42,11 @@ steps:
       {{repo.owner}}/{{repo.name}} ({{build.branch}}) x86_64 build #{{build.number}} failed: {{build.link}}
       {{/success}}
     when:
-    branch:
-      - master
-    status:
-      - success
-      - failure
+      branch:
+        - master
+      status:
+        - success
+        - failure
 
 ---
 kind: pipeline
@@ -69,8 +69,8 @@ steps:
     template: >
       {{repo.owner}}/{{repo.name}} ({{build.branch}}) arm64 build #{{build.number}} start: {{build.link}}
     when:
-    branch:
-      - master
+      branch:
+        - master
 
   - name: docker
     image: plugins/docker
@@ -97,8 +97,8 @@ steps:
       {{repo.owner}}/{{repo.name}} ({{build.branch}}) arm64 build #{{build.number}} failed: {{build.link}}
       {{/success}}
     when:
-    branch:
-      - master
-    status:
-      - success
-      - failure
+      branch:
+        - master
+      status:
+        - success
+        - failure
