@@ -68,7 +68,7 @@ export class Template extends React.Component<IProps, {}> {
                     </div>
                 </EmotionalContainer>
                 <Footer/>
-                {this.props.showSearch && <Search />}
+                {this.props.showSearch && this.props.SettingsStore!.mongoDbSearch === "regex" && <Search />}
             </>
         );
     }
