@@ -2,6 +2,7 @@ import ToastStore from "./ToastStore";
 import {RouterStore} from "mobx-react-router";
 import {EntryStore} from "./EntryStore";
 import {SettingsStore} from "./SettingsStore";
+import {SearchStore} from "./SearchStore";
 
 export interface ISSRState {
     entryStore: {
@@ -16,6 +17,7 @@ let cached: {
     RouterStore: RouterStore;
     EntryStore: EntryStore;
     SettingsStore: SettingsStore;
+    SearchStore: SearchStore;
 };
 
 export default function createStore(isSSR: boolean, ssrState: ISSRState) {
@@ -24,6 +26,7 @@ export default function createStore(isSSR: boolean, ssrState: ISSRState) {
         RouterStore: new RouterStore(),
         EntryStore: new EntryStore(JSON.parse(ssrState.entryStore.entries), JSON.parse(ssrState.entryStore.entry), JSON.parse(ssrState.entryStore.paginate), isSSR),
         SettingsStore: new SettingsStore(isSSR),
+        SearchStore: new SearchStore(isSSR),
     };
     return cached;
 };

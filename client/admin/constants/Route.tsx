@@ -16,6 +16,7 @@ import {NotifySetting} from "../containers/page/settings/Notify";
 import {RenderSetting} from "../containers/page/settings/Render";
 import {CacheSetting} from "../containers/page/settings/Cache";
 import {StyleSetting} from "../containers/page/settings/Style";
+import {SearchSetting} from "../containers/page/settings/Search";
 
 export interface IRouteInfo {
     name: string;
@@ -121,6 +122,13 @@ export const ROUTES: IRouteInfo[] = [
                 name: "外観",
                 path: "/settings/style",
                 component: StyleSetting,
+                showLeftNav: true,
+                permission: [1],
+            },
+            {
+                name: "検索",
+                path: "/settings/search",
+                component: SearchSetting,
                 showLeftNav: true,
                 permission: [1],
             },

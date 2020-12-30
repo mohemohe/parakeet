@@ -55,6 +55,7 @@ const (
 	KVServerSideRendering     = "server_side_rendering"
 	KVCloudflare              = "cloudflare"
 	KVCustomCSS               = "custom_css"
+	KVMongoDBSearch      = "mongodb_search"
 )
 
 var pubsub *mgo_pubsub.PubSub
@@ -99,6 +100,7 @@ func InitDB() {
 		APIToken: "",
 	}))
 	setDefaultConfig(KVCustomCSS, "")
+	setDefaultConfig(KVMongoDBSearch, "")
 
 	user := GetUserByEmail("root")
 	if user == nil {

@@ -8,11 +8,15 @@ export class SettingsStore extends StoreBase {
     @observable
     public sideNavContents: string[];
 
+    @observable
+    public mongoDbSearch: string;
+
     constructor(isSSR?: boolean) {
         super();
 
         this.isSSR = isSSR || false;
         this.sideNavContents = [];
+        this.mongoDbSearch = "";
     }
 
     @action
@@ -47,6 +51,30 @@ export class SettingsStore extends StoreBase {
             this.setState(State.DONE);
         } catch (e) {
             this.tryShowToast("サイドバーコンテンツの取得に失敗しました");
+            console.error(e);
+            this.setState(State.ERROR);
+        }
+    }
+
+    @action
+    public async getMongoDbSearch() {
+        this.setMode(Mode.GET);
+        this.setState(State.RUNNING);
+
+        try {
+            const url = `${this.apiBasePath}v1/settings/search/mongodb`;
+            const response = await fetch(url, {
+                method: "GET",
+            });
+
+            if (response.status !== 200) {
+                throw new Error();
+            }
+            this.mongoDbSearch = await response.text();
+
+            this.setState(State.DONE);
+        } catch (e) {
+            this.tryShowToast("MongoDB検索設定の取得に失敗しました");
             console.error(e);
             this.setState(State.ERROR);
         }

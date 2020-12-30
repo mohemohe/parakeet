@@ -10,6 +10,7 @@ export interface IEntry extends IModel {
     tags: string[];
     body: string;
     draft: boolean;
+    find_count?: number;
 }
 
 export class EntryStore extends StoreBase {
@@ -73,6 +74,7 @@ export class EntryStore extends StoreBase {
                 entry._created = new Date(entry._created).toLocaleString();
             }
             (entry as any)._draft = entry.draft ? <Edit/> : undefined;
+            (entry as any)._find_count = entry.find_count || 0;
             return {
                 ...entry,
                 path: <LinkButton to={`/entries/${entry._id}`} buttonProps={{variant: "contained", color: "primary"}}>編集</LinkButton>,

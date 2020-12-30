@@ -88,6 +88,8 @@ func initEcho(e *echo.Echo) {
 	e.PUT("/api/v1/settings/cache/cloudflare", controllers.SetCloudflare, middlewares.Authorize, middlewares.Authorized)
 	e.GET("/api/v1/settings/style/custom", controllers.GetCustomCSS)
 	e.PUT("/api/v1/settings/style/custom", controllers.SetCustomCSS, middlewares.Authorize, middlewares.Authorized)
+	e.GET("/api/v1/settings/search/mongodb", controllers.GetMongoDBSearch)
+	e.PUT("/api/v1/settings/search/mongodb", controllers.SetMongoDBSearch, middlewares.Authorize, middlewares.Authorized)
 
 	e.GET("/swagger", func(c echo.Context) error {
 		return c.Redirect(http.StatusFound, "/swagger/index.html")
