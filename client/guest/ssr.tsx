@@ -3,7 +3,7 @@ import React from "react";
 import ReactDOMServer from "react-dom/server";
 import {getStyles} from "typestyle";
 import App from "./containers/App";
-import { ServerStyleSheets } from "@material-ui/styles";
+import ServerStyleSheets from "@material-ui/styles/ServerStyleSheets";
 import {ISSRState} from "./stores";
 
 interface ISSROptions {

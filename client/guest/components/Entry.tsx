@@ -1,8 +1,9 @@
-import * as React from "react";
+import React from "react";
 import {classes, style} from "typestyle";
-import {IEntry} from "../stores/EntryStore";
+import type {IEntry} from "../stores/EntryStore";
 import {COLORS, DARK_COLORS} from "../constants/Style";
-import Card, {CardProps} from "@material-ui/core/Card";
+import Card from "@material-ui/core/Card";
+import type {CardProps} from "@material-ui/core/Card";
 import ReactMarkdown from "react-markdown";
 import {Link} from "react-router-dom";
 import {LinkButton} from "../../common/components/LinkButton";

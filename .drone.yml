@@ -6,6 +6,9 @@ workspace:
   base: /go
   path: src/github.com/mohemohe/parakeet
 
+environment:
+  DOCKER_BUILDKIT: 1
+
 steps:
   - name: slack notification on start
     image: plugins/slack
@@ -17,6 +20,7 @@ steps:
     when:
       branch:
         - master
+        - develop
       event:
         - push
         - tag
@@ -32,6 +36,21 @@ steps:
     when:
       branch:
         - master
+      event:
+        - push
+
+  - name: build edge image
+    image: plugins/docker
+    settings:
+      repo: mohemohe/parakeet
+      tags: edge
+      username:
+        from_secret: dockerhub_username
+      password:
+        from_secret: dockerhub_password
+    when:
+      branch:
+        - develop
       event:
         - push
 
@@ -64,6 +83,7 @@ steps:
     when:
       branch:
         - master
+        - develop
       event:
         - push
         - tag

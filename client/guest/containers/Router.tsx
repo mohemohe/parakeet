@@ -1,9 +1,10 @@
-import * as React from "react";
+import React from "react";
 import { style } from "typestyle";
 import { inject, observer } from "mobx-react";
 import {Route, Router as ReactRouter, StaticRouter, Switch} from "react-router";
 import {createMemoryHistory, createBrowserHistory} from "history";
-import MobxReactRouter, {syncHistoryWithStore, RouterStore} from "mobx-react-router";
+import MobxReactRouter, {syncHistoryWithStore} from "mobx-react-router";
+import type {RouterStore} from "mobx-react-router";
 import Toast from "./common/Toast";
 import Notfound from "./page/NotFound";
 import Index from "./page/Index";

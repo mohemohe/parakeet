@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 import { Provider } from "mobx-react";
 import createStore, {ISSRState} from "../stores";
 import Router from "./Router";

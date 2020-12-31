@@ -1,6 +1,6 @@
-import * as React from "react";
+import React from "react";
 import {inject, observer} from "mobx-react";
-import {SettingsStore} from "../../stores/SettingsStore";
+import type {SettingsStore} from "../../stores/SettingsStore";
 import {style} from "typestyle";
 import {EmotionalCard} from "../../components/EmotionalCard";
 import ReactMarkdown from "react-markdown";
