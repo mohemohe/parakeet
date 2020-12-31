@@ -23,6 +23,8 @@ steps:
 
   - name: build latest image
     image: plugins/docker
+    environment:
+      - DOCKER_BUILDKIT=1
     settings:
       repo: mohemohe/parakeet
       username:
@@ -37,6 +39,8 @@ steps:
 
   - name: build tagged image
     image: plugins/docker
+    environment:
+      - DOCKER_BUILDKIT=1
     settings:
       repo: mohemohe/parakeet
       auto_tag: true
