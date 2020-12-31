@@ -1,6 +1,6 @@
-import * as React from "react";
+import React from "react";
 import {Entries} from "../common/Entries";
-import {RouteComponentProps} from "react-router";
+import type {RouteComponentProps} from "react-router";
 
 interface IProps extends RouteComponentProps<any> {
 }

@@ -1,7 +1,8 @@
-import * as React from "react";
-import {Link, LinkProps} from "react-router-dom";
-import {Button} from "@material-ui/core";
-import {ButtonProps} from "@material-ui/core/Button";
+import React from "react";
+import {Link} from "react-router-dom";
+import type {LinkProps} from "react-router-dom";
+import Button from "@material-ui/core/Button";
+import type {ButtonProps} from "@material-ui/core/Button";
 import {style} from "typestyle";
 
 interface IProps extends LinkProps {

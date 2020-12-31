@@ -1,17 +1,20 @@
-import * as React from "react";
+import React from "react";
 import {inject, observer} from "mobx-react";
 import {style} from "typestyle";
-import {RouterStore} from "mobx-react-router";
-import {SearchStore} from "../../stores/SearchStore";
+import type {RouterStore} from "mobx-react-router";
+import type {SearchStore} from "../../stores/SearchStore";
 import SearchOutlined from "@material-ui/icons/SearchOutlined";
-import {
-    Box,
-    Dialog,
-    DialogContent,
-    DialogTitle,
-    Fab, IconButton, List, ListItem, ListItemText,
-    TextField, Typography
-} from "@material-ui/core";
+import Box from "@material-ui/core/Box";
+import Dialog from "@material-ui/core/Dialog";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import Fab from "@material-ui/core/Fab";
+import IconButton from "@material-ui/core/IconButton";
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemText from "@material-ui/core/ListItemText";
+import TextField from "@material-ui/core/TextField";
+import Typography from "@material-ui/core/Typography";
 import CloseOutlined from "@material-ui/icons/CloseOutlined";
 
 interface IProps {

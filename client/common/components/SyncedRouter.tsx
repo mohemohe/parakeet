@@ -1,6 +1,6 @@
-import * as React from 'react'
-import {Router} from 'react-router-dom'
-import {History} from 'history'
+import React from "react"
+import {Router} from "react-router-dom"
+import type {History} from "history"
 
 export interface IProps {
     history: History

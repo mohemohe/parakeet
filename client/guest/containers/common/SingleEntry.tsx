@@ -1,9 +1,9 @@
-import * as React from "react";
+import React from "react";
 import {inject, observer} from "mobx-react";
-import {EntryStore} from "../../stores/EntryStore";
+import type {EntryStore} from "../../stores/EntryStore";
 import {Entry} from "../../components/Entry";
 import {style} from "typestyle";
-import {RouteComponentProps} from "react-router-dom";
+import type {RouteComponentProps} from "react-router-dom";
 
 interface IProps extends RouteComponentProps<{id: string}> {
     EntryStore?: EntryStore;

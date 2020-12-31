@@ -1,6 +1,7 @@
 import React from "react";
 import {style} from "typestyle";
-import Renderer, {defaultProps, Language} from "prism-react-renderer";
+import Renderer, {defaultProps} from "prism-react-renderer";
+import type {Language} from "prism-react-renderer";
 import oceanicNext from "prism-react-renderer/themes/oceanicNext";
 
 interface IProps {

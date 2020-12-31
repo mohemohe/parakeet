@@ -1,13 +1,13 @@
 import "core-js/stable";
 import "whatwg-fetch";
-import * as React from "react";
+import React from "react";
 import ReactDOM from "react-dom";
-import * as typestyle from "typestyle";
+import {setStylesTarget} from "typestyle";
 import App from "./containers/App";
 
 const style = document.getElementById("typestyle");
 if (style) {
-    typestyle.setStylesTarget(style);
+    setStylesTarget(style);
 }
 
 let initialState = (window as any).__INITIAL_STATE__;

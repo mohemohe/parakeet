@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 import {inject, observer} from "mobx-react";
 import {Header} from "../components/Header";
 import {EmotionalContainer} from "../components/EmotionalContainer";
@@ -6,7 +6,7 @@ import {Footer} from "../components/Footer";
 import {style} from "typestyle";
 import {SIZES} from "../constants/Style";
 import {SideColumn} from "./common/SideColumn";
-import {SettingsStore} from '../stores/SettingsStore';
+import type {SettingsStore} from "../stores/SettingsStore";
 import {Search} from "./common/Search";
 
 export interface IProps {

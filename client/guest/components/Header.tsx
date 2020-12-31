@@ -1,7 +1,8 @@
-import * as React from "react";
+import React from "react";
 import {style} from "typestyle";
 import {COLORS, SIZES} from "../constants/Style";
-import Paper, {PaperProps} from "@material-ui/core/Paper";
+import Paper from "@material-ui/core/Paper";
+import type {PaperProps} from "@material-ui/core/Paper";
 import {Link} from "react-router-dom";
 
 interface IProps extends PaperProps {
