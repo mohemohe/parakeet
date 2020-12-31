@@ -19,6 +19,9 @@ export class EntryStore extends StoreBase {
     public entry: IEntry;
 
     @observable
+    public isHydrate: boolean;
+
+    @observable
     public isSSR: boolean;
 
     constructor(entries?: IEntry[], entry?: IEntry, paginate?: IPagitane, isSSR?: boolean) {
@@ -26,6 +29,7 @@ export class EntryStore extends StoreBase {
 
         this.entries = entries || [];
         this.entry = entry || {} as IEntry;
+        this.isHydrate = entry?._id != null;
         this.info = paginate || {
             current: 1,
             perPage: 5,
@@ -88,7 +92,9 @@ export class EntryStore extends StoreBase {
             const url = `${this.apiBasePath}v1/entries/${id}`;
             const response = await fetch(url, {
                 method: "GET",
-                headers: this.generateFetchHeader(),
+                headers: this.generateFetchHeader(false, {
+                    "X-Parakeet-Count": `${!this.isHydrate}`,
+                }),
             });
 
             if (response.status !== 200) {
@@ -100,6 +106,8 @@ export class EntryStore extends StoreBase {
             document.title = `${this.entry.title} - ${this.siteTitle}`;
 
             this.setState(State.DONE);
+
+            this.isHydrate = false;
         } catch (e) {
             this.tryShowToast("エントリーの取得に失敗しました");
             console.error(e);
