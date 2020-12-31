@@ -397,7 +397,7 @@ func SetCustomCSS(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, &models.KV{
 		Key:   models.KVCustomCSS,
-		Value: reqBody,
+		Value: reqBody.Value,
 	})
 }
 
