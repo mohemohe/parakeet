@@ -60,9 +60,10 @@ func GetEntries(c echo.Context) error {
 // @Router /v1/entries/{id} [get]
 func GetEntry(c echo.Context) error {
 	id := c.Param("id")
+	count := c.Request().Header.Get("X-Parakeet-Count")
 	includeDraft := c.Get("User") != nil
 
-	entry := models.GetEntryById(id, includeDraft, includeDraft)
+	entry := models.GetEntryById(id, includeDraft, !includeDraft || count == "true")
 	if entry == nil {
 		return c.NoContent(http.StatusNotFound)
 	}
@@ -106,6 +107,8 @@ func UpsertEntry(c echo.Context) error {
 	}
 	user := c.Get("User").(*models.User)
 	entry.Author = user.Id
+	count := 0
+	entry.FindCount = &count
 
 	enableNotify := false
 
@@ -117,6 +120,9 @@ func UpsertEntry(c echo.Context) error {
 		if current != nil {
 			entry.Id = current.Id
 			entry.Created = current.Created
+			if current.FindCount != nil {
+				entry.FindCount = current.FindCount
+			}
 			entry.SetIsNew(false) // HACK: force update
 			if current.Draft && !entry.Draft {
 				entry.Created = time.Now()

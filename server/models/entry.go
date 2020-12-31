@@ -27,9 +27,29 @@ type (
 )
 
 func GetEntryById(id string, includeDraft bool, shouldCount bool) *Entry {
-	cacheKey := "entry:" + id
-
+	conn := connection.Mongo()
 	entry := new(Entry)
+
+	defer func() {
+		if shouldCount {
+			go func() {
+				err := conn.Collection(collections.Entries).Collection().UpdateId(bson.ObjectIdHex(id), bson.M{
+					"$inc": bson.M{
+						"find_count": 1,
+					},
+				})
+				if err != nil && entry.FindCount == nil {
+					conn.Collection(collections.Entries).Collection().UpdateId(bson.ObjectIdHex(id), bson.M{
+						"$set": bson.M{
+							"find_count": 1,
+						},
+					})
+				}
+			}()
+		}
+	}()
+
+	cacheKey := "entry:" + id
 	if err := GetCache(cacheKey, entry); err == nil {
 		if entry.Draft {
 			if includeDraft {
@@ -39,7 +59,6 @@ func GetEntryById(id string, includeDraft bool, shouldCount bool) *Entry {
 		}
 	}
 
-	conn := connection.Mongo()
 	err := conn.Collection(collections.Entries).FindById(bson.ObjectIdHex(id), entry)
 	if err != nil {
 		return nil
@@ -57,31 +76,22 @@ func GetEntryById(id string, includeDraft bool, shouldCount bool) *Entry {
 		}
 		return nil
 	}
-	if shouldCount {
-		go func() {
-			conn.Collection(collections.Entries).Collection().UpdateId(bson.ObjectIdHex(id), bson.M{
-				"$inc": bson.M{
-					"find_count": 1,
-				},
-			})
-		}()
-	}
+
 	return entry
 }
 
 func GetEntries(perPage int, page int, search string, includeDraft bool) *Entries {
 	cacheKey := "entries:" + strconv.Itoa(perPage) + ":" + strconv.Itoa(page) + ":" + search
-
-	entries := new(Entries)
-	if err := GetCache(cacheKey, entries); err == nil {
-		if len(entries.Entries) == 0 {
-			entries.Entries = []Entry{}
-		}
-		return entries
-	}
-
 	query := bson.M{}
+	entries := new(Entries)
+
 	if !includeDraft {
+		if err := GetCache(cacheKey, entries); err == nil {
+			if len(entries.Entries) == 0 {
+				entries.Entries = []Entry{}
+			}
+			return entries
+		}
 		query["draft"] = bson.M{
 			"$ne": true,
 		}
