@@ -15,9 +15,9 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
+import CircularProgress from "@material-ui/core/CircularProgress";
 import CloseOutlined from "@material-ui/icons/CloseOutlined";
 import {State} from "../../stores/StoreBase";
-import {CircularProgress} from "@material-ui/core";
 
 interface IProps {
     RouterStore?: RouterStore;
