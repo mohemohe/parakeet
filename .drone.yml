@@ -17,6 +17,7 @@ steps:
     when:
       branch:
         - master
+        - develop
       event:
         - push
         - tag
@@ -85,6 +86,7 @@ steps:
     when:
       branch:
         - master
+        - develop
       event:
         - push
         - tag
