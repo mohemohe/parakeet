@@ -6,6 +6,9 @@ workspace:
   base: /go
   path: src/github.com/mohemohe/parakeet
 
+environment:
+  DOCKER_BUILDKIT: 1
+
 steps:
   - name: slack notification on start
     image: plugins/slack
@@ -24,8 +27,6 @@ steps:
 
   - name: build latest image
     image: plugins/docker
-    environment:
-      - DOCKER_BUILDKIT=1
     settings:
       repo: mohemohe/parakeet
       username:
@@ -40,8 +41,6 @@ steps:
 
   - name: build edge image
     image: plugins/docker
-    environment:
-      - DOCKER_BUILDKIT=1
     settings:
       repo: mohemohe/parakeet
       tags: edge
@@ -57,8 +56,6 @@ steps:
 
   - name: build tagged image
     image: plugins/docker
-    environment:
-      - DOCKER_BUILDKIT=1
     settings:
       repo: mohemohe/parakeet
       auto_tag: true
