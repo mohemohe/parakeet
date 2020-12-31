@@ -16,6 +16,8 @@ import ListItemText from "@material-ui/core/ListItemText";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import CloseOutlined from "@material-ui/icons/CloseOutlined";
+import {State} from "../../stores/StoreBase";
+import {CircularProgress} from "@material-ui/core";
 
 interface IProps {
     RouterStore?: RouterStore;
@@ -50,6 +52,7 @@ export class Search extends React.Component<IProps, IState> {
     }
 
     public render() {
+        const { entries, info, state } = this.props.SearchStore!;
         return (
             <>
                 <Fab className={styles.button} color={"primary"}  onClick={() => this.props.SearchStore!.toggleShowModal(true)}>
@@ -75,25 +78,57 @@ export class Search extends React.Component<IProps, IState> {
                             onKeyDown={(e) => e.keyCode === 13 && this.props.SearchStore!.getEntries() }
                         />
                         {
-                            this.props.SearchStore!.entries.length > 0 && (
-                                <List>
-                                    {
-                                        this.props.SearchStore!.entries.map((entry) => {
-                                            const lines = entry.body.split("\n");
-                                            return (
-                                                <ListItem button onClick={() => {
-                                                    this.props.RouterStore!.history.push(`/entry/${entry._id}`);
-                                                    this.props.SearchStore!.toggleShowModal(false);
-                                                }}>
-                                                    <ListItemText
-                                                        primary={entry.title}
-                                                        secondary={[lines.shift(), lines.shift(), lines.shift()].map((line) => <div>{line+""}</div>)}
-                                                    />
-                                                </ListItem>
-                                            );
-                                        })
-                                    }
-                                </List>
+                            state === State.RUNNING && (
+                                <Box display={"flex"} flexDirection={"column"} alignItems={"center"} m={6}>
+                                    <CircularProgress />
+                                </Box>
+                            )
+                        }
+                        {
+                            entries.length > 0 && (
+                                <>
+                                    <List>
+                                        {
+                                            entries.map((entry) => {
+                                                const lines = entry.body.split("\n").filter((line) => line !== "");
+                                                return (
+                                                    <ListItem button onClick={() => {
+                                                        this.props.RouterStore!.history.push(`/entry/${entry._id}`);
+                                                        this.props.SearchStore!.toggleShowModal(false);
+                                                    }}>
+                                                        <ListItemText
+                                                            primary={
+                                                                <Typography variant={"h6"} noWrap={true}>
+                                                                    {entry.title}
+                                                                </Typography>
+                                                            }
+                                                            secondary={[lines.shift(), lines.shift(), lines.shift()].map((line) => <Typography variant={"body2"} noWrap={true}>{(line || "")+""}</Typography>)}
+                                                        />
+                                                    </ListItem>
+                                                );
+                                            })
+                                        }
+                                    </List>
+                                    <Box display={"flex"} flexDirection={"column"} alignItems={"flex-end"}>
+                                        <Typography variant={"caption"}>
+                                            {info.recordsOnPage > entries.length ? entries.length : info.recordsOnPage}件 / {info.totalRecords}件
+                                        </Typography>
+                                    </Box>
+                                </>
+                            )
+                        }
+                        {
+                            info.totalRecords === 0 && (
+                                <Box display={"flex"} flexDirection={"column"} alignItems={"center"} m={6}>
+                                    <Box marginBottom={2}>
+                                        <Typography variant={"h6"}>
+                                            エントリーが見つかりませんでした
+                                        </Typography>
+                                    </Box>
+                                    <Typography variant={"body1"}>
+                                        キーワードを変えて再度試してみてください。
+                                    </Typography>
+                                </Box>
                             )
                         }
                     </DialogContent>
