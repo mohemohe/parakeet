@@ -64,6 +64,22 @@ const styles = {
             ["@media (prefers-color-scheme: dark)"]: {
                 background: `${DARK_COLORS.PaperBackGround} !important`,
                 color: `${COLORS.EmotionalWhite} !important`,
+
+                $nest: {
+                    "& a": {
+                        color: "#68a8f1 !important",
+                    },
+                    "& blockquote": {
+                        color: "#8d98a5 !important",
+                    },
+                    "& code": {
+                        color: "#a8ff60 !important",
+                        background: "#393e48 !important",
+                    },
+                    "& pre": {
+                        background: "#393e48 !important",
+                    },
+                },
             },
         },
     }),
