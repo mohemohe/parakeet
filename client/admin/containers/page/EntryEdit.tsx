@@ -29,7 +29,7 @@ const styles = {
 
         $nest: {
             "& .fullscreen": {
-                zIndex: 1000,
+                zIndex: 1100,
             },
             "& .CodeMirror": {
                 height: "300px !important",
@@ -40,10 +40,10 @@ const styles = {
             },
             "& .CodeMirror-fullscreen": {
                 height: "auto !important",
-                zIndex: 1000,
+                zIndex: 1100,
             },
             "& .CodeMirror-fullscreen + .editor-preview": {
-                zIndex: 1000,
+                zIndex: 1100,
             },
         },
     }),
