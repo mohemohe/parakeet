@@ -37,6 +37,23 @@ steps:
       event:
         - push
 
+  - name: build edge image
+    image: plugins/docker
+    environment:
+      - DOCKER_BUILDKIT=1
+    settings:
+      repo: mohemohe/parakeet
+      tags: edge
+      username:
+        from_secret: dockerhub_username
+      password:
+        from_secret: dockerhub_password
+    when:
+      branch:
+        - develop
+      event:
+        - push
+
   - name: build tagged image
     image: plugins/docker
     environment:
