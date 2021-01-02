@@ -136,7 +136,7 @@ func initializeState(c echo.Context) (map[string]interface{}, *models.Entry, boo
 		r := regexp.MustCompile(`^/entries/(\d+)`).FindAllStringSubmatch(path, -1)
 		if len(r) == 1 && len(r[0]) == 2 {
 			if page, err := strconv.Atoi(r[0][1]); err == nil {
-				entries = models.GetEntries(5, page, "",false)
+				entries = models.GetEntries(5, page, "", false)
 				shouldHandle = true
 			}
 		}

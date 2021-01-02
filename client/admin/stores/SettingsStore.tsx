@@ -20,6 +20,14 @@ export interface ICloudflare extends IModel {
     api_token: string;
 }
 
+export interface IS3 extends IModel {
+    region: string;
+    bucket: string;
+    access_key_id: string;
+    access_secret_key: string;
+    endpoint: string;
+}
+
 export class SettingsStore extends StoreBase {
     @observable
     public siteTitle: string;
@@ -51,6 +59,9 @@ export class SettingsStore extends StoreBase {
     @observable
     public mongoDbSearch: string;
 
+    @observable
+    public s3: IS3;
+
     constructor() {
         super();
 
@@ -72,6 +83,13 @@ export class SettingsStore extends StoreBase {
         } as ICloudflare;
         this.customCss = "";
         this.mongoDbSearch = "";
+        this.s3 = {
+            region: "",
+            bucket: "",
+            access_key_id: "",
+            access_secret_key: "",
+            endpoint: "",
+        } as IS3;
     }
 
     @action
@@ -701,6 +719,64 @@ export class SettingsStore extends StoreBase {
             this.setState(State.DONE);
         } catch (e) {
             this.tryShowToast("MongoDB検索設定の保存に失敗しました");
+            console.error(e);
+            this.setState(State.ERROR);
+        }
+    }
+
+    @action
+    public async getS3() {
+        this.setMode(Mode.GET);
+        this.setState(State.RUNNING);
+
+        try {
+            const url = `${this.apiBasePath}v1/settings/aws/s3`;
+            const response = await fetch(url, {
+                method: "GET",
+                headers: this.generateFetchHeader(),
+            });
+
+            if (response.status !== 200) {
+                throw new Error();
+            }
+            this.s3 = await response.json();
+
+            this.setState(State.DONE);
+        } catch (e) {
+            this.tryShowToast("S3接続設定の取得に失敗しました");
+            console.error(e);
+            this.setState(State.ERROR);
+        }
+    }
+
+    @action
+    public setS3(s3: Partial<IS3>) {
+        this.s3 = { ...this.s3, ...s3 };
+    }
+
+    @action
+    public async putS3() {
+        this.setMode(Mode.GET);
+        this.setState(State.RUNNING);
+
+        try {
+            const url = `${this.apiBasePath}v1/settings/aws/s3`;
+            const response = await fetch(url, {
+                method: "PUT",
+                headers: this.generateFetchHeader(),
+                body: JSON.stringify(this.s3),
+            });
+
+            if (response.status !== 200) {
+                throw new Error();
+            }
+            this.s3 = await response.json();
+
+            this.tryShowToast("S3接続設定を編集しました");
+            stores.AuthStore.checkAuth();
+            this.setState(State.DONE);
+        } catch (e) {
+            this.tryShowToast("S3接続設定の保存に失敗しました");
             console.error(e);
             this.setState(State.ERROR);
         }

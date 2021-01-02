@@ -25,7 +25,7 @@ func PostMisskey(status string, baseURL string, token string) error {
 
 	body := noteCreateBody{
 		Token: token,
-		Text: status,
+		Text:  status,
 	}
 	b, err := json.Marshal(body)
 	if err != nil {
@@ -33,7 +33,7 @@ func PostMisskey(status string, baseURL string, token string) error {
 	}
 
 	res, err := fetch.Fetch(u.String(), fetch.Option{
-		Method:  "POST",
+		Method: "POST",
 		Headers: map[string]string{
 			"Content-Type": "application/json",
 		},

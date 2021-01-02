@@ -17,6 +17,8 @@ import {RenderSetting} from "../containers/page/settings/Render";
 import {CacheSetting} from "../containers/page/settings/Cache";
 import {StyleSetting} from "../containers/page/settings/Style";
 import {SearchSetting} from "../containers/page/settings/Search";
+import {DriveSetting} from "../containers/page/settings/Drive";
+import {Drive} from "../containers/page/Drive";
 
 export interface IRouteInfo {
     name: string;
@@ -105,6 +107,14 @@ export const ROUTES: IRouteInfo[] = [
         ],
     },
     {
+        name: "ドライブ",
+        path: "/drive",
+        icon: <People/>,
+        component: Drive,
+        showLeftNav: true,
+        permission: [1],
+    },
+    {
         name: "設定",
         path: "/settings",
         icon: <Settings/>,
@@ -150,6 +160,13 @@ export const ROUTES: IRouteInfo[] = [
                 name: "投稿通知",
                 path: "/settings/notify",
                 component: NotifySetting,
+                showLeftNav: true,
+                permission: [1],
+            },
+            {
+                name: "ドライブ",
+                path: "/settings/drive",
+                component: DriveSetting,
                 showLeftNav: true,
                 permission: [1],
             },
