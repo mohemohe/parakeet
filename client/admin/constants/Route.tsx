@@ -4,6 +4,7 @@ import Subject from "@material-ui/icons/Subject";
 import People from "@material-ui/icons/People";
 import InsertDriveFile from "@material-ui/icons/InsertDriveFile";
 import Settings from "@material-ui/icons/Settings";
+import Folder from "@material-ui/icons/Folder";
 import { Index } from "../containers/page/Index";
 import { LoginPage } from "../containers/page/auth/Login";
 import { LogoutPage } from "../containers/page/auth/Logout";
@@ -29,6 +30,7 @@ export interface IRouteInfo {
     icon?: any;
     children?: IRouteInfo[];
     link?: boolean;
+    fuzzy?: boolean;
 }
 
 export const ROUTES: IRouteInfo[] = [
@@ -109,10 +111,11 @@ export const ROUTES: IRouteInfo[] = [
     {
         name: "ドライブ",
         path: "/drive",
-        icon: <People/>,
+        icon: <Folder/>,
         component: Drive,
         showLeftNav: true,
         permission: [1],
+        fuzzy: true,
     },
     {
         name: "設定",

@@ -82,7 +82,7 @@ export default class Router extends React.Component<IProps, IState> {
     private routeParser(routes: IRouteInfo[]) {
         routes.forEach((route) => {
             if (route.path) {
-                this.routeArray.push(<Route exact path={route.path} component={route.component ? route.component : Notfound} key={this.routeArray.length}/>);
+                this.routeArray.push(<Route exact={route.fuzzy !== true} path={route.path} component={route.component ? route.component : Notfound} key={this.routeArray.length}/>);
             }
             if (route.children) {
                 this.routeParser(route.children);

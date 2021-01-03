@@ -471,7 +471,7 @@ func SetAWSS3(c echo.Context) error {
 		panic("bind error")
 	}
 
-	if err := models.SetKVS(models.KVAWSS3,  util.StructToJsonMap(reqBody)); err != nil {
+	if err := models.SetKVS(models.KVAWSS3, util.StructToJsonMap(reqBody)); err != nil {
 		panic(err)
 	}
 
