@@ -54,9 +54,6 @@ export class DriveStore extends StoreBase {
     public showDeleteConfirmDialog: boolean;
 
     @observable
-    public showRenameDialog: boolean;
-
-    @observable
     public showPropertyDialog: boolean;
 
     constructor() {
@@ -73,7 +70,6 @@ export class DriveStore extends StoreBase {
         this.showEditNameDialog = false;
         this.showMkDirDialog = false;
         this.showDeleteConfirmDialog = false;
-        this.showRenameDialog = false;
         this.showPropertyDialog = false;
     }
 
@@ -105,6 +101,66 @@ export class DriveStore extends StoreBase {
             this.tryShowToast("ドライブの取得に失敗しました");
             console.error(e);
             this.setState(State.ERROR);
+        }
+    }
+
+    @action
+    public async mkDir() {
+        try {
+            this.setMode(Mode.GET);
+            this.setState(State.RUNNING);
+
+            const path = `${this.currentDir}${this.editName}`;
+
+            const url = this.apiBasePath + `v1/drive/${path}/`;
+            const response = await fetch(url, {
+                headers: this.generateFetchHeader(),
+                method: "POST",
+            });
+
+            if (response.ok) {
+                this.resetSource();
+                this.showMkDirDialog = false;
+                this.setState(State.DONE);
+                this.getFile(this.currentDir);
+            } else {
+                throw new Error();
+            }
+        } catch (e) {
+            this.setState(State.ERROR);
+            console.error(e);
+            this.tryShowToast("ファイル操作に失敗しました");
+        }
+    }
+
+    @action
+    public async rename() {
+        try {
+            this.setMode(Mode.GET);
+            this.setState(State.RUNNING);
+
+            const url = this.apiBasePath + `v1/drive/${this.currentDir}${this.editName}`;
+            const response = await fetch(url, {
+                headers: this.generateFetchHeader(),
+                method: "PUT",
+                body: JSON.stringify({
+                    operation: "move",
+                    src: this.source.path,
+                })
+            });
+
+            if (response.ok) {
+                this.getFile(this.currentDir);
+                this.showEditNameDialog = false;
+                this.resetSource();
+                this.setState(State.DONE);
+            } else {
+                throw new Error();
+            }
+        } catch (e) {
+            this.setState(State.ERROR);
+            console.error(e);
+            this.tryShowToast("ファイル操作に失敗しました");
         }
     }
 
@@ -236,11 +292,6 @@ export class DriveStore extends StoreBase {
     @action
     public setShowDeleteConfirmDialog(show: boolean) {
         this.showDeleteConfirmDialog = show;
-    }
-
-    @action
-    public setShowRenameDialog(show: boolean) {
-        this.showRenameDialog = show;
     }
 
     @action

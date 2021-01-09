@@ -18,9 +18,21 @@ import "react-contexify/dist/ReactContexify.css";
 import {COLORS} from "../../constants/Style";
 import type {Location, UnregisterCallback} from "history";
 import {classes} from "typestyle";
-import {Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle} from "@material-ui/core";
+import {
+    Breadcrumbs,
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
+    Paper,
+    TextField
+} from "@material-ui/core";
 import {TitleBar} from "../../../common/components/TitleBar";
-import { Container } from "../../../common/components/Container";
+import {Container} from "../../../common/components/Container";
+import {Link} from "react-router-dom";
+import {ValidatableTextField} from "../../components/ValidatableTextField";
 
 interface IProps extends React.ClassAttributes<{}> {
     DriveStore?: DriveStore;
@@ -31,6 +43,13 @@ interface IState extends React.ComponentState {
 }
 
 const styles = {
+    breadcrumbsContainer: style({
+        padding: "0.5rem 1rem",
+        borderRadius: "0 !important",
+    }),
+    link: style({
+        color: COLORS.LightColor,
+    }),
     list: style({
         display: "flex",
         $nest: {
@@ -78,6 +97,9 @@ const styles = {
     }),
     fileBackgroundIcon: style({
         color: COLORS.EmotionalBlack,
+    }),
+    propertyIconContainer: style({
+        display: "flex",
     }),
     icon: style({
         position: "absolute",
@@ -217,6 +239,21 @@ export class Drive extends React.Component<IProps, IState> {
         });
     }
 
+    private renderBreadcrumbs() {
+        const paths = this.props.DriveStore!.currentDir.split("/");
+
+        return (
+            <Breadcrumbs>
+                <Link key={"root"} to={`/drive`} className={styles.link}><Folder /></Link>
+                {paths.map((path, index) => {
+                    const to = paths.slice(0, index+1).join("/");
+
+                    return <Link key={to} to={`/drive/${to}`} className={styles.link}>{path}</Link>;
+                })}
+            </Breadcrumbs>
+        );
+    }
+
     private renderFiles() {
         const files = this.props.DriveStore!.info;
 
@@ -299,7 +336,10 @@ export class Drive extends React.Component<IProps, IState> {
                         <Item disabled={this.props.DriveStore!.source?.command === Command.NONE} onClick={() => this.props.DriveStore!.paste()}>
                             貼り付け
                         </Item>
-                        <Item onClick={() => this.props.DriveStore!.setShowMkDirDialog(true)}>
+                        <Item onClick={() => {
+                            this.props.DriveStore!.setEditName("");
+                            this.props.DriveStore!.setShowMkDirDialog(true);
+                        }}>
                             フォルダーを作成
                         </Item>
                     </> :
@@ -320,6 +360,7 @@ export class Drive extends React.Component<IProps, IState> {
                             削除
                         </Item>
                         <Item onClick={() => {
+                            this.props.DriveStore!.setSource(Command.MOVE);
                             this.props.DriveStore!.setEditName(this.props.DriveStore!.selectedInfo!.name);
                             this.props.DriveStore!.setShowEditNameDialog(true);
                         }}>
@@ -378,10 +419,117 @@ export class Drive extends React.Component<IProps, IState> {
         );
     }
 
+    public renderMkDirDialog() {
+        if (!this.props.DriveStore!.selectedInfo) {
+            return <></>;
+        }
+        return (
+            <Dialog open={this.props.DriveStore!.showMkDirDialog} maxWidth={"sm"} fullWidth={true}>
+                <DialogTitle>フォルダー作成</DialogTitle>
+                <DialogContent>
+                    <ValidatableTextField
+                        autoFocus
+                        label={"フォルダー名"}
+                        fullWidth={true}
+                        validators={[{errorText: "/ を含むことはでできません", isValid: (text) => !text.includes("/")}]}
+                        value={this.props.DriveStore!.editName}
+                        onChangeValue={(e) => this.props.DriveStore!.setEditName(e.target.value)}
+                    />
+                </DialogContent>
+                <DialogActions>
+                    <Button
+                        color="primary"
+                        onClick={() => this.props.DriveStore!.mkDir()}
+                    >
+                        作成
+                    </Button>
+                    <Button
+                        onClick={() => {
+                            this.props.DriveStore!.setEditName("");
+                            this.props.DriveStore!.setShowMkDirDialog(false);
+                        }}
+                    >
+                        キャンセル
+                    </Button>
+                </DialogActions>
+            </Dialog>
+        );
+    }
+
+    public renderEditNameDialog() {
+        if (!this.props.DriveStore!.selectedInfo) {
+            return <></>;
+        }
+        return (
+            <Dialog open={this.props.DriveStore!.showEditNameDialog} maxWidth={"sm"} fullWidth={true}>
+                <DialogTitle>名前の変更</DialogTitle>
+                <DialogContent>
+                    <ValidatableTextField
+                        autoFocus
+                        label={"新しい名前"}
+                        fullWidth={true}
+                        validators={[{errorText: "/ を含むことはでできません", isValid: (text) => !text.includes("/")}]}
+                        value={this.props.DriveStore!.editName}
+                        onChangeValue={(e) => this.props.DriveStore!.setEditName(e.target.value)}
+                    />
+                </DialogContent>
+                <DialogActions>
+                    <Button
+                        color="primary"
+                        onClick={() => this.props.DriveStore!.rename()}
+                    >
+                        作成
+                    </Button>
+                    <Button
+                        onClick={() => {
+                            this.props.DriveStore!.setEditName("");
+                            this.props.DriveStore!.resetSource();
+                            this.props.DriveStore!.setShowEditNameDialog(false);
+                        }}
+                    >
+                        キャンセル
+                    </Button>
+                </DialogActions>
+            </Dialog>
+        );
+    }
+
+    public renderPropertyDialog() {
+        if (!this.props.DriveStore!.selectedInfo) {
+            return <></>;
+        }
+
+        const info = this.props.DriveStore!.selectedInfo;
+        return (
+            <Dialog open={this.props.DriveStore!.showPropertyDialog} maxWidth={"sm"} fullWidth={true}>
+                <DialogTitle>プロパティー</DialogTitle>
+                <DialogContent>
+                    <div className={styles.propertyIconContainer}>
+                        {this.renderIcon(info)}
+                    </div>
+                        <TextField disabled={true} fullWidth={true} margin={"normal"} label={info.type === FileType.DIRECTORY ? "フォルダー名" : "ファイル名"} value={info.name}/>
+                        <TextField disabled={true} fullWidth={true} margin={"normal"} label={"パス"} value={info.path}/>
+                        <TextField disabled={true} fullWidth={true} margin={"normal"} label={"サイズ"} value={this.humanReadableFileSize(info.size, true)}/>
+                </DialogContent>
+                <DialogActions>
+                    <Button
+                        color="primary"
+                        onClick={() => this.props.DriveStore!.setShowPropertyDialog(false)}
+                    >
+                        OK
+                    </Button>
+                </DialogActions>
+            </Dialog>
+        );
+    }
+
     public render() {
         return (
             <>
                 <TitleBar>ドライブ</TitleBar>
+                <Paper elevation={2} className={styles.breadcrumbsContainer}>
+                    {this.renderBreadcrumbs()}
+                </Paper>
                 <Container
                     onClick={() => {
                         this.props.DriveStore!.setSelectedIndex(-1);
@@ -397,6 +545,9 @@ export class Drive extends React.Component<IProps, IState> {
                 </Container>
                 {this.renderContextMenu()}
                 {this.renderDeleteConfirmDialog()}
+                {this.renderMkDirDialog()}
+                {this.renderEditNameDialog()}
+                {this.renderPropertyDialog()}
             </>
         );
     }

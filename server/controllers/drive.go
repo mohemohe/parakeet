@@ -97,7 +97,7 @@ func FetchDrive(c echo.Context) error {
 // @Produce json
 // @Param path query int true "ドライブのコピー先パス" default("/")
 // @Param Body body DriveFileCopyRequest true "Body"
-// @Success 200 {object} []s3fs.FileInfo
+// @Success 200
 // @Router /v1/drive/* [put]
 func CopyDriveFile(c echo.Context) error {
 	body := new(DriveFileCopyRequest)
@@ -114,12 +114,14 @@ func CopyDriveFile(c echo.Context) error {
 		return c.NoContent(http.StatusBadRequest)
 	}
 
+	src := strings.TrimPrefix(body.Src, "/")
+
 	s3 := newClient()
 
 	if operation == "copy" {
-		err = s3.Copy(body.Src, path, nil)
+		err = s3.Copy(src, path, nil)
 	} else if operation == "move" {
-		err = s3.Move(body.Src, path)
+		err = s3.Move(src, path)
 	} else {
 		err = errors.New("malformed request")
 	}
@@ -134,14 +136,14 @@ func CopyDriveFile(c echo.Context) error {
 // @Description ファイルを削除します
 // @Produce json
 // @Param path query int true "ファイル パス" default("/")
-// @Success 200 {object} []s3fs.FileInfo
+// @Success 200
 // @Router /v1/drive/* [delete]
 func DeleteDriveFile(c echo.Context) error {
 	path, err := url.QueryUnescape(c.Param("*"))
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err)
 	}
-	if path != "" && strings.HasSuffix(path, "/") {
+	if path == "" {
 		return c.NoContent(http.StatusBadRequest)
 	}
 
@@ -150,6 +152,47 @@ func DeleteDriveFile(c echo.Context) error {
 	err = s3.Delete(path)
 	if err != nil {
 		return c.NoContent(http.StatusInternalServerError)
+	}
+	return c.NoContent(http.StatusOK)
+}
+
+// @Tags drive
+// @Summary list files
+// @Description ファイルを追加またはフォルダーを作成します
+// @Produce json
+// @Param path query int true "ドライブの作成先パス" default("/")
+// @Success 200 {object} []s3fs.FileInfo
+// @Router /v1/drive/* [post]
+func CreateDriveObject(c echo.Context) error {
+	path, err := url.QueryUnescape(c.Param("*"))
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err)
+	}
+	if path == "" {
+		return c.NoContent(http.StatusNotAcceptable)
+	}
+	if strings.HasSuffix(path, "/") {
+		return createDriveDir(c, path)
+	}
+	return createDriveFile(c, path)
+}
+
+func createDriveFile(c echo.Context, path string) error {
+	extension := filepath.Ext(path)
+	contentType := mime.TypeByExtension(extension)
+
+	s3 := newClient()
+	if err := s3.Put(path, c.Request().Body, contentType); err != nil {
+		return c.NoContent(http.StatusBadRequest)
+	}
+	return c.NoContent(http.StatusOK)
+}
+
+func createDriveDir(c echo.Context, path string) error {
+	s3 := newClient()
+	dirPath := strings.TrimSuffix(path, "/")
+	if err := s3.MkDir(dirPath); err != nil {
+		return c.NoContent(http.StatusBadRequest)
 	}
 	return c.NoContent(http.StatusOK)
 }

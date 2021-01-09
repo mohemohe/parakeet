@@ -91,6 +91,15 @@ export const ROUTES: IRouteInfo[] = [
         permission: [],
     },
     {
+        name: "ドライブ",
+        path: "/drive",
+        icon: <Folder/>,
+        component: Drive,
+        showLeftNav: true,
+        permission: [1],
+        fuzzy: true,
+    },
+    {
         name: "ユーザー",
         path: "/users",
         icon: <People/>,
@@ -107,15 +116,6 @@ export const ROUTES: IRouteInfo[] = [
                 permission: [1],
             },
         ],
-    },
-    {
-        name: "ドライブ",
-        path: "/drive",
-        icon: <Folder/>,
-        component: Drive,
-        showLeftNav: true,
-        permission: [1],
-        fuzzy: true,
     },
     {
         name: "設定",
