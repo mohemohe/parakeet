@@ -134,6 +134,36 @@ export class DriveStore extends StoreBase {
     }
 
     @action
+    public async upload(files: FileList) {
+        try {
+            this.setMode(Mode.GET);
+            this.setState(State.RUNNING);
+
+            for (let i = 0; i < files.length; i++) {
+                const path = `${this.currentDir}${files[i].name}`;
+
+                const url = this.apiBasePath + `v1/drive/${path}`;
+                const response = await fetch(url, {
+                    headers: this.generateFetchHeader(),
+                    method: "POST",
+                    body: files[i],
+                });
+
+                if (!response.ok) {
+                    throw new Error();
+                }
+                this.getFile(this.currentDir);
+            }
+
+            this.setState(State.DONE);
+        } catch (e) {
+            this.setState(State.ERROR);
+            console.error(e);
+            this.tryShowToast("ファイル操作に失敗しました");
+        }
+    }
+
+    @action
     public async rename() {
         try {
             this.setMode(Mode.GET);

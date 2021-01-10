@@ -27,12 +27,13 @@ import {
     DialogContentText,
     DialogTitle,
     Paper,
-    TextField
+    TextField, Typography
 } from "@material-ui/core";
 import {TitleBar} from "../../../common/components/TitleBar";
 import {Container} from "../../../common/components/Container";
 import {Link} from "react-router-dom";
 import {ValidatableTextField} from "../../components/ValidatableTextField";
+import {FileDrop} from "react-file-drop";
 
 interface IProps extends React.ClassAttributes<{}> {
     DriveStore?: DriveStore;
@@ -50,13 +51,41 @@ const styles = {
     link: style({
         color: COLORS.LightColor,
     }),
+    dropContainer: style({
+        display: "flex",
+        flex: 1,
+        $nest: {
+            "& .file-drop-target": {
+                display: "flex",
+                flex: 1,
+            },
+        },
+    }),
+    hintText: style({
+        display: "flex",
+        flex: 1,
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        $nest: {
+            "& > *": {
+                color: COLORS.ExtraDarkGray,
+            },
+            "& > *:first-child": {
+                marginBottom: "1rem",
+            },
+        },
+    }),
     list: style({
         display: "flex",
         $nest: {
             "& > div": {
-                width: 180,
+                width: 150,
             },
         },
+    }),
+    emptyList: style({
+        flex: 1,
     }),
     item: style({
         border: "1px solid rgba(0, 0, 0, 0)",
@@ -256,6 +285,19 @@ export class Drive extends React.Component<IProps, IState> {
 
     private renderFiles() {
         const files = this.props.DriveStore!.info;
+
+        if (files.length === 0) {
+            return (
+                <div className={classes("upload-hint", styles.hintText)}>
+                    <Typography display={"block"} variant={"h4"}>
+                        ここにドロップしてファイルを追加
+                    </Typography>
+                    <Typography display={"block"} variant={"h6"}>
+                        右クリックメニューでフォルダーを追加
+                    </Typography>
+                </div>
+            )
+        }
 
         return files.map((file: IFileInfo, index) => {
             return (
@@ -530,19 +572,29 @@ export class Drive extends React.Component<IProps, IState> {
                 <Paper elevation={2} className={styles.breadcrumbsContainer}>
                     {this.renderBreadcrumbs()}
                 </Paper>
-                <Container
-                    onClick={() => {
-                        this.props.DriveStore!.setSelectedIndex(-1);
-                    }}
-                    onContextMenu={(event) => {
+                <FileDrop
+                    className={styles.dropContainer}
+                    onDrop={(files, event) => {
                         event.preventDefault();
-                        this.showContextMenu(event, -1);
+                        if (files) {
+                            this.props.DriveStore!.upload(files);
+                        }
                     }}
                 >
-                    <div className={styles.list}>
-                        {this.renderFiles()}
-                    </div>
-                </Container>
+                    <Container
+                        onClick={() => {
+                            this.props.DriveStore!.setSelectedIndex(-1);
+                        }}
+                        onContextMenu={(event) => {
+                            event.preventDefault();
+                            this.showContextMenu(event, -1);
+                        }}
+                    >
+                        <div className={classes(styles.list, this.props.DriveStore!.info.length === 0 && styles.emptyList)}>
+                            {this.renderFiles()}
+                        </div>
+                    </Container>
+                </FileDrop>
                 {this.renderContextMenu()}
                 {this.renderDeleteConfirmDialog()}
                 {this.renderMkDirDialog()}
