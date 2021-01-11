@@ -20,6 +20,12 @@ type (
 		Operation string `json:"operation"`
 		Src       string `json:"src"`
 	}
+	FileInfo struct {
+		Name string `json:"name"`
+		Path string `json:"path"`
+		Type int    `json:"type"`
+		Size int64  `json:"size,omitempty"`
+	}
 )
 
 func newClient() *s3fs.S3FS {
@@ -56,8 +62,8 @@ func newClient() *s3fs.S3FS {
 // @Description ファイル一覧を取得します
 // @Produce json
 // @Param path query int false "ドライブのパス" default("/")
-// @Success 200 {object} []s3fs.FileInfo
-// @Router /v1/drive/* [get]
+// @Success 200 {array} s3fs.FileInfo
+// @Router /v1/drive/{path} [get]
 func FetchDrive(c echo.Context) error {
 	path, err := url.QueryUnescape(c.Param("*"))
 	if err != nil {
@@ -98,7 +104,7 @@ func FetchDrive(c echo.Context) error {
 // @Param path query int true "ドライブのコピー先パス" default("/")
 // @Param Body body DriveFileCopyRequest true "Body"
 // @Success 200
-// @Router /v1/drive/* [put]
+// @Router /v1/drive/{path} [put]
 func CopyDriveFile(c echo.Context) error {
 	body := new(DriveFileCopyRequest)
 	if err := c.Bind(body); err != nil {
@@ -137,7 +143,7 @@ func CopyDriveFile(c echo.Context) error {
 // @Produce json
 // @Param path query int true "ファイル パス" default("/")
 // @Success 200
-// @Router /v1/drive/* [delete]
+// @Router /v1/drive/{path} [delete]
 func DeleteDriveFile(c echo.Context) error {
 	path, err := url.QueryUnescape(c.Param("*"))
 	if err != nil {
@@ -161,8 +167,8 @@ func DeleteDriveFile(c echo.Context) error {
 // @Description ファイルを追加またはフォルダーを作成します
 // @Produce json
 // @Param path query int true "ドライブの作成先パス" default("/")
-// @Success 200 {object} []s3fs.FileInfo
-// @Router /v1/drive/* [post]
+// @Success 200
+// @Router /v1/drive/{path} [post]
 func CreateDriveObject(c echo.Context) error {
 	path, err := url.QueryUnescape(c.Param("*"))
 	if err != nil {

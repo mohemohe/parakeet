@@ -1,5 +1,18 @@
 basePath: /api
 definitions:
+  bongo.PaginationInfo:
+    properties:
+      current:
+        type: integer
+      perPage:
+        type: integer
+      recordsOnPage:
+        type: integer
+      totalPages:
+        type: integer
+      totalRecords:
+        type: integer
+    type: object
   controllers.AuthRequest:
     properties:
       email:
@@ -13,13 +26,18 @@ definitions:
         type: string
       user:
         $ref: '#/definitions/models.User'
-        type: object
+    type: object
+  controllers.DriveFileCopyRequest:
+    properties:
+      operation:
+        type: string
+      src:
+        type: string
     type: object
   controllers.EntryResponse:
     properties:
       entry:
         $ref: '#/definitions/models.Entry'
-        type: object
     type: object
   controllers.Setting:
     properties:
@@ -46,16 +64,24 @@ definitions:
           $ref: '#/definitions/models.Entry'
         type: array
       info:
-        type: string
+        $ref: '#/definitions/bongo.PaginationInfo'
     type: object
   models.Entry:
     properties:
+      _created:
+        type: string
+      _id:
+        type: string
+      _modified:
+        type: string
       author:
         type: string
       body:
         type: string
       draft:
         type: boolean
+      find_count:
+        type: integer
       tag:
         items:
           type: string
@@ -65,6 +91,12 @@ definitions:
     type: object
   models.KV:
     properties:
+      _created:
+        type: string
+      _id:
+        type: string
+      _modified:
+        type: string
       key:
         type: string
       value:
@@ -79,20 +111,48 @@ definitions:
       token:
         type: string
     type: object
+  models.NotifyMisskey:
+    properties:
+      baseurl:
+        type: string
+      template:
+        type: string
+      token:
+        type: string
+    type: object
   models.ServerSideRendering:
     properties:
       entries:
         type: boolean
       entry:
         type: boolean
+      timeout:
+        type: number
     type: object
   models.User:
     properties:
+      _created:
+        type: string
+      _id:
+        type: string
+      _modified:
+        type: string
       email:
         type: string
       name:
         type: string
       role:
+        type: integer
+    type: object
+  s3fs.FileInfo:
+    properties:
+      name:
+        type: string
+      path:
+        type: string
+      size:
+        type: integer
+      type:
         type: integer
     type: object
 info:
@@ -148,6 +208,80 @@ paths:
       summary: login
       tags:
       - auth
+  /v1/drive/{path}:
+    delete:
+      description: ファイルを削除します
+      parameters:
+      - description: ファイル パス
+        in: query
+        name: path
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ""
+      summary: delete file(s)
+      tags:
+      - drive
+    get:
+      description: ファイル一覧を取得します
+      parameters:
+      - description: ドライブのパス
+        in: query
+        name: path
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/s3fs.FileInfo'
+            type: array
+      summary: list files
+      tags:
+      - drive
+    post:
+      description: ファイルを追加またはフォルダーを作成します
+      parameters:
+      - description: ドライブの作成先パス
+        in: query
+        name: path
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ""
+      summary: list files
+      tags:
+      - drive
+    put:
+      description: ファイルを移動またはコピーします
+      parameters:
+      - description: ドライブのコピー先パス
+        in: query
+        name: path
+        required: true
+        type: integer
+      - description: Body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.DriveFileCopyRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ""
+      summary: list files
+      tags:
+      - drive
   /v1/entries:
     get:
       description: エントリー一覧を取得します
@@ -161,6 +295,10 @@ paths:
         description: 1ページごとの件数
         in: query
         name: limit
+        type: integer
+      - description: 検索クエリー
+        in: query
+        name: search
         type: integer
       produces:
       - application/json
@@ -217,14 +355,15 @@ paths:
           description: Unauthorized
           schema:
             $ref: '#/definitions/middlewares.EmptyJson'
-        "404": {}
+        "404":
+          description: ""
       security:
       - AccessToken: []
       summary: delete entry
       tags:
       - entry
     get:
-      description: エントリー一覧を取得します
+      description: エントリーを取得します
       parameters:
       - description: エントリーの 'Mongo ObjectID'
         in: path
@@ -238,7 +377,8 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/controllers.EntryResponse'
-        "404": {}
+        "404":
+          description: ""
       summary: get entry
       tags:
       - entry
@@ -267,12 +407,49 @@ paths:
           description: Unauthorized
           schema:
             $ref: '#/definitions/middlewares.EmptyJson'
-        "404": {}
+        "404":
+          description: ""
       security:
       - AccessToken: []
       summary: update entry
       tags:
       - entry
+  /v1/settings/aws/s3:
+    get:
+      description: S3接続を取得します
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ""
+      summary: get S3 setting
+      tags:
+      - setting
+    put:
+      description: S3接続を設定します
+      parameters:
+      - description: Body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.Setting'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.KV'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/middlewares.EmptyJson'
+      security:
+      - AccessToken: []
+      summary: set S3 setting
+      tags:
+      - setting
   /v1/settings/cache/cloudflare:
     get:
       description: Cloudflareのキャッシュ削除設定を取得します
@@ -449,6 +626,50 @@ paths:
       summary: set mastodon notification
       tags:
       - setting
+  /v1/settings/notify/misskey:
+    get:
+      description: Misskeyの通知設定を取得します
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.KV'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/middlewares.EmptyJson'
+      security:
+      - AccessToken: []
+      summary: get misskey notification
+      tags:
+      - setting
+    put:
+      description: Misskeyの通知設定を更新します
+      parameters:
+      - description: Body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/models.NotifyMisskey'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.KV'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/middlewares.EmptyJson'
+      security:
+      - AccessToken: []
+      summary: set misskey notification
+      tags:
+      - setting
   /v1/settings/render/server:
     get:
       description: サーバーサイドレンダリングの設定を取得します
@@ -491,6 +712,42 @@ paths:
       security:
       - AccessToken: []
       summary: set SSR
+      tags:
+      - setting
+  /v1/settings/search/mongodb:
+    get:
+      description: MongoDBの検索設定を取得します
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ""
+      summary: get mongodb regex search
+      tags:
+      - setting
+    put:
+      description: MongoDBの検索設定を設定します
+      parameters:
+      - description: Body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.Setting'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.KV'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/middlewares.EmptyJson'
+      security:
+      - AccessToken: []
+      summary: set mongodb regex search
       tags:
       - setting
   /v1/settings/site/sidenav:
@@ -573,6 +830,42 @@ paths:
       security:
       - AccessToken: []
       summary: set site title
+      tags:
+      - setting
+  /v1/settings/style/custom:
+    get:
+      description: カスタムCSSを取得します
+      produces:
+      - text/css
+      responses:
+        "200":
+          description: ""
+      summary: get custom style
+      tags:
+      - setting
+    put:
+      description: カスタムCSSを設定します
+      parameters:
+      - description: Body
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.Setting'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.KV'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/middlewares.EmptyJson'
+      security:
+      - AccessToken: []
+      summary: set custom style
       tags:
       - setting
 securityDefinitions:

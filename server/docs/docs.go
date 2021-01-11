@@ -91,6 +91,118 @@ var doc = `{
                 }
             }
         },
+        "/v1/drive/{path}": {
+            "get": {
+                "description": "ファイル一覧を取得します",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "drive"
+                ],
+                "summary": "list files",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ドライブのパス",
+                        "name": "path",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/s3fs.FileInfo"
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "ファイルを移動またはコピーします",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "drive"
+                ],
+                "summary": "list files",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ドライブのコピー先パス",
+                        "name": "path",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "description": "Body",
+                        "name": "Body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controllers.DriveFileCopyRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                }
+            },
+            "post": {
+                "description": "ファイルを追加またはフォルダーを作成します",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "drive"
+                ],
+                "summary": "list files",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ドライブの作成先パス",
+                        "name": "path",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                }
+            },
+            "delete": {
+                "description": "ファイルを削除します",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "drive"
+                ],
+                "summary": "delete file(s)",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ファイル パス",
+                        "name": "path",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                }
+            }
+        },
         "/v1/entries": {
             "get": {
                 "description": "エントリー一覧を取得します",
@@ -114,6 +226,12 @@ var doc = `{
                         "default": 5,
                         "description": "1ページごとの件数",
                         "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "検索クエリー",
+                        "name": "search",
                         "in": "query"
                     }
                 ],
@@ -169,7 +287,7 @@ var doc = `{
         },
         "/v1/entries/{id}": {
             "get": {
-                "description": "エントリー一覧を取得します",
+                "description": "エントリーを取得します",
                 "produces": [
                     "application/json"
                 ],
@@ -193,7 +311,9 @@ var doc = `{
                             "$ref": "#/definitions/controllers.EntryResponse"
                         }
                     },
-                    "404": {}
+                    "404": {
+                        "description": ""
+                    }
                 }
             },
             "put": {
@@ -241,7 +361,9 @@ var doc = `{
                             "$ref": "#/definitions/middlewares.EmptyJson"
                         }
                     },
-                    "404": {}
+                    "404": {
+                        "description": ""
+                    }
                 }
             },
             "delete": {
@@ -280,7 +402,66 @@ var doc = `{
                             "$ref": "#/definitions/middlewares.EmptyJson"
                         }
                     },
-                    "404": {}
+                    "404": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/v1/settings/aws/s3": {
+            "get": {
+                "description": "S3接続を取得します",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "setting"
+                ],
+                "summary": "get S3 setting",
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "AccessToken": []
+                    }
+                ],
+                "description": "S3接続を設定します",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "setting"
+                ],
+                "summary": "set S3 setting",
+                "parameters": [
+                    {
+                        "description": "Body",
+                        "name": "Body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controllers.Setting"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.KV"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/middlewares.EmptyJson"
+                        }
+                    }
                 }
             }
         },
@@ -568,6 +749,77 @@ var doc = `{
                 }
             }
         },
+        "/v1/settings/notify/misskey": {
+            "get": {
+                "security": [
+                    {
+                        "AccessToken": []
+                    }
+                ],
+                "description": "Misskeyの通知設定を取得します",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "setting"
+                ],
+                "summary": "get misskey notification",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.KV"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/middlewares.EmptyJson"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "AccessToken": []
+                    }
+                ],
+                "description": "Misskeyの通知設定を更新します",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "setting"
+                ],
+                "summary": "set misskey notification",
+                "parameters": [
+                    {
+                        "description": "Body",
+                        "name": "Body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.NotifyMisskey"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.KV"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/middlewares.EmptyJson"
+                        }
+                    }
+                }
+            }
+        },
         "/v1/settings/render/server": {
             "get": {
                 "security": [
@@ -620,6 +872,63 @@ var doc = `{
                         "required": true,
                         "schema": {
                             "$ref": "#/definitions/models.ServerSideRendering"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.KV"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/middlewares.EmptyJson"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/settings/search/mongodb": {
+            "get": {
+                "description": "MongoDBの検索設定を取得します",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "setting"
+                ],
+                "summary": "get mongodb regex search",
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "AccessToken": []
+                    }
+                ],
+                "description": "MongoDBの検索設定を設定します",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "setting"
+                ],
+                "summary": "set mongodb regex search",
+                "parameters": [
+                    {
+                        "description": "Body",
+                        "name": "Body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controllers.Setting"
                         }
                     }
                 ],
@@ -769,9 +1078,86 @@ var doc = `{
                     }
                 }
             }
+        },
+        "/v1/settings/style/custom": {
+            "get": {
+                "description": "カスタムCSSを取得します",
+                "produces": [
+                    "text/css"
+                ],
+                "tags": [
+                    "setting"
+                ],
+                "summary": "get custom style",
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "AccessToken": []
+                    }
+                ],
+                "description": "カスタムCSSを設定します",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "setting"
+                ],
+                "summary": "set custom style",
+                "parameters": [
+                    {
+                        "description": "Body",
+                        "name": "Body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controllers.Setting"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.KV"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/middlewares.EmptyJson"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
+        "bongo.PaginationInfo": {
+            "type": "object",
+            "properties": {
+                "current": {
+                    "type": "integer"
+                },
+                "perPage": {
+                    "type": "integer"
+                },
+                "recordsOnPage": {
+                    "type": "integer"
+                },
+                "totalPages": {
+                    "type": "integer"
+                },
+                "totalRecords": {
+                    "type": "integer"
+                }
+            }
+        },
         "controllers.AuthRequest": {
             "type": "object",
             "properties": {
@@ -790,8 +1176,18 @@ var doc = `{
                     "type": "string"
                 },
                 "user": {
-                    "type": "object",
                     "$ref": "#/definitions/models.User"
+                }
+            }
+        },
+        "controllers.DriveFileCopyRequest": {
+            "type": "object",
+            "properties": {
+                "operation": {
+                    "type": "string"
+                },
+                "src": {
+                    "type": "string"
                 }
             }
         },
@@ -799,7 +1195,6 @@ var doc = `{
             "type": "object",
             "properties": {
                 "entry": {
-                    "type": "object",
                     "$ref": "#/definitions/models.Entry"
                 }
             }
@@ -842,13 +1237,22 @@ var doc = `{
                     }
                 },
                 "info": {
-                    "type": "string"
+                    "$ref": "#/definitions/bongo.PaginationInfo"
                 }
             }
         },
         "models.Entry": {
             "type": "object",
             "properties": {
+                "_created": {
+                    "type": "string"
+                },
+                "_id": {
+                    "type": "string"
+                },
+                "_modified": {
+                    "type": "string"
+                },
                 "author": {
                     "type": "string"
                 },
@@ -857,6 +1261,9 @@ var doc = `{
                 },
                 "draft": {
                     "type": "boolean"
+                },
+                "find_count": {
+                    "type": "integer"
                 },
                 "tag": {
                     "type": "array",
@@ -872,6 +1279,15 @@ var doc = `{
         "models.KV": {
             "type": "object",
             "properties": {
+                "_created": {
+                    "type": "string"
+                },
+                "_id": {
+                    "type": "string"
+                },
+                "_modified": {
+                    "type": "string"
+                },
                 "key": {
                     "type": "string"
                 },
@@ -894,6 +1310,20 @@ var doc = `{
                 }
             }
         },
+        "models.NotifyMisskey": {
+            "type": "object",
+            "properties": {
+                "baseurl": {
+                    "type": "string"
+                },
+                "template": {
+                    "type": "string"
+                },
+                "token": {
+                    "type": "string"
+                }
+            }
+        },
         "models.ServerSideRendering": {
             "type": "object",
             "properties": {
@@ -902,12 +1332,24 @@ var doc = `{
                 },
                 "entry": {
                     "type": "boolean"
+                },
+                "timeout": {
+                    "type": "number"
                 }
             }
         },
         "models.User": {
             "type": "object",
             "properties": {
+                "_created": {
+                    "type": "string"
+                },
+                "_id": {
+                    "type": "string"
+                },
+                "_modified": {
+                    "type": "string"
+                },
                 "email": {
                     "type": "string"
                 },
@@ -915,6 +1357,23 @@ var doc = `{
                     "type": "string"
                 },
                 "role": {
+                    "type": "integer"
+                }
+            }
+        },
+        "s3fs.FileInfo": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "path": {
+                    "type": "string"
+                },
+                "size": {
+                    "type": "integer"
+                },
+                "type": {
                     "type": "integer"
                 }
             }
