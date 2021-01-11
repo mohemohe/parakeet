@@ -127,6 +127,7 @@ steps:
     settings:
       repo: mohemohe/parakeet
       tag: latest-arm64
+      dockerfile: arm64.Dockerfile
       username:
         from_secret: dockerhub_username
       password:
@@ -142,6 +143,7 @@ steps:
     settings:
       repo: mohemohe/parakeet
       tags: edge
+      dockerfile: arm64.Dockerfile
       username:
         from_secret: dockerhub_username
       password:
