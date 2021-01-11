@@ -33,14 +33,21 @@ type (
 		Template string `json:"template"`
 	}
 	ServerSideRendering struct {
-		Entries bool `json:"entries"`
-		Entry   bool `json:"entry"`
+		Entries bool    `json:"entries"`
+		Entry   bool    `json:"entry"`
 		Timeout float64 `json:"timeout"`
 	}
 	Cloudflare struct {
 		Enable   bool   `json:"enable"`
 		ZoneID   string `json:"zone_id"`
 		APIToken string `json:"api_token"`
+	}
+	S3 struct {
+		Region          string `json:"region"`
+		Bucket          string `json:"bucket"`
+		AccessKeyID     string `json:"access_key_id"`
+		AccessSecretKey string `json:"access_secret_key"`
+		Endpoint        string `json:"endpoint"`
 	}
 )
 
@@ -55,7 +62,8 @@ const (
 	KVServerSideRendering     = "server_side_rendering"
 	KVCloudflare              = "cloudflare"
 	KVCustomCSS               = "custom_css"
-	KVMongoDBSearch      = "mongodb_search"
+	KVMongoDBSearch           = "mongodb_search"
+	KVAWSS3                   = "aws_s3"
 )
 
 var pubsub *mgo_pubsub.PubSub
@@ -101,6 +109,13 @@ func InitDB() {
 	}))
 	setDefaultConfig(KVCustomCSS, "")
 	setDefaultConfig(KVMongoDBSearch, "")
+	setDefaultConfig(KVAWSS3, util.StructToJsonMap(S3{
+		Region:          "",
+		Bucket:          "",
+		AccessKeyID:     "",
+		AccessSecretKey: "",
+		Endpoint:        "",
+	}))
 
 	user := GetUserByEmail("root")
 	if user == nil {

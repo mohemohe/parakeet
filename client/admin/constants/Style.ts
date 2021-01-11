@@ -16,6 +16,8 @@ export const COLORS = {
     WarnYellow: "#e5cf3f",
     SafeGreen: "#74e589",
     ClarityBlack: "rgba(0, 0, 0, .40)",
+
+
 };
 
 export const SIZES = {

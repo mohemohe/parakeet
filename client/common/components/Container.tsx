@@ -1,7 +1,7 @@
 import React from "react";
 import {style} from "typestyle";
 
-interface IProps {
+interface IProps extends React.HTMLProps<HTMLDivElement> {
 }
 
 const styles = {
@@ -17,7 +17,7 @@ const styles = {
 export class Container extends React.Component<IProps, {}> {
     public render() {
         return (
-            <div className={styles.root}>
+            <div { ...this.props } className={styles.root}>
                 {this.props.children}
             </div>
         );

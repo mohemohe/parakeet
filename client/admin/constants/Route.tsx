@@ -4,6 +4,7 @@ import Subject from "@material-ui/icons/Subject";
 import People from "@material-ui/icons/People";
 import InsertDriveFile from "@material-ui/icons/InsertDriveFile";
 import Settings from "@material-ui/icons/Settings";
+import Folder from "@material-ui/icons/Folder";
 import { Index } from "../containers/page/Index";
 import { LoginPage } from "../containers/page/auth/Login";
 import { LogoutPage } from "../containers/page/auth/Logout";
@@ -17,6 +18,8 @@ import {RenderSetting} from "../containers/page/settings/Render";
 import {CacheSetting} from "../containers/page/settings/Cache";
 import {StyleSetting} from "../containers/page/settings/Style";
 import {SearchSetting} from "../containers/page/settings/Search";
+import {DriveSetting} from "../containers/page/settings/Drive";
+import {Drive} from "../containers/page/Drive";
 
 export interface IRouteInfo {
     name: string;
@@ -27,6 +30,7 @@ export interface IRouteInfo {
     icon?: any;
     children?: IRouteInfo[];
     link?: boolean;
+    fuzzy?: boolean;
 }
 
 export const ROUTES: IRouteInfo[] = [
@@ -85,6 +89,15 @@ export const ROUTES: IRouteInfo[] = [
         component: Entry,
         showLeftNav: false,
         permission: [],
+    },
+    {
+        name: "ドライブ",
+        path: "/drive",
+        icon: <Folder/>,
+        component: Drive,
+        showLeftNav: true,
+        permission: [1],
+        fuzzy: true,
     },
     {
         name: "ユーザー",
@@ -150,6 +163,13 @@ export const ROUTES: IRouteInfo[] = [
                 name: "投稿通知",
                 path: "/settings/notify",
                 component: NotifySetting,
+                showLeftNav: true,
+                permission: [1],
+            },
+            {
+                name: "ドライブ",
+                path: "/settings/drive",
+                component: DriveSetting,
                 showLeftNav: true,
                 permission: [1],
             },

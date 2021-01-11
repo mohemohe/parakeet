@@ -1,6 +1,7 @@
 package util
 
 import (
+	"encoding/json"
 	"reflect"
 )
 
@@ -28,4 +29,12 @@ func StructToJsonMap(item interface{}) map[string]interface{} {
 	}
 
 	return m
+}
+
+func JsonMapToStruct(m interface{}, p interface{}) error {
+	t, err := json.Marshal(m)
+	if err != nil {
+		return err
+	}
+	return json.Unmarshal(t, p)
 }

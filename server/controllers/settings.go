@@ -372,7 +372,7 @@ func GetCustomCSS(c echo.Context) error {
 	res := c.Response()
 	res.Status = http.StatusOK
 	res.Header().Set("Content-Type", "text/css")
-	_, err :=  res.Write([]byte(kv.Value.(string)))
+	_, err := res.Write([]byte(kv.Value.(string)))
 	return err
 }
 
@@ -437,6 +437,46 @@ func SetMongoDBSearch(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, &models.KV{
 		Key:   models.KVCustomCSS,
+		Value: reqBody,
+	})
+}
+
+// @Tags setting
+// @Summary get S3 setting
+// @Description S3接続を取得します
+// @Produce json
+// @Success 200
+// @Router /v1/settings/aws/s3 [get]
+func GetAWSS3(c echo.Context) error {
+	kv := models.GetKVS(models.KVAWSS3)
+	if kv == nil {
+		panic("db error")
+	}
+
+	return c.JSON(http.StatusOK, kv.Value)
+}
+
+// @Tags setting
+// @Summary set S3 setting
+// @Description S3接続を設定します
+// @Produce json
+// @Security AccessToken
+// @Param Body body Setting true "Body"
+// @Success 200 {object} models.KV
+// @Failure 401 {object} middlewares.EmptyJson
+// @Router /v1/settings/aws/s3 [put]
+func SetAWSS3(c echo.Context) error {
+	reqBody := new(models.S3)
+	if err := c.Bind(reqBody); err != nil {
+		panic("bind error")
+	}
+
+	if err := models.SetKVS(models.KVAWSS3, util.StructToJsonMap(reqBody)); err != nil {
+		panic(err)
+	}
+
+	return c.JSON(http.StatusOK, &models.KV{
+		Key:   models.KVAWSS3,
 		Value: reqBody,
 	})
 }
