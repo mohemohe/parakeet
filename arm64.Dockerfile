@@ -3,7 +3,7 @@ FROM golang:alpine as server-builder
 ARG GOLANG_NAMESPACE="github.com/mohemohe/parakeet"
 ENV GOLANG_NAMESPACE="$GOLANG_NAMESPACE"
 
-RUN apk --no-cache add alpine-sdk coreutils git tzdata nodejs upx util-linux yarn zsh
+RUN apk --no-cache add alpine-sdk coreutils git tzdata nodejs util-linux yarn zsh
 SHELL ["/bin/zsh", "-c"]
 RUN cp -f /usr/share/zoneinfo/Asia/Tokyo /etc/localtime
 RUN go get -u -v github.com/pwaller/goupx
@@ -19,7 +19,6 @@ RUN go build -ldflags "\
       -w \
       -s \
     " -o /parakeet/app
-RUN goupx /parakeet/app
 
 # ====================================================================================
 
