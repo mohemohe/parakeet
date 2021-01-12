@@ -74,6 +74,10 @@ func FetchDrive(c echo.Context) error {
 
 	if path == "" || strings.HasSuffix(path, "/") {
 		list := s3.List(path)
+		if list == nil {
+			newList := make([]s3fs.FileInfo, 0)
+			list = &newList
+		}
 		return c.JSON(http.StatusOK, list)
 	}
 
