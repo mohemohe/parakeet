@@ -142,7 +142,7 @@ steps:
     image: plugins/docker
     settings:
       repo: mohemohe/parakeet
-      tags: edge
+      tags: edge-arm64
       dockerfile: arm64.Dockerfile
       username:
         from_secret: dockerhub_username
