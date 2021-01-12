@@ -67,7 +67,7 @@ func newClient() *s3fs.S3FS {
 func FetchDrive(c echo.Context) error {
 	path, err := url.QueryUnescape(c.Param("*"))
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, err)
+		return c.String(http.StatusInternalServerError, err.Error())
 	}
 
 	s3 := newClient()
@@ -83,7 +83,7 @@ func FetchDrive(c echo.Context) error {
 
 	stream, err := s3.Get(path)
 	if err != nil {
-		return c.NoContent(http.StatusNotFound)
+		return c.String(http.StatusNotFound, err.Error())
 	}
 	contentType := echo.MIMEOctetStream
 	if filepath.Ext(path) == "" {
@@ -112,13 +112,13 @@ func FetchDrive(c echo.Context) error {
 func CopyDriveFile(c echo.Context) error {
 	body := new(DriveFileCopyRequest)
 	if err := c.Bind(body); err != nil {
-		return c.NoContent(http.StatusNotAcceptable)
+		return c.String(http.StatusNotAcceptable, err.Error())
 	}
 	operation := strings.ToLower(body.Operation)
 
 	path, err := url.QueryUnescape(c.Param("*"))
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, err)
+		return c.String(http.StatusInternalServerError, err.Error())
 	}
 	if path != "" && strings.HasSuffix(path, "/") {
 		return c.NoContent(http.StatusBadRequest)
@@ -136,7 +136,7 @@ func CopyDriveFile(c echo.Context) error {
 		err = errors.New("malformed request")
 	}
 	if err != nil {
-		return c.NoContent(http.StatusInternalServerError)
+		return c.String(http.StatusInternalServerError, err.Error())
 	}
 	return c.NoContent(http.StatusOK)
 }
@@ -151,7 +151,7 @@ func CopyDriveFile(c echo.Context) error {
 func DeleteDriveFile(c echo.Context) error {
 	path, err := url.QueryUnescape(c.Param("*"))
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, err)
+		return c.String(http.StatusInternalServerError, err.Error())
 	}
 	if path == "" {
 		return c.NoContent(http.StatusBadRequest)
@@ -161,7 +161,7 @@ func DeleteDriveFile(c echo.Context) error {
 
 	err = s3.Delete(path)
 	if err != nil {
-		return c.NoContent(http.StatusInternalServerError)
+		return c.String(http.StatusInternalServerError, err.Error())
 	}
 	return c.NoContent(http.StatusOK)
 }
@@ -176,7 +176,7 @@ func DeleteDriveFile(c echo.Context) error {
 func CreateDriveObject(c echo.Context) error {
 	path, err := url.QueryUnescape(c.Param("*"))
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, err)
+		return c.String(http.StatusInternalServerError, err.Error())
 	}
 	if path == "" {
 		return c.NoContent(http.StatusNotAcceptable)
@@ -193,7 +193,7 @@ func createDriveFile(c echo.Context, path string) error {
 
 	s3 := newClient()
 	if err := s3.Put(path, c.Request().Body, contentType); err != nil {
-		return c.NoContent(http.StatusBadRequest)
+		return c.String(http.StatusBadRequest, err.Error())
 	}
 	return c.NoContent(http.StatusOK)
 }
@@ -202,7 +202,7 @@ func createDriveDir(c echo.Context, path string) error {
 	s3 := newClient()
 	dirPath := strings.TrimSuffix(path, "/")
 	if err := s3.MkDir(dirPath); err != nil {
-		return c.NoContent(http.StatusBadRequest)
+		return c.String(http.StatusBadRequest, err.Error())
 	}
 	return c.NoContent(http.StatusOK)
 }
