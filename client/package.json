@@ -29,7 +29,7 @@
     "mobx-react-router": "^4.0.7",
     "parcel-bundler": "^1.12.3",
     "prism-react-renderer": "^0.1.7",
-    "prismjs": "^1.22.0",
+    "prismjs": "^1.25.0",
     "react": ">=16",
     "react-contexify": "^5.0.0",
     "react-contextify": "^0.1.0",
