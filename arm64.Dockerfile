@@ -27,7 +27,7 @@ FROM node:14-alpine as client-builder
 ARG GOLANG_NAMESPACE="github.com/mohemohe/parakeet"
 ENV GOLANG_NAMESPACE="$GOLANG_NAMESPACE"
 
-RUN apk --no-cache add alpine-sdk coreutils git python tzdata util-linux yarn zsh
+RUN apk --no-cache add alpine-sdk coreutils git python2 python3 tzdata util-linux yarn zsh
 SHELL ["/bin/zsh", "-c"]
 WORKDIR /go/src/$GOLANG_NAMESPACE/server
 ADD . /go/src/$GOLANG_NAMESPACE/
