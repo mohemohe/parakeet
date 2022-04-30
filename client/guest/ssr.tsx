@@ -43,4 +43,9 @@ function SSR(options: ISSROptions, callback: (result: any) => void) {
     });
 }
 
+if (process.env.NODE_ENV !== 'production') {
+    (global as any).$RefreshReg$ = () => {};
+    (global as any).$RefreshSig$ = () => () => {};
+}
+
 (global as any).SSR = SSR;

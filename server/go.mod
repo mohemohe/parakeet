@@ -4,9 +4,8 @@ go 1.12
 
 require (
 	github.com/aws/aws-sdk-go v1.36.19 // indirect
-	github.com/dlclark/regexp2 v1.1.6 // indirect
-	github.com/dop251/goja v0.0.0-20190429205339-8d6ee3d16611
-	github.com/dop251/goja_nodejs v0.0.0-20171011081505-adff31b136e6
+	github.com/dop251/goja v0.0.0-20220430115111-e1f9dc0755e7
+	github.com/dop251/goja_nodejs v0.0.0-20211022123610-8dd9abb0616d
 	github.com/elazarl/goproxy v0.0.0-20190421051319-9d40249d3c2f // indirect
 	github.com/elazarl/goproxy/ext v0.0.0-20190421051319-9d40249d3c2f // indirect
 	github.com/emluque/dscache v0.0.0-20181022182702-0e9337345fd9
@@ -15,7 +14,6 @@ require (
 	github.com/go-bongo/go-dotaccess v0.0.0-20150208020959-ae070a2d2a38 // indirect
 	github.com/go-openapi/spec v0.20.6 // indirect
 	github.com/go-openapi/swag v0.21.1 // indirect
-	github.com/go-sourcemap/sourcemap v2.1.2+incompatible // indirect
 	github.com/golang-jwt/jwt/v4 v4.4.1
 	github.com/kelseyhightower/envconfig v1.3.0
 	github.com/labstack/echo/v4 v4.0.0

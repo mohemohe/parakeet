@@ -94,12 +94,18 @@ export class SideColumn extends React.Component<IProps, IState> {
     }
 
     public render() {
+        if (this.props.SettingsStore!.isSSR) {
+            return <></>;
+        }
+
         const contents = this.props.SettingsStore!.sideNavContents;
         return (
             <div id={"side_container"} className={styles.root}>
                 {contents.map((content, index) => {
-                    const scriptRegex = /<script>(.*?)<\/script>/gsi;
-                    const scripts = [...content.matchAll(scriptRegex)];
+                    // gojaの制限
+                    const scriptRegex = /<script>(.*?)<\/script>/gi;
+                    const scripts = [...(content as any).replaceAll("\n","").matchAll(scriptRegex)];
+
                     console.log(`contents[${index+1}/${contents.length}]`);
                     if (scripts) {
                         for (let i = 0; i < scripts.length; i++) {
