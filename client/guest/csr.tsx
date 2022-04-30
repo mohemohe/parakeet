@@ -4,6 +4,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import {setStylesTarget} from "typestyle";
 import App from "./containers/App";
+import "./style.scss";
 
 const style = document.getElementById("typestyle");
 if (style) {

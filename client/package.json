@@ -53,6 +53,7 @@
   },
   "devDependencies": {
     "parcel-plugin-bundle-visualiser": "^1.2.0",
+    "sass": "^1.51.0",
     "typescript": "^3.5.1"
   }
 }

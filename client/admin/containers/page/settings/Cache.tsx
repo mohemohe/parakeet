@@ -113,6 +113,7 @@ export class CacheSetting extends React.Component<IProps, IState> {
                                 validators={[]}
                                 onChangeValue={(event) => this.props.SettingsStore!.setCloudflare({...cloudflare, api_token: event.target.value})}
                                 value={cloudflare.api_token}
+                                togglePassword={true}
                                 InputLabelProps={{shrink: true}}/>
                         </FormControl>
                     </Box>

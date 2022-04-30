@@ -2,17 +2,18 @@ package controllers
 
 import (
 	"bytes"
-	"github.com/labstack/echo/v4"
-	"github.com/mobilusoss/go-s3fs"
-	"github.com/mohemohe/parakeet/server/models"
-	"github.com/mohemohe/parakeet/server/util"
-	"github.com/pkg/errors"
 	"io/ioutil"
 	"mime"
 	"net/http"
 	"net/url"
 	"path/filepath"
 	"strings"
+
+	"github.com/labstack/echo/v4"
+	"github.com/mobilusoss/go-s3fs"
+	"github.com/mohemohe/parakeet/server/models"
+	"github.com/mohemohe/parakeet/server/util"
+	"github.com/pkg/errors"
 )
 
 type (
@@ -28,15 +29,15 @@ type (
 	}
 )
 
-func newClient() *s3fs.S3FS {
+func newClient() (*s3fs.S3FS, error) {
 	kv := models.GetKVS(models.KVAWSS3)
 	if kv == nil {
-		return nil
+		return nil, errors.New("'models.KVAWSS3' is nil")
 	}
 
 	v := new(models.S3)
 	if err := util.JsonMapToStruct(kv.Value, v); err != nil {
-		return nil
+		return nil, err
 	}
 
 	config := &s3fs.Config{
@@ -54,12 +55,12 @@ func newClient() *s3fs.S3FS {
 		config.EnableMinioCompat = true
 	}
 
-	return s3fs.New(config)
+	return s3fs.New(config), nil
 }
 
 // @Tags drive
 // @Summary list files
-// @Description ファイル一覧を取得します
+// @Description ファイル一覧またはファイルを取得します
 // @Produce json
 // @Param path query int false "ドライブのパス" default("/")
 // @Success 200 {array} s3fs.FileInfo
@@ -70,7 +71,10 @@ func FetchDrive(c echo.Context) error {
 		return c.String(http.StatusInternalServerError, err.Error())
 	}
 
-	s3 := newClient()
+	s3, err := newClient()
+	if err != nil {
+		return c.String(http.StatusInternalServerError, err.Error())
+	}
 
 	if path == "" || strings.HasSuffix(path, "/") {
 		list := s3.List(path)
@@ -126,7 +130,10 @@ func CopyDriveFile(c echo.Context) error {
 
 	src := strings.TrimPrefix(body.Src, "/")
 
-	s3 := newClient()
+	s3, err := newClient()
+	if err != nil {
+		return c.String(http.StatusInternalServerError, err.Error())
+	}
 
 	if operation == "copy" {
 		err = s3.Copy(src, path, nil)
@@ -157,7 +164,10 @@ func DeleteDriveFile(c echo.Context) error {
 		return c.NoContent(http.StatusBadRequest)
 	}
 
-	s3 := newClient()
+	s3, err := newClient()
+	if err != nil {
+		return c.String(http.StatusInternalServerError, err.Error())
+	}
 
 	err = s3.Delete(path)
 	if err != nil {
@@ -191,7 +201,11 @@ func createDriveFile(c echo.Context, path string) error {
 	extension := filepath.Ext(path)
 	contentType := mime.TypeByExtension(extension)
 
-	s3 := newClient()
+	s3, err := newClient()
+	if err != nil {
+		return c.String(http.StatusInternalServerError, err.Error())
+	}
+
 	if err := s3.Put(path, c.Request().Body, contentType); err != nil {
 		return c.String(http.StatusBadRequest, err.Error())
 	}
@@ -199,7 +213,11 @@ func createDriveFile(c echo.Context, path string) error {
 }
 
 func createDriveDir(c echo.Context, path string) error {
-	s3 := newClient()
+	s3, err := newClient()
+	if err != nil {
+		return c.String(http.StatusInternalServerError, err.Error())
+	}
+
 	dirPath := strings.TrimSuffix(path, "/")
 	if err := s3.MkDir(dirPath); err != nil {
 		return c.String(http.StatusBadRequest, err.Error())

@@ -1,8 +1,9 @@
 import * as React from "react";
 import { style } from "typestyle/lib";
-import { TextField } from "@material-ui/core";
+import {IconButton, InputAdornment, TextField} from "@material-ui/core";
 import { StandardTextFieldProps } from "@material-ui/core/TextField";
 import { COLORS } from "../constants/Style";
+import {Visibility, VisibilityOff} from "@material-ui/icons";
 
 interface IValidator {
     errorText?: string;
@@ -14,11 +15,13 @@ interface IProps extends StandardTextFieldProps {
     validators: IValidator[];
     onChangeValue: (event: React.ChangeEvent<HTMLInputElement>) => void;
     isValid?: (isValid: boolean) => void;
+    togglePassword?: boolean;
 }
 
 interface IState extends React.ComponentState {
     didInitialValidate: boolean;
     helperText?: string;
+    showPassword: boolean;
 }
 
 const styles = {
@@ -38,6 +41,7 @@ export class ValidatableTextField extends React.Component<IProps, IState> {
     public state = {
         helperText: undefined,
         didInitialValidate: false,
+        showPassword: false,
     };
 
     public componentDidMount() {
@@ -100,6 +104,16 @@ export class ValidatableTextField extends React.Component<IProps, IState> {
                 helperText={<span className={styles.errorText}>{this.state.helperText}</span>}
                 margin={this.props.margin || "normal"}
                 onChange={this.onChangeTextField}
+                type={this.props.togglePassword ? this.state.showPassword ? "text" : "password" : "text"}
+                InputProps={{
+                    endAdornment: this.props.togglePassword && (
+                        <InputAdornment position="end">
+                            <IconButton onClick={() => this.setState({ showPassword: !this.state.showPassword })}>
+                                {this.state.showPassword ? <VisibilityOff /> : <Visibility />}
+                            </IconButton>
+                        </InputAdornment>
+                    )
+                }}
                 {...this.props}
             />
         );

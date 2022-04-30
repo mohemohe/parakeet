@@ -46,6 +46,11 @@ export class StyleSetting extends React.Component<IProps, IState> {
                         <Typography variant="h6" gutterBottom>
                             カスタムCSS
                         </Typography>
+                        <Box my={1}>
+                            <Typography variant={"body2"} color={"textSecondary"}>
+                                font-familyに<code>twemojittf</code>を指定すると、<a href={"https://github.com/xem/emoji"} target={"_blank"}>xem/emoji</a>のTTF版Twemojiを利用できます
+                            </Typography>
+                        </Box>
                         <FormControl className={classes(styles.control)}>
                             <CodeFlask
                                 elevation={2}

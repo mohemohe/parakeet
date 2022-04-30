@@ -43,7 +43,9 @@ func main() {
 func initEcho(e *echo.Echo) {
 	e.Use(middleware.Recover())
 	e.Logger = log.Logger()
-	e.Use(middleware.Logger())
+	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{Skipper: func(c echo.Context) bool {
+		return c.Path() == "/api/v1/healthcheck"
+	}}))
 	e.Use(middleware.CORS())
 	if configs.GetEnv().Echo.Env == "debug" {
 		e.Logger.SetLevel(0)
@@ -58,6 +60,7 @@ func initEcho(e *echo.Echo) {
 
 	e.GET("/admin", controllers.AdminIndex)
 
+	e.GET("/api/v1/healthcheck", controllers.GetHealthCheck)
 	e.GET("/api/v1/auth", controllers.AuthCheck, middlewares.Authorize, middlewares.Authorized)
 	e.POST("/api/v1/auth", controllers.AuthLogin)
 	e.GET("/api/v1/users", controllers.GetUsers, middlewares.Authorize, middlewares.Authorized)

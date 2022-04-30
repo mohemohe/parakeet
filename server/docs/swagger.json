@@ -77,7 +77,7 @@
         },
         "/v1/drive/{path}": {
             "get": {
-                "description": "ファイル一覧を取得します",
+                "description": "ファイル一覧またはファイルを取得します",
                 "produces": [
                     "application/json"
                 ],
@@ -387,6 +387,20 @@
                         }
                     },
                     "404": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/v1/healthcheck": {
+            "get": {
+                "description": "healthcheck",
+                "tags": [
+                    "healthcheck"
+                ],
+                "summary": "healthcheck",
+                "responses": {
+                    "200": {
                         "description": ""
                     }
                 }
@@ -1189,9 +1203,7 @@
                 "key": {
                     "type": "string"
                 },
-                "value": {
-                    "type": "object"
-                }
+                "value": {}
             }
         },
         "middlewares.EmptyJson": {
@@ -1275,9 +1287,7 @@
                 "key": {
                     "type": "string"
                 },
-                "value": {
-                    "type": "object"
-                }
+                "value": {}
             }
         },
         "models.NotifyMastodon": {

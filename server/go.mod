@@ -12,13 +12,17 @@ require (
 	github.com/elazarl/goproxy v0.0.0-20190421051319-9d40249d3c2f // indirect
 	github.com/elazarl/goproxy/ext v0.0.0-20190421051319-9d40249d3c2f // indirect
 	github.com/emluque/dscache v0.0.0-20181022182702-0e9337345fd9
+	github.com/gin-gonic/gin v1.6.3 // indirect
 	github.com/globalsign/mgo v0.0.0-20181015135952-eeefdecb41b8
 	github.com/go-bongo/bongo v0.10.5-0.20180517124215-761759e31d8f
 	github.com/go-bongo/go-dotaccess v0.0.0-20150208020959-ae070a2d2a38 // indirect
-	github.com/go-openapi/spec v0.19.15 // indirect
+	github.com/go-openapi/spec v0.20.6 // indirect
+	github.com/go-openapi/swag v0.21.1 // indirect
 	github.com/go-sourcemap/sourcemap v2.1.2+incompatible // indirect
+	github.com/gofrs/uuid v3.3.0+incompatible // indirect
 	github.com/kelseyhightower/envconfig v1.3.0
 	github.com/labstack/echo/v4 v4.0.0
+	github.com/mailru/easyjson v0.7.7 // indirect
 	github.com/mitchellh/mapstructure v1.1.2
 	github.com/mobilusoss/go-s3fs v0.0.0-20190924083947-ac89030fc5b0
 	github.com/mohemohe/fetch v1.0.0
@@ -29,10 +33,11 @@ require (
 	github.com/pkg/errors v0.9.1
 	github.com/playree/goingtpl v0.0.0-20180728103816-063435765262
 	github.com/sirupsen/logrus v1.4.1
-	github.com/smartystreets/goconvey v0.0.0-20190330032615-68dc04aab96a // indirect
 	github.com/swaggo/echo-swagger v0.0.0-20191205130555-62f81ea88919
-	github.com/swaggo/swag v1.6.9
-	golang.org/x/crypto v0.0.0-20200622213623-75b288015ac9
-	golang.org/x/tools v0.0.0-20201125231158-b5590deeca9b // indirect
+	github.com/swaggo/swag v1.8.1
+	golang.org/x/crypto v0.0.0-20210921155107-089bfa567519
+	golang.org/x/net v0.0.0-20220425223048-2871e0cb64e4 // indirect
+	golang.org/x/sys v0.0.0-20220429233432-b5fbb4746d32 // indirect
+	golang.org/x/tools v0.1.10 // indirect
 	gopkg.in/elazarl/goproxy.v1 v1.0.0-20180725130230-947c36da3153 // indirect
 )
