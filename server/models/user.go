@@ -1,9 +1,9 @@
 package models
 
 import (
-	"github.com/dgrijalva/jwt-go"
 	"github.com/globalsign/mgo/bson"
 	"github.com/go-bongo/bongo"
+	"github.com/golang-jwt/jwt/v4"
 	"github.com/mohemohe/parakeet/server/configs"
 	"github.com/mohemohe/parakeet/server/models/connection"
 	"github.com/mohemohe/parakeet/server/util"
@@ -28,7 +28,7 @@ type (
 		ID    string `json:"id"`
 		Email string `json:"email"`
 		Role  int    `json:"role"`
-		jwt.StandardClaims
+		jwt.RegisteredClaims
 	}
 )
 
@@ -111,11 +111,13 @@ func AuthroizeUser(email string, password string) (*User, *string) {
 	}
 
 	claims := &JwtClaims{
-		user.GetId().Hex(),
-		user.Email,
-		user.Role,
-		jwt.StandardClaims{
-			ExpiresAt: time.Now().Add(time.Hour * 24).Unix(),
+		ID:    user.GetId().Hex(),
+		Email: user.Email,
+		Role:  user.Role,
+		RegisteredClaims: jwt.RegisteredClaims{
+			ExpiresAt: &jwt.NumericDate{
+				Time: time.Now().Add(time.Hour * 24),
+			},
 		},
 	}
 
