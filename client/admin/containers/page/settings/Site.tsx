@@ -69,22 +69,31 @@ export class SiteSetting extends React.Component<IProps, IState> {
                                             サイドバー {index + 1}
                                         </Typography>
                                         <Box display={"flex"} alignItems={"stretch"} marginBottom={2}>
-                                            <CodeFlask
-                                                elevation={2}
-                                                autosize={true}
-                                                value={sideNavContents[index]}
-                                                options={{
-                                                    language: "markdown",
-                                                    lineNumbers: true,
-                                                    handleTabs: true,
-                                                    tabSize: 2,
-                                                }}
-                                                onUpdate={(value) => {
-                                                    const contents = [...sideNavContents];
-                                                    contents[index] = value;
-                                                    this.props.SettingsStore!.setSideNavContents(contents);
-                                                }}
-                                            />
+                                            <Box flex={1}>
+                                                <CodeFlask
+                                                    elevation={2}
+                                                    autosize={true}
+                                                    value={sideNavContents[index]}
+                                                    options={{
+                                                        language: "markdown",
+                                                        lineNumbers: true,
+                                                        handleTabs: true,
+                                                        tabSize: 2,
+                                                    }}
+                                                    onUpdate={(value) => {
+                                                        const contents = [...sideNavContents];
+                                                        contents[index] = value;
+                                                        this.props.SettingsStore!.setSideNavContents(contents);
+                                                    }}
+                                                />
+                                                {sideNavContents[index].includes("<script>") && (
+                                                    <Box mt={1}>
+                                                        <Typography variant={"body2"} color={"textSecondary"}>
+                                                            ⚠ <code>&lt;script&gt;</code>タグ内のJavaScriptはwindow.evalで実行されます
+                                                        </Typography>
+                                                    </Box>
+                                                )}
+                                            </Box>
                                             <Box display={"flex"} flexDirection={"column"} justifyContent={"space-between"} marginLeft={2} marginY={1}>
                                                 <Fab size="small" aria-label="up" disabled={index === 0} onClick={() => {
                                                     const contents = [...sideNavContents];

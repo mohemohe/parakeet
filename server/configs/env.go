@@ -5,7 +5,7 @@ import (
 )
 
 type (
-	environmentVariable struct {
+	EnvironmentVariable struct {
 		Echo struct {
 			Env string `default:"debug"`
 		}
@@ -23,11 +23,11 @@ type (
 	}
 )
 
-var cachedEnvironmentVariable *environmentVariable
+var cachedEnvironmentVariable *EnvironmentVariable
 
-func GetEnv() environmentVariable {
+func GetEnv() EnvironmentVariable {
 	if cachedEnvironmentVariable == nil {
-		cachedEnvironmentVariable = new(environmentVariable)
+		cachedEnvironmentVariable = new(EnvironmentVariable)
 		envconfig.MustProcess("", cachedEnvironmentVariable)
 	}
 

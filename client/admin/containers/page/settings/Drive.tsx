@@ -3,12 +3,11 @@ import {inject, observer} from "mobx-react";
 import {SettingsStore} from "../../../stores/SettingsStore";
 import {RouteComponentProps} from "react-router-dom";
 import {ValidatableTextField} from "../../../components/ValidatableTextField";
-import {FormControl, Button, Typography, Box, IconButton, InputAdornment} from "@material-ui/core";
+import {FormControl, Button, Typography, Box} from "@material-ui/core";
 import {style} from "typestyle";
 import {AuthStore} from "../../../stores/AuthStore";
 import {TitleBar} from "../../../../common/components/TitleBar";
 import {Container} from "../../../../common/components/Container";
-import {Visibility, VisibilityOff} from "@material-ui/icons";
 
 interface IProps extends RouteComponentProps<{id: string}> {
     AuthStore?: AuthStore;
@@ -87,21 +86,12 @@ export class DriveSetting extends React.Component<IProps, IState> {
                             <ValidatableTextField
                                 label={"Access Secret Key"}
                                 helperText={"空にするとIAM Roleで認証を行います"}
-                                type={this.state.showAccessSecretKey ? "text" : "password"}
                                 fullWidth={true}
                                 validators={[]}
                                 onChangeValue={(event) => this.props.SettingsStore!.setS3({ access_secret_key: event.target.value })}
                                 value={s3.access_secret_key}
                                 InputLabelProps={{shrink: true}}
-                                InputProps={{
-                                    endAdornment: (
-                                        <InputAdornment position="end">
-                                            <IconButton onClick={() => this.setState({ showAccessSecretKey: !this.state.showAccessSecretKey })}>
-                                                {this.state.showAccessSecretKey ? <VisibilityOff /> : <Visibility />}
-                                            </IconButton>
-                                        </InputAdornment>
-                                    )
-                                }}
+                                togglePassword={true}
                             />
                         </FormControl>
                         <FormControl className={styles.control}>

@@ -99,17 +99,20 @@ export class SideColumn extends React.Component<IProps, IState> {
             <div id={"side_container"} className={styles.root}>
                 {contents.map((content, index) => {
                     const scriptRegex = /<script>(.*?)<\/script>/gsi;
-                    const script = scriptRegex.exec(content);
-                    console.log("script:", content, script);
-                    if (script) {
-                        try {
-                            (window as any).eval(script[1] || "");
-                        } catch (e) {
-                            console.error("script evaluate error:", e);
+                    const scripts = [...content.matchAll(scriptRegex)];
+                    console.log(`contents[${index+1}/${contents.length}]`);
+                    if (scripts) {
+                        for (let i = 0; i < scripts.length; i++) {
+                            console.log(`script[${i+1}/${scripts.length}]`, scripts[i][1]);
+                            try {
+                                (window as any).eval(scripts[i][1] || "");
+                            } catch (e) {
+                                console.error("script evaluate error:", e);
+                            }
                         }
                     }
                     return (
-                        <EmotionalCard id={`side_content-${index+1}`} component={"section"}>
+                        <EmotionalCard id={`side_content-${index+1}`} key={index} component={"section"}>
                             <ReactMarkdown
                                 key={index}
                                 source={content}

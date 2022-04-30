@@ -1,5 +1,5 @@
 export default class ClipboardHelper {
-    public static copyToClipoboard(text: string) {
+    public static copyToClipboard(text: string) {
         if (!window) {
             return "";
         }

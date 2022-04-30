@@ -34,6 +34,7 @@ import {Container} from "../../../common/components/Container";
 import {Link} from "react-router-dom";
 import {ValidatableTextField} from "../../components/ValidatableTextField";
 import {FileDrop} from "react-file-drop";
+import ClipboardHelper from "../../helpers/ClipboardHelper";
 
 interface IProps extends React.ClassAttributes<{}> {
     DriveStore?: DriveStore;
@@ -393,6 +394,20 @@ export class Drive extends React.Component<IProps, IState> {
                             切り取り
                         </Item>
                         <Separator/>
+                        {this.props.DriveStore!.selectedInfo?.type === FileType.FILE ?
+                            <>
+                                <Item disabled={false} onClick={() => {
+                                    const text = ("[![NAME](PATH)](PATH)" as any)
+                                        .replaceAll("NAME", this.props.DriveStore!.selectedInfo!.name)
+                                        .replaceAll("PATH", `/api/v1/drive${this.props.DriveStore!.selectedInfo!.path}`);
+                                    ClipboardHelper.copyToClipboard(text);
+                                }}>
+                                    Markdown形式でコピー
+                                </Item>
+                                <Separator/>
+                            </> :
+                            <></>
+                        }
                         <Item
                             onClick={() => {
                                 this.props.DriveStore!.setSource(Command.DELETE);

@@ -67,6 +67,7 @@ export class NotifySetting extends React.Component<IProps, IState> {
                                 validators={[]}
                                 onChangeValue={(event) => this.props.SettingsStore!.setNotifyMastodon({...notifyMastodon, token: event.target.value})}
                                 value={notifyMastodon.token}
+                                togglePassword={true}
                                 InputLabelProps={{shrink: true}}/>
                         </FormControl>
                         <FormControl className={styles.control}>
@@ -103,6 +104,7 @@ export class NotifySetting extends React.Component<IProps, IState> {
                                 validators={[]}
                                 onChangeValue={(event) => this.props.SettingsStore!.setNotifyMisskey({...notifyMisskey, token: event.target.value})}
                                 value={notifyMisskey.token}
+                                togglePassword={true}
                                 InputLabelProps={{shrink: true}}/>
                         </FormControl>
                         <FormControl className={styles.control}>

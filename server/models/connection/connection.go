@@ -2,8 +2,10 @@ package connection
 
 import (
 	"crypto/tls"
+	"encoding/gob"
 	"github.com/emluque/dscache"
 	"github.com/globalsign/mgo"
+	"github.com/globalsign/mgo/bson"
 	"github.com/go-bongo/bongo"
 	"github.com/mohemohe/parakeet/server/configs"
 	"github.com/mohemohe/parakeet/server/util"
@@ -74,6 +76,8 @@ func PurgeDsCache() {
 }
 
 func newDsCache() *dscache.Dscache {
+	gob.Register(bson.M{})
+
 	conn, err := dscache.New(64 * dscache.MB)
 	if err != nil {
 		panic(err)
