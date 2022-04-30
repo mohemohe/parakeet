@@ -43,8 +43,7 @@ definitions:
     properties:
       key:
         type: string
-      value:
-        type: object
+      value: {}
     type: object
   middlewares.EmptyJson:
     type: object
@@ -99,8 +98,7 @@ definitions:
         type: string
       key:
         type: string
-      value:
-        type: object
+      value: {}
     type: object
   models.NotifyMastodon:
     properties:
@@ -226,7 +224,7 @@ paths:
       tags:
       - drive
     get:
-      description: ファイル一覧を取得します
+      description: ファイル一覧またはファイルを取得します
       parameters:
       - description: ドライブのパス
         in: query
@@ -414,6 +412,15 @@ paths:
       summary: update entry
       tags:
       - entry
+  /v1/healthcheck:
+    get:
+      description: healthcheck
+      responses:
+        "200":
+          description: ""
+      summary: healthcheck
+      tags:
+      - healthcheck
   /v1/settings/aws/s3:
     get:
       description: S3接続を取得します
