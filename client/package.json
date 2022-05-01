@@ -46,8 +46,7 @@
     "remark-breaks": "^1.0.3",
     "tslib": "^1.10.0",
     "typestyle": "^2.0.2",
-    "whatwg-fetch": "^3.0.0",
-    "window": "^4.2.6"
+    "whatwg-fetch": "^3.0.0"
   },
   "scripts": {
     "build": "NODE_ENV=production parcel build",
