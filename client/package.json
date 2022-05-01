@@ -65,7 +65,12 @@
     "sass": "^1.51.0",
     "typescript": "^3.5.1"
   },
-  "browserslist": ["> 0.5%", "last 2 versions", "not dead", "node 4"],
+  "browserslist": [
+    "> 0.5%",
+    "last 2 versions",
+    "not dead",
+    "node 4"
+  ],
   "targets": {
     "ssr": {
       "context": "browser",
