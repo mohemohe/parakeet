@@ -28,6 +28,9 @@ export default function createStore(isSSR: boolean, ssrState: ISSRState) {
         SettingsStore: new SettingsStore(isSSR),
         SearchStore: new SearchStore(isSSR),
     };
+    (window as any).parakeet = {
+        stores: cached,
+    };
     return cached;
 };
 

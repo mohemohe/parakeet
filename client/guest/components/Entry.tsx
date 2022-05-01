@@ -4,13 +4,9 @@ import type {IEntry} from "../stores/EntryStore";
 import {COLORS, DARK_COLORS} from "../constants/Style";
 import Card from "@material-ui/core/Card";
 import type {CardProps} from "@material-ui/core/Card";
-import ReactMarkdown from "react-markdown";
 import {Link} from "react-router-dom";
 import {LinkButton} from "../../common/components/LinkButton";
-import {Prism} from "./Prism";
-import {Plain} from "./Plain";
-
-const breaks = require("remark-breaks");
+import {UnsafeMarkdown} from "./UnsafeMarkdown";
 
 interface IProps extends CardProps {
     entry: IEntry
@@ -73,7 +69,7 @@ const styles = {
                         color: "#8d98a5 !important",
                     },
                     "& code": {
-                        color: "#a8ff60 !important",
+                        color: "#a8ff60",
                         background: "#393e48 !important",
                     },
                     "& pre": {
@@ -118,13 +114,6 @@ export class Entry extends React.Component<IProps, {}> {
             body = body.replace(more, `<div id="entry_more"></div>`);
         }
 
-        let renderers;
-        if (this.props.syntaxHighlighting) {
-            renderers = {code: Prism};
-        } else {
-            renderers = {code: Plain};
-        }
-
         const nextProps = { ...this.props };
         delete nextProps.entry;
         delete nextProps.stopToReadMore;
@@ -144,14 +133,7 @@ export class Entry extends React.Component<IProps, {}> {
                         {modified ? <div className={"entry_updated"}>更新: {modified.toLocaleString()}</div> : <></>}
                     </div>
                 </div>
-                <ReactMarkdown
-                    source={body}
-                    className={classes("entry_body", "markdown-body", styles.body)}
-                    plugins={[[breaks]]}
-                    escapeHtml={false}
-                    renderers={renderers}
-
-                />
+                <UnsafeMarkdown content={body} markdownClassName={styles.body} />
                 {showReadMore ?
                     <div className={classes("entry_readmore", styles.readMore)}>
                         <LinkButton className={"entry_readmore_button"} to={`/entry/${entry._id}?scroll=more`} buttonProps={{variant: "contained", color: "primary"}}>続きを読む</LinkButton>
