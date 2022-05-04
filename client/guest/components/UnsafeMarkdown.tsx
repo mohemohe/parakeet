@@ -23,7 +23,6 @@ const styles = {
 		lineHeight: 1.75,
 		$nest: {
 			"pre": {
-				padding: 0,
 				background: "transparent",
 			},
 			["@media (prefers-color-scheme: dark)"]: {
@@ -34,6 +33,7 @@ const styles = {
 				},
 			},
 			"& [data-syntaxHighlighter]": {
+				margin: "-16px !important",
 				fontSize: "1rem !important",
 			},
 		},
@@ -89,11 +89,11 @@ export class UnsafeMarkdown extends React.Component<IProps, IState> {
 				components={SyntaxHighlighter ? {
 					code: ({node, inline, className, children, ...props}) => {
 						const match = /language-(\w+)/.exec(className || '');
-						return !inline && match ? (
+						return !inline ? (
 							<SyntaxHighlighter
 								children={`${children}`.replace(/\n$/, '')}
 								style={prismTheme as any}
-								language={UnsafeMarkdown.migrateLanguage(match[1])}
+								language={UnsafeMarkdown.migrateLanguage(match ? match[1] : "text")}
 								PreTag="div"
 								showLineNumbers={true}
 								lineNumberStyle={{minWidth: "2.25em"}}
