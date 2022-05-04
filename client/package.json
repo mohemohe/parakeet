@@ -29,6 +29,8 @@
     "mobx": "4",
     "mobx-react": "^5.4.4",
     "mobx-react-router": "^4.0.7",
+    "patch-package": "^6.4.7",
+    "postinstall-postinstall": "^2.1.0",
     "prism-react-renderer": "^0.1.7",
     "prismjs": "^1.22.0",
     "react": ">=16",
@@ -52,7 +54,8 @@
   },
   "scripts": {
     "build": "NODE_ENV=production parcel build",
-    "watch": "NODE_ENV=development parcel watch"
+    "watch": "NODE_ENV=development parcel watch",
+    "postinstall": "patch-package"
   },
   "devDependencies": {
     "@parcel/config-default": "^2.5.0",
