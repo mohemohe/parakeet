@@ -28,7 +28,7 @@ SHELL ["/bin/zsh", "-c"]
 WORKDIR /go/src/$GOLANG_NAMESPACE/server
 ADD . /go/src/$GOLANG_NAMESPACE/
 WORKDIR /go/src/$GOLANG_NAMESPACE/client
-RUN yarn
+RUN yarn install --frozen-lockfile
 RUN yarn build
 
 # ====================================================================================
