@@ -41,6 +41,8 @@ func main() {
 }
 
 func initEcho(e *echo.Echo) {
+	e.HideBanner = true
+
 	e.Use(middleware.Recover())
 	e.Logger = log.Logger()
 	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{Skipper: func(c echo.Context) bool {
@@ -50,15 +52,20 @@ func initEcho(e *echo.Echo) {
 	if configs.GetEnv().Echo.Env == "debug" {
 		e.Logger.SetLevel(0)
 	}
-	e.Static("/public", "public")
-	e.Use(middlewares.SSRWithConfig(middlewares.SSRConfig{
-		Skipper: func(c echo.Context) bool {
-			return strings.HasPrefix(c.Path(), "/public") || strings.HasPrefix(c.Path(), "/admin") || strings.HasPrefix(c.Path(), "/api") || strings.HasPrefix(c.Path(), "/swagger") || c.Path() == "/favicon.ico"
-		},
-		Handler: e,
-	}))
 
-	e.GET("/admin", controllers.AdminIndex)
+	e.Static("/public", "public")
+	if configs.GetEnv().Echo.SSR {
+		e.Logger.Info("enable SSR and static file hosting")
+		e.Use(middlewares.SSRWithConfig(middlewares.SSRConfig{
+			Skipper: func(c echo.Context) bool {
+				return strings.HasPrefix(c.Path(), "/public") || strings.HasPrefix(c.Path(), "/admin") || strings.HasPrefix(c.Path(), "/api") || strings.HasPrefix(c.Path(), "/swagger") || c.Path() == "/favicon.ico"
+			},
+			Handler: e,
+		}))
+		e.GET("/admin", controllers.AdminIndex)
+	} else {
+		e.Logger.Info("disable SSR")
+	}
 
 	e.GET("/api/v1/healthcheck", controllers.GetHealthCheck)
 	e.GET("/api/v1/auth", controllers.AuthCheck, middlewares.Authorize, middlewares.Authorized)

@@ -8,6 +8,7 @@ type (
 	EnvironmentVariable struct {
 		Echo struct {
 			Env string `default:"debug"`
+			SSR bool   `default:"true"`
 		}
 		Root struct {
 			Password string `default:"root"`
