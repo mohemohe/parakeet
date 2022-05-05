@@ -3,10 +3,8 @@ import {inject, observer} from "mobx-react";
 import type {SettingsStore} from "../../stores/SettingsStore";
 import {style} from "typestyle";
 import {EmotionalCard} from "../../components/EmotionalCard";
-import ReactMarkdown from "react-markdown";
 import {COLORS, DARK_COLORS} from "../../constants/Style";
-
-const breaks = require("remark-breaks");
+import {UnsafeMarkdown} from "../../components/UnsafeMarkdown";
 
 interface IProps extends React.ComponentClass<HTMLDivElement> {
     SettingsStore?: SettingsStore;
@@ -43,7 +41,7 @@ const styles = {
                         color: "#8d98a5 !important",
                     },
                     "& code": {
-                        color: "#a8ff60 !important",
+                        color: "#a8ff60",
                         background: "#393e48 !important",
                     },
                     "& pre": {
@@ -102,30 +100,11 @@ export class SideColumn extends React.Component<IProps, IState> {
         return (
             <div id={"side_container"} className={styles.root}>
                 {contents.map((content, index) => {
-                    // gojaの制限
-                    const scriptRegex = /<script>(.*?)<\/script>/gi;
-                    const scripts = [...(content as any).replaceAll("\n","").matchAll(scriptRegex)];
-
+                    let body = content;
                     console.log(`contents[${index+1}/${contents.length}]`);
-                    if (scripts) {
-                        for (let i = 0; i < scripts.length; i++) {
-                            console.log(`script[${i+1}/${scripts.length}]`, scripts[i][1]);
-                            try {
-                                (window as any).eval(scripts[i][1] || "");
-                            } catch (e) {
-                                console.error("script evaluate error:", e);
-                            }
-                        }
-                    }
                     return (
                         <EmotionalCard id={`side_content-${index+1}`} key={index} component={"section"}>
-                            <ReactMarkdown
-                                key={index}
-                                source={content}
-                                className={`side_content_body markdown-body ${styles.markdown}`}
-                                plugins={[[breaks]]}
-                                escapeHtml={false}
-                            />
+                            <UnsafeMarkdown key={index} content={body} markdownClassName={styles.markdown} />
                         </EmotionalCard>
                     );
                 })}
