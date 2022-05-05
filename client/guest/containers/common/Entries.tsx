@@ -54,7 +54,7 @@ export class Entries extends React.Component<IProps, IState> {
 
         return (
             <div id={"entries"} className={styles.root}>
-                {this.props.EntryStore!.formattedEntries.map((entry, index) => <Entry key={`${entry.title}_${index}`} entry={entry} stopToReadMore={true} syntaxHighlighting={!this.props.EntryStore!.isSSR}/>)}
+                {this.props.EntryStore!.formattedEntries.map((entry, index) => <Entry key={`${entry.title}_${index}`} entry={entry} stopToReadMore={true} syntaxHighlighting={!this.props.EntryStore!.isSSR} isSSR={this.props.EntryStore!.isSSR}/>)}
 
                 <div id={"pager"} className={styles.pager}>
                     {page > 1 ?

@@ -12,6 +12,7 @@ interface IProps extends CardProps {
     entry: IEntry
     stopToReadMore: boolean;
     syntaxHighlighting: boolean;
+    isSSR: boolean;
 }
 
 const styles = {
@@ -99,10 +100,21 @@ export class Entry extends React.Component<IProps, {}> {
 
     public render() {
         const { entry } = this.props;
-        const created = new Date(entry._created);
-        let modified: Date | undefined;
+
+        let created: string | undefined;
+        if (this.props.isSSR) {
+            created = entry._created;
+        } else {
+            created = new Date(entry._created).toLocaleString();
+        }
+
+        let modified: string | undefined;
         if (entry._modified && entry._modified !== "") {
-            modified = new Date(entry._modified);
+            if (this.props.isSSR) {
+                modified = entry._modified;
+            } else {
+                modified = new Date(entry._modified).toLocaleString();
+            }
         }
 
         let body = entry.body || "";
@@ -127,13 +139,13 @@ export class Entry extends React.Component<IProps, {}> {
                     </h2>
                     <div className={classes("entry_datetime", styles.subheader)}>
                         <div className={"entry_created"}>
-                            公開: {created.toLocaleString()}
+                            公開: {created}
                             {modified ? "," : ""}
                         </div>
-                        {modified ? <div className={"entry_updated"}>更新: {modified.toLocaleString()}</div> : <></>}
+                        {modified ? <div className={"entry_updated"}>更新: {modified}</div> : <></>}
                     </div>
                 </div>
-                <UnsafeMarkdown content={body} markdownClassName={styles.body} />
+                <UnsafeMarkdown content={body} markdownClassName={styles.body} syntaxHighlighting={this.props.syntaxHighlighting} />
                 {showReadMore ?
                     <div className={classes("entry_readmore", styles.readMore)}>
                         <LinkButton className={"entry_readmore_button"} to={`/entry/${entry._id}?scroll=more`} buttonProps={{variant: "contained", color: "primary"}}>続きを読む</LinkButton>

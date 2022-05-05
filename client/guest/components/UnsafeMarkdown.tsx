@@ -13,6 +13,7 @@ interface IProps extends React.ComponentClass<HTMLDivElement> {
 	SettingsStore?: SettingsStore;
 	markdownClassName?: string;
 	content: string;
+	syntaxHighlighting: boolean;
 }
 
 interface IState extends React.ComponentState {
@@ -50,7 +51,7 @@ export class UnsafeMarkdown extends React.Component<IProps, IState> {
 	private SyntaxHighlighter?: typeof Prism;
 
 	public async componentDidMount() {
-		if (!this.props.SettingsStore!.isSSR) {
+		if (this.props.syntaxHighlighting) {
 			const rsh = await import ("react-syntax-highlighter");
 			this.SyntaxHighlighter = rsh.Prism;
 			this.forceUpdate();
