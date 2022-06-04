@@ -1,6 +1,10 @@
 package main
 
 import (
+	"net/http"
+	"strings"
+
+	"github.com/joho/godotenv"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/mohemohe/parakeet/server/configs"
@@ -10,9 +14,7 @@ import (
 	"github.com/mohemohe/parakeet/server/templates"
 	"github.com/neko-neko/echo-logrus/v2/log"
 	"github.com/playree/goingtpl"
-	"github.com/swaggo/echo-swagger"
-	"net/http"
-	"strings"
+	echoSwagger "github.com/swaggo/echo-swagger"
 
 	_ "github.com/mohemohe/parakeet/server/docs"
 )
@@ -124,6 +126,7 @@ func initTemplate(e *echo.Echo) {
 }
 
 func initEnv() {
+	_ = godotenv.Load()
 	_ = configs.GetEnv()
 	_ = configs.GetUnix()
 }

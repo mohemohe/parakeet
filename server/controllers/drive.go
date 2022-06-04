@@ -41,18 +41,13 @@ func newClient() (*s3fs.S3FS, error) {
 	}
 
 	config := &s3fs.Config{
-		Region:          v.Region,
-		Bucket:          v.Bucket,
-		AccessKeyID:     v.AccessKeyID,
-		AccessSecretKey: v.AccessSecretKey,
-		Endpoint:        v.Endpoint,
-	}
-
-	if config.AccessKeyID == "" || config.AccessSecretKey == "" {
-		config.EnableIAMAuth = true
-	}
-	if config.Endpoint != "" {
-		config.EnableMinioCompat = true
+		Region:            v.Region,
+		Bucket:            v.Bucket,
+		AccessKeyID:       v.AccessKeyID,
+		AccessSecretKey:   v.AccessSecretKey,
+		Endpoint:          v.Endpoint,
+		EnableIAMAuth:     v.AccessKeyID != "" && v.AccessSecretKey != "",
+		EnableMinioCompat: v.Endpoint != "",
 	}
 
 	return s3fs.New(config), nil

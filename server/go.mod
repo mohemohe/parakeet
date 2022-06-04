@@ -15,6 +15,7 @@ require (
 	github.com/go-openapi/spec v0.20.6 // indirect
 	github.com/go-openapi/swag v0.21.1 // indirect
 	github.com/golang-jwt/jwt/v4 v4.4.1
+	github.com/joho/godotenv v1.4.0 // indirect
 	github.com/kelseyhightower/envconfig v1.3.0
 	github.com/labstack/echo/v4 v4.0.0
 	github.com/mailru/easyjson v0.7.7 // indirect
