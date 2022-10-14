@@ -16,6 +16,19 @@ jobs:
         with:
           fetch-depth: 0
 
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+
+      - run: npm config rm proxy
+      - run: npm config rm https-proxy
+      - run: npm config set fetch-retry-mintimeout 20000
+      - run: npm config set fetch-retry-maxtimeout 120000
+      - run: npm config set registry https://registry.npmjs.org/
+
+      - run: npm install -g -no-save yarn
+      - run: yarn config set network-timeout 120000
+
       - uses: docker/setup-qemu-action@v2
 
       - uses: docker/setup-buildx-action@v2
@@ -35,6 +48,12 @@ jobs:
             type=semver,pattern={{major}}.{{minor}}
             type=semver,pattern={{major}}
             type=sha
+
+      - run: yarn install --frozen-lockfile
+        working-directory: client
+
+      - run: yarn build
+        working-directory: client
 
       - uses: docker/build-push-action@v3
         with:

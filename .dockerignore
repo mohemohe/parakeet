@@ -1,3 +1,4 @@
 client/.cache
 client/node_modules
 server/public
+server/tmp
