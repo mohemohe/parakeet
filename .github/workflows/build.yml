@@ -11,6 +11,14 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        arch:
+          - linux/amd64
+          - linux/arm64
+          - linux/arm/v7
+    
     steps:
       - uses: actions/checkout@v3
         with:
@@ -19,14 +27,8 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 16
+          cache: 'yarn'
 
-      - run: npm config rm proxy
-      - run: npm config rm https-proxy
-      - run: npm config set fetch-retry-mintimeout 20000
-      - run: npm config set fetch-retry-maxtimeout 120000
-      - run: npm config set registry https://registry.npmjs.org/
-
-      - run: npm install -g -no-save yarn
       - run: yarn config set network-timeout 120000
 
       - uses: docker/setup-qemu-action@v2
@@ -57,10 +59,15 @@ jobs:
 
       - uses: docker/build-push-action@v3
         with:
-          platforms: linux/amd64,linux/arm64,linux/arm/v7
+          platforms: ${{ matrix.arch }}
           tags: ${{ steps.metadata.outputs.tags }}
           labels: ${{ steps.metadata.outputs.labels }}
-      
+          cache-from: type=gha,scope=${{ matrix.arch }}
+          cache-to: type=gha,mode=max,scope=${{ matrix.arch }}      
+
+  update_dockerhub_readme:
+    needs: build
+    steps:
       - uses: peter-evans/dockerhub-description@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
