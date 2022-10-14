@@ -9,16 +9,9 @@ on:
       - v*.*.*
 
 jobs:
-  build:
+  build_client:
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        arch:
-          - linux/amd64
-          - linux/arm64
-          - linux/arm/v7
-    
     steps:
       - uses: actions/checkout@v3
         with:
@@ -31,6 +24,39 @@ jobs:
           cache-dependency-path: ./client/yarn.lock
 
       - run: yarn config set network-timeout 120000
+
+      - run: yarn install --frozen-lockfile
+        working-directory: client
+
+      - run: yarn build
+        working-directory: client
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: client
+          path: server/public
+
+  build_docker_image:
+    needs: build_client
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        arch:
+          - linux/amd64
+          - linux/arm64
+          - linux/arm/v7
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - uses: actions/download-artifact@v3
+        with:
+          name: client
+          path: server/public
 
       - uses: docker/setup-qemu-action@v2
 
@@ -52,23 +78,17 @@ jobs:
             type=semver,pattern={{major}}
             type=sha
 
-      - run: yarn install --frozen-lockfile
-        working-directory: client
-
-      - run: yarn build
-        working-directory: client
-
       - uses: docker/build-push-action@v3
         with:
           platforms: ${{ matrix.arch }}
           tags: ${{ steps.metadata.outputs.tags }}
           labels: ${{ steps.metadata.outputs.labels }}
           cache-from: type=gha,scope=${{ matrix.arch }}
-          cache-to: type=gha,mode=max,scope=${{ matrix.arch }}      
+          cache-to: type=gha,mode=max,scope=${{ matrix.arch }}
 
   update_dockerhub_readme:
-    needs: build
-    
+    needs: build_docker_image
+
     runs-on: ubuntu-latest
 
     steps:
