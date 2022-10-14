@@ -92,10 +92,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
       - uses: peter-evans/dockerhub-description@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
           repository: mohemohe/parakeet
-          readme-filepath: ./README.md
           short-description: Fast weblog built in golang and top of echo. Supports React SSR and hydrate.
