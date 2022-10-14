@@ -27,7 +27,8 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 16
-          cache: 'yarn'
+          cache: yarn
+          cache-dependency-path: ./client/yarn.lock
 
       - run: yarn config set network-timeout 120000
 
