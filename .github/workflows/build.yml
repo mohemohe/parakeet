@@ -8,7 +8,8 @@ on:
     tags:
       - v*.*.*
 
-concurrency: build
+concurrency: 
+  group: build-${{ github.ref }}
 
 jobs:
   build_client:
