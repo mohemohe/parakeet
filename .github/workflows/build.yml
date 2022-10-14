@@ -8,6 +8,9 @@ on:
     tags:
       - v*.*.*
 
+concurrency: 
+  group: build-${{ github.ref }}
+
 jobs:
   build_client:
     runs-on: ubuntu-latest
@@ -80,6 +83,7 @@ jobs:
 
       - uses: docker/build-push-action@v3
         with:
+          push: true
           platforms: ${{ matrix.arch }}
           tags: ${{ steps.metadata.outputs.tags }}
           labels: ${{ steps.metadata.outputs.labels }}
