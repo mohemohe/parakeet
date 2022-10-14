@@ -44,13 +44,6 @@ jobs:
 
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        arch:
-          - linux/amd64
-          - linux/arm64
-          - linux/arm/v7
-
     steps:
       - uses: actions/checkout@v3
         with:
@@ -79,12 +72,11 @@ jobs:
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
             type=semver,pattern={{major}}
-            type=sha
 
       - uses: docker/build-push-action@v3
         with:
           push: true
-          platforms: ${{ matrix.arch }}
+          platforms: linux/amd64,linux/arm64,linux/arm/v7
           tags: ${{ steps.metadata.outputs.tags }}
           labels: ${{ steps.metadata.outputs.labels }}
           cache-from: type=gha,scope=${{ matrix.arch }}
