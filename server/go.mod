@@ -16,14 +16,13 @@ require (
 	github.com/golang-jwt/jwt/v4 v4.4.1
 	github.com/joho/godotenv v1.4.0
 	github.com/kelseyhightower/envconfig v1.3.0
-	github.com/labstack/echo/v4 v4.0.0
+	github.com/labstack/echo/v4 v4.9.0
 	github.com/mailru/easyjson v0.7.7 // indirect
-	github.com/mattn/go-isatty v0.0.12 // indirect
 	github.com/mitchellh/mapstructure v1.1.2
 	github.com/mobilusoss/go-s3fs v0.0.0-20190924083947-ac89030fc5b0
 	github.com/mohemohe/fetch v1.0.0
 	github.com/mohemohe/mgo-pubsub v0.0.0-20201211125819-c2e8968128ce
-	github.com/neko-neko/echo-logrus/v2 v2.0.0
+	github.com/neko-neko/echo-logrus/v2 v2.0.1
 	github.com/olebedev/gojax v0.0.0-20170318114811-bb153be84336
 	github.com/oleiade/reflections v1.0.0 // indirect
 	github.com/pkg/errors v0.9.1
