@@ -1,0 +1,13 @@
+diff --git a/node_modules/mdast-util-gfm-autolink-literal/index.js b/node_modules/mdast-util-gfm-autolink-literal/index.js
+index d3f006c..a7979fc 100644
+--- a/node_modules/mdast-util-gfm-autolink-literal/index.js
++++ b/node_modules/mdast-util-gfm-autolink-literal/index.js
+@@ -157,7 +157,7 @@ function findEmail(_, atext, label, match) {
+     // Not an expected previous character.
+     !previous(match, true) ||
+     // Label ends in not allowed character.
+-    /[_-\d]$/.test(label)
++    /[_-]$/.test(label)
+   ) {
+     return false
+   }

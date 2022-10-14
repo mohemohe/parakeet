@@ -35,13 +35,12 @@ export class CacheSetting extends React.Component<IProps, IState> {
     }
 
     public componentDidMount() {
-        this.props.SettingsStore!.getMongoDbQueryCache();
         this.props.SettingsStore!.getSsrPageCache();
         this.props.SettingsStore!.getCloudflare();
     }
 
     public render() {
-        const {mongoDbQueryCache, ssrPageCache, cloudflare} = this.props.SettingsStore!;
+        const {ssrPageCache, cloudflare} = this.props.SettingsStore!;
         const loading = this.props.SettingsStore!.state === State.RUNNING;
 
         return (
@@ -52,18 +51,6 @@ export class CacheSetting extends React.Component<IProps, IState> {
                         <Typography variant="h6" gutterBottom>
                             組み込み
                         </Typography>
-                        <FormControlLabel
-                            className={styles.control}
-                            disabled={loading}
-                            control={
-                                <Switch
-                                    checked={mongoDbQueryCache}
-                                    onChange={(event) => this.props.SettingsStore!.setMongoDbQueryCache(event.target.checked)}
-                                    color="primary"
-                                />
-                            }
-                            label="MongoDBのクエリーをキャッシュする"
-                        />
                     </Box>
                     <Box marginBottom={2}>
                         <FormControlLabel
@@ -119,7 +106,6 @@ export class CacheSetting extends React.Component<IProps, IState> {
                     </Box>
                     <Box display={"flex"} justifyContent={"flex-end"}>
                         <Button className={styles.button} variant={"contained"} color={"primary"} onClick={() => {
-                            this.props.SettingsStore!.putMongoDbQueryCache();
                             // this.props.SettingsStore!.putSsrPageCache();
                             this.props.SettingsStore!.putCloudflare();
                         }} disabled={loading}>保存</Button>

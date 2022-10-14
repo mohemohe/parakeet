@@ -1,10 +1,11 @@
 package controllers
 
 import (
+	"net/http"
+
 	"github.com/labstack/echo/v4"
 	"github.com/mohemohe/parakeet/server/models"
 	"github.com/mohemohe/parakeet/server/util"
-	"net/http"
 )
 
 type (
@@ -179,53 +180,6 @@ func SetServerSideRendering(c echo.Context) error {
 }
 
 // @Tags setting
-// @Summary get MongoDB query cache
-// @Description MongoDB クエリーのキャッシュ設定を取得します
-// @Produce json
-// @Security AccessToken
-// @Success 200 {object} models.KV
-// @Failure 401 {object} middlewares.EmptyJson
-// @Router /v1/settings/cache/mongodb [get]
-func GetMongoDBQueryCache(c echo.Context) error {
-	kv := models.GetKVS(models.KVEnableMongoDBQueryCache)
-	if kv == nil {
-		panic("db error")
-	}
-	return c.JSON(http.StatusOK, kv)
-}
-
-// @Tags setting
-// @Summary set MongoDB query cache
-// @Description MongoDB クエリーのキャッシュ設定を更新します
-// @Produce json
-// @Security AccessToken
-// @Param Body body models.KV true "Body"
-// @Success 200 {object} models.KV
-// @Failure 401 {object} middlewares.EmptyJson
-// @Router /v1/settings/cache/mongodb [put]
-func SetGetMongoDBQueryCache(c echo.Context) error {
-	reqBody := new(models.KV)
-	if err := c.Bind(reqBody); err != nil {
-		panic("bind error")
-	}
-
-	enabled := reqBody.Value.(bool)
-
-	if err := models.SetKVS(models.KVEnableMongoDBQueryCache, enabled); err != nil {
-		panic(err)
-	}
-
-	if !enabled {
-		models.PurgeCache()
-	}
-
-	return c.JSON(http.StatusOK, &models.KV{
-		Key:   models.KVEnableMongoDBQueryCache,
-		Value: reqBody.Value,
-	})
-}
-
-// @Tags setting
 // @Summary get SSR-ed page cache
 // @Description サーバーサイドレンダリングで生成したHTMLのキャッシュ設定を取得します
 // @Produce json
@@ -263,7 +217,7 @@ func SetSSRPageCache(c echo.Context) error {
 	}
 
 	if !enabled {
-		models.PurgeCache()
+		//TODO:
 	}
 
 	return c.JSON(http.StatusOK, &models.KV{

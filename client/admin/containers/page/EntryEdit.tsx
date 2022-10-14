@@ -26,14 +26,23 @@ const styles = {
         display: "flex",
         flexDirection: "column",
         width: "100%",
+        flex: 1,
 
         $nest: {
             "& .fullscreen": {
                 zIndex: 1100,
             },
-            "& .CodeMirror": {
-                height: "300px !important",
+            "& .EasyMDEContainer": {
+                display: "flex",
+                flexDirection: "column",
                 flex: 1,
+            },
+            "& .CodeMirror": {
+                flex: 1,
+            },
+            "& .CodeMirror-sizer": {
+                minHeight: "0 !important",
+                height: "0 !important",
             },
             "& .editor-statusbar": {
                 marginRight: 64,

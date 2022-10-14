@@ -27,3 +27,5 @@ public/js/**/*.js.map
 public/js/**/*.css
 public/js/**/*.css.map
 public/js/**/report.html
+.env
+tmp
