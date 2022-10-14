@@ -1,12 +1,12 @@
 package models
 
 import (
+	"regexp"
+	"strings"
+
 	"github.com/globalsign/mgo/bson"
 	"github.com/go-bongo/bongo"
 	"github.com/mohemohe/parakeet/server/models/connection"
-	"regexp"
-	"strconv"
-	"strings"
 )
 
 type (
@@ -49,25 +49,9 @@ func GetEntryById(id string, includeDraft bool, shouldCount bool) *Entry {
 		}
 	}()
 
-	cacheKey := "entry:" + id
-	if err := GetCache(cacheKey, entry); err == nil {
-		if entry.Draft {
-			if includeDraft {
-				return entry
-			}
-			return nil
-		}
-	}
-
 	err := conn.Collection(collections.Entries).FindById(bson.ObjectIdHex(id), entry)
 	if err != nil {
 		return nil
-	}
-
-	if kv := GetKVS(KVEnableMongoDBQueryCache); kv != nil {
-		if kv.Value.(bool) == true {
-			_ = SetCache(cacheKey, entry)
-		}
 	}
 
 	if entry.Draft {
@@ -81,17 +65,10 @@ func GetEntryById(id string, includeDraft bool, shouldCount bool) *Entry {
 }
 
 func GetEntries(perPage int, page int, search string, includeDraft bool) *Entries {
-	cacheKey := "entries:" + strconv.Itoa(perPage) + ":" + strconv.Itoa(page) + ":" + search
 	query := bson.M{}
 	entries := new(Entries)
 
 	if !includeDraft {
-		if err := GetCache(cacheKey, entries); err == nil {
-			if len(entries.Entries) == 0 {
-				entries.Entries = []Entry{}
-			}
-			return entries
-		}
 		query["draft"] = bson.M{
 			"$ne": true,
 		}
@@ -139,12 +116,6 @@ func GetEntries(perPage int, page int, search string, includeDraft bool) *Entrie
 	entries = &Entries{
 		Info:    info,
 		Entries: entryArray,
-	}
-
-	if kv := GetKVS(KVEnableMongoDBQueryCache); kv != nil {
-		if kv.Value.(bool) == true {
-			_ = SetCache(cacheKey, entries)
-		}
 	}
 
 	return entries

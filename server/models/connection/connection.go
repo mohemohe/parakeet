@@ -2,17 +2,14 @@ package connection
 
 import (
 	"crypto/tls"
-	"encoding/gob"
-	"github.com/emluque/dscache"
+	"net"
+	"time"
+
 	"github.com/globalsign/mgo"
-	"github.com/globalsign/mgo/bson"
 	"github.com/go-bongo/bongo"
 	"github.com/mohemohe/parakeet/server/configs"
 	"github.com/mohemohe/parakeet/server/util"
 	"github.com/sirupsen/logrus"
-	"net"
-	"runtime"
-	"time"
 )
 
 var mongoConn *bongo.Connection
@@ -58,29 +55,5 @@ func newMongo() *bongo.Connection {
 	}
 	util.Logger().Info("mongo connection created")
 
-	return conn
-}
-
-var dsConn *dscache.Dscache
-
-func DsCache() *dscache.Dscache {
-	if dsConn == nil {
-		dsConn = newDsCache()
-	}
-	return dsConn
-}
-
-func PurgeDsCache() {
-	dsConn = newDsCache()
-	go runtime.GC()
-}
-
-func newDsCache() *dscache.Dscache {
-	gob.Register(bson.M{})
-
-	conn, err := dscache.New(64 * dscache.MB)
-	if err != nil {
-		panic(err)
-	}
 	return conn
 }

@@ -8,14 +8,13 @@ require (
 	github.com/dop251/goja_nodejs v0.0.0-20211022123610-8dd9abb0616d
 	github.com/elazarl/goproxy v0.0.0-20190421051319-9d40249d3c2f // indirect
 	github.com/elazarl/goproxy/ext v0.0.0-20190421051319-9d40249d3c2f // indirect
-	github.com/emluque/dscache v0.0.0-20181022182702-0e9337345fd9
 	github.com/globalsign/mgo v0.0.0-20181015135952-eeefdecb41b8
 	github.com/go-bongo/bongo v0.10.5-0.20180517124215-761759e31d8f
 	github.com/go-bongo/go-dotaccess v0.0.0-20150208020959-ae070a2d2a38 // indirect
 	github.com/go-openapi/spec v0.20.6 // indirect
 	github.com/go-openapi/swag v0.21.1 // indirect
 	github.com/golang-jwt/jwt/v4 v4.4.1
-	github.com/joho/godotenv v1.4.0 // indirect
+	github.com/joho/godotenv v1.4.0
 	github.com/kelseyhightower/envconfig v1.3.0
 	github.com/labstack/echo/v4 v4.0.0
 	github.com/mailru/easyjson v0.7.7 // indirect

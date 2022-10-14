@@ -2,7 +2,7 @@ package models
 
 import (
 	"github.com/globalsign/mgo"
-	"github.com/mohemohe/mgo-pubsub"
+	mgo_pubsub "github.com/mohemohe/mgo-pubsub"
 	"github.com/mohemohe/parakeet/server/configs"
 	"github.com/mohemohe/parakeet/server/models/connection"
 	"github.com/mohemohe/parakeet/server/util"
@@ -52,18 +52,17 @@ type (
 )
 
 const (
-	KVCacheSize               = "cache_size" // TODO:
-	KVEnableMongoDBQueryCache = "mongo_db_query_cache"
-	KVEnableSSRPageCache      = "ssr_page_cache"
-	KVSideNavContents         = "side_nav_contents"
-	KVSiteTitle               = "site_title"
-	KVNotifyMastodon          = "notify_mastodon"
-	KVNotifyMisskey           = "notify_misskey"
-	KVServerSideRendering     = "server_side_rendering"
-	KVCloudflare              = "cloudflare"
-	KVCustomCSS               = "custom_css"
-	KVMongoDBSearch           = "mongodb_search"
-	KVAWSS3                   = "aws_s3"
+	KVCacheSize           = "cache_size" // TODO:
+	KVEnableSSRPageCache  = "ssr_page_cache"
+	KVSideNavContents     = "side_nav_contents"
+	KVSiteTitle           = "site_title"
+	KVNotifyMastodon      = "notify_mastodon"
+	KVNotifyMisskey       = "notify_misskey"
+	KVServerSideRendering = "server_side_rendering"
+	KVCloudflare          = "cloudflare"
+	KVCustomCSS           = "custom_css"
+	KVMongoDBSearch       = "mongodb_search"
+	KVAWSS3               = "aws_s3"
 )
 
 var pubsub *mgo_pubsub.PubSub
@@ -100,7 +99,6 @@ func InitDB() {
 		Entry:   true,
 		Timeout: 3000,
 	}))
-	setDefaultConfig(KVEnableMongoDBQueryCache, true)
 	setDefaultConfig(KVEnableSSRPageCache, false)
 	setDefaultConfig(KVCloudflare, util.StructToJsonMap(Cloudflare{
 		Enable:   false,
@@ -131,8 +129,6 @@ func InitDB() {
 			}).Warn("could not create root user")
 		}
 	}
-
-	go subscribePurgeCacheEvent()
 
 	util.Logger().Info("DB initialized")
 }

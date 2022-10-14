@@ -15,28 +15,16 @@ type (
 )
 
 func GetKVS(key string) *KV {
-	cacheKey := "kvs:" + key
-
 	result := new(KV)
-	if err := GetCache(cacheKey, result); err == nil {
-		return result
-	}
-
 	err := connection.Mongo().Collection(collections.KVS).FindOne(bson.M{"key": key}, result)
 	if err != nil {
 		return nil
 	}
-
-	_ = SetCache(cacheKey, result)
 
 	return result
 }
 
 func SetKVS(key string, value interface{}) error {
 	_, err := connection.Mongo().Collection(collections.KVS).Collection().Upsert(bson.M{"key": key}, bson.M{"key": key, "value": value})
-	if err == nil {
-		PurgeInternalCache()
-		_ = SetCache("kvs:"+key, value)
-	}
 	return err
 }
