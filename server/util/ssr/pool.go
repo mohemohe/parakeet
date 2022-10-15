@@ -1,11 +1,12 @@
 package ssr
 
 import (
-	"github.com/mohemohe/parakeet/server/configs"
-	"github.com/mohemohe/parakeet/server/util"
 	"net/http"
 	"runtime"
 	"time"
+
+	"github.com/mohemohe/parakeet/server/configs"
+	"github.com/mohemohe/parakeet/server/util"
 )
 
 type (
@@ -31,7 +32,7 @@ func NewPool(handler http.Handler) *Pool {
 			js, ready := newJS(handler)
 			if !ready {
 				util.Logger().Warnln("JS instance create error: ", i+1, "/", cpus)
-				time.Sleep(time.Microsecond)
+				time.Sleep(100 * time.Millisecond)
 				goto INIT
 			}
 			util.Logger().Infoln("JS instance created: ", i+1, "/", cpus)
