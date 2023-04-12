@@ -12,7 +12,36 @@ concurrency:
   group: build-${{ github.ref }}
 
 jobs:
+  build_client:
+    runs-on: buildjet-4vcpu-ubuntu-2204
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: yarn
+          cache-dependency-path: ./client/yarn.lock
+
+      - run: yarn config set network-timeout 120000
+
+      - run: yarn install --frozen-lockfile
+        working-directory: client
+
+      - run: yarn build
+        working-directory: client
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: client
+          path: server/public
+
   fetch_docker_metadata:
+    needs: build_client
+
     runs-on: buildjet-2vcpu-ubuntu-2204
 
     outputs:
@@ -50,19 +79,10 @@ jobs:
         with:
           fetch-depth: 0
 
-      - uses: actions/setup-node@v3
+      - uses: actions/download-artifact@v3
         with:
-          node-version: 16
-          cache: yarn
-          cache-dependency-path: ./client/yarn.lock
-
-      - run: yarn config set network-timeout 120000
-
-      - run: yarn install --frozen-lockfile
-        working-directory: client
-
-      - run: yarn build
-        working-directory: client
+          name: client
+          path: server/public
 
       - uses: docker/login-action@v2
         with:
@@ -72,6 +92,7 @@ jobs:
       - uses: docker/build-push-action@v3
         with:
           push: true
+          context: .
           platforms: linux/amd64
           tags: ${{ needs.fetch_docker_metadata.outputs.tags }}
           labels: ${{ needs.fetch_docker_metadata.outputs.labels }}
@@ -86,19 +107,10 @@ jobs:
         with:
           fetch-depth: 0
 
-      - uses: actions/setup-node@v3
+      - uses: actions/download-artifact@v3
         with:
-          node-version: 16
-          cache: yarn
-          cache-dependency-path: ./client/yarn.lock
-
-      - run: yarn config set network-timeout 120000
-
-      - run: yarn install --frozen-lockfile
-        working-directory: client
-
-      - run: yarn build
-        working-directory: client
+          name: client
+          path: server/public
 
       - uses: docker/login-action@v2
         with:
@@ -108,6 +120,7 @@ jobs:
       - uses: docker/build-push-action@v3
         with:
           push: true
+          context: .
           platforms: linux/arm64
           tags: ${{ needs.fetch_docker_metadata.outputs.tags }}-arm64
           labels: ${{ needs.fetch_docker_metadata.outputs.labels }}
