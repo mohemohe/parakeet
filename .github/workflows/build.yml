@@ -120,7 +120,7 @@ jobs:
         with:
           push: true
           platforms: linux/arm64
-          tags: ${{ needs.fetch_docker_metadata.outputs.tags }}
+          tags: ${{ needs.fetch_docker_metadata.outputs.tags }}-arm64
           labels: ${{ needs.fetch_docker_metadata.outputs.labels }}
 
   update_dockerhub_readme:
