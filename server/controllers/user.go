@@ -1,10 +1,11 @@
 package controllers
 
 import (
-	"github.com/labstack/echo/v4"
-	"github.com/mohemohe/parakeet/server/models"
 	"net/http"
 	"strconv"
+
+	"github.com/labstack/echo/v4"
+	"github.com/mohemohe/parakeet/server/models"
 )
 
 type (
@@ -97,7 +98,7 @@ func UpdateUser(c echo.Context) error {
 		Password: password,
 		Role:     reqBody.Role,
 	}
-	nextUser.Id = user.Id
+	nextUser.ID = user.ID
 
 	if err := models.UpsertUser(nextUser); err != nil {
 		panic(err)

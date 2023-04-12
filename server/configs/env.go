@@ -19,7 +19,6 @@ type (
 		Mongo struct {
 			Address  string `default:"mongodb://localhost:27017"`
 			Database string `default:"parakeet"`
-			SSL      bool   `default:"false"`
 		}
 	}
 )

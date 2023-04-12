@@ -30,7 +30,7 @@ func Authorize(next echo.HandlerFunc) echo.HandlerFunc {
 			return next(c)
 		}
 
-		if user.Id.Hex() == tokenUser.ID && user.Email == tokenUser.Email && user.Role == tokenUser.Role {
+		if user.ID.Hex() == tokenUser.ID && user.Email == tokenUser.Email && user.Role == tokenUser.Role {
 			c.Set("User", user)
 		}
 

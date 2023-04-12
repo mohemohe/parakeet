@@ -1,27 +1,34 @@
 package models
 
 import (
-	"github.com/globalsign/mgo/bson"
-	"github.com/go-bongo/bongo"
+	"context"
+	"math"
+	"time"
+
 	"github.com/golang-jwt/jwt/v4"
 	"github.com/mohemohe/parakeet/server/configs"
 	"github.com/mohemohe/parakeet/server/models/connection"
 	"github.com/mohemohe/parakeet/server/util"
-	"time"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 type (
 	User struct {
-		bongo.DocumentBase `bson:",inline"`
-		Name               string `bson:"name" json:"name"`
-		Email              string `bson:"email" json:"email"`
-		Password           string `bson:"password" json:"-"`
-		Role               int    `bson:"role" json:"role"`
+		ID       primitive.ObjectID `bson:"_id" json:"_id"`
+		Created  time.Time          `bson:"_created" json:"_created"`
+		Modified time.Time          `bson:"_modified" json:"_modified"`
+
+		Name     string `bson:"name" json:"name"`
+		Email    string `bson:"email" json:"email"`
+		Password string `bson:"password" json:"-"`
+		Role     int    `bson:"role" json:"role"`
 	}
 
 	Users struct {
-		Info  *bongo.PaginationInfo `bson:"-" json:"info"`
-		Users []User                `bson:"-" json:"users"`
+		Info  *PaginationInfo `bson:"-" json:"info"`
+		Users []User          `bson:"-" json:"users"`
 	}
 
 	JwtClaims struct {
@@ -45,7 +52,7 @@ func GetUserById(id string) *User {
 	conn := connection.Mongo()
 
 	user := &User{}
-	err := conn.Collection(collections.Users).FindById(bson.ObjectIdHex(id), user)
+	err := conn.Collection(collections.Users).FindOne(context.TODO(), ObjectIdHex(id)).Decode(user)
 	if err != nil {
 		return nil
 	}
@@ -57,9 +64,9 @@ func GetUserByEmail(email string) *User {
 	conn := connection.Mongo()
 
 	user := &User{}
-	err := conn.Collection(collections.Users).FindOne(bson.M{
+	err := conn.Collection(collections.Users).FindOne(context.TODO(), bson.M{
 		Email: email,
-	}, user)
+	}).Decode(user)
 	if err != nil {
 		return nil
 	}
@@ -70,34 +77,62 @@ func GetUserByEmail(email string) *User {
 func GetUsers(perPage int, page int) *Users {
 	conn := connection.Mongo()
 
-	result := conn.Collection(collections.Users).Find(bson.M{})
-	if result == nil {
-		return nil
-	}
-	info, err := result.Paginate(perPage, page)
+	skip := (page - 1) * perPage
+	sortOptions := options.Find().SetSort(bson.M{"name": -1})
+
+	total, err := conn.Collection(collections.Users).CountDocuments(context.TODO(), bson.M{})
 	if err != nil {
 		return nil
 	}
-	users := make([]User, info.RecordsOnPage)
-	for i := 0; i < info.RecordsOnPage; i++ {
-		_ = result.Next(&users[i])
+	cursor, err := conn.Collection(collections.Users).Find(context.TODO(), bson.M{}, sortOptions, options.Find().SetSkip(int64(skip)).SetLimit(int64(perPage)))
+	if cursor == nil {
+		return nil
+	}
+	defer cursor.Close(context.TODO())
+	userArray := make([]User, 0)
+	for cursor.Next(context.TODO()) {
+		user := new(User)
+		if err = cursor.Decode(user); err != nil {
+			continue
+		}
+		userArray = append(userArray, *user)
+	}
+	if len(userArray) == 0 {
+		userArray = []User{}
 	}
 
-	return &Users{
-		Info:  info,
-		Users: users,
+	info := &PaginationInfo{
+		Current:       page,
+		TotalPages:    int(math.Ceil(float64(total) / float64(perPage))),
+		PerPage:       perPage,
+		TotalRecords:  int(total),
+		RecordsOnPage: len(userArray),
 	}
+
+	users := &Users{
+		Info:  info,
+		Users: userArray,
+	}
+
+	return users
 }
 
 func UpsertUser(user *User) error {
 	if !util.IsBcrypt(user.Password) {
 		user.Password = *util.Bcrypt(user.Password)
 	}
-	return connection.Mongo().Collection(collections.Users).Save(user)
+	if user.ID.IsZero() {
+		user.Created = time.Now()
+	}
+	user.Modified = time.Now()
+
+	_, err := connection.Mongo().Collection(collections.Users).UpdateOne(context.TODO(), bson.M{"_id": user.ID}, bson.M{"$set": user}, &options.UpdateOptions{Upsert: connection.TruePtr})
+	return err
 }
 
 func DeleteUser(user *User) error {
-	return connection.Mongo().Collection(collections.Users).DeleteDocument(user)
+	_, err := connection.Mongo().Collection(collections.Users).DeleteOne(context.TODO(), bson.M{"_id": user.ID})
+	return err
 }
 
 func AuthroizeUser(email string, password string) (*User, *string) {
@@ -111,7 +146,7 @@ func AuthroizeUser(email string, password string) (*User, *string) {
 	}
 
 	claims := &JwtClaims{
-		ID:    user.GetId().Hex(),
+		ID:    user.ID.Hex(),
 		Email: user.Email,
 		Role:  user.Role,
 		RegisteredClaims: jwt.RegisteredClaims{

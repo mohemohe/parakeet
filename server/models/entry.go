@@ -1,28 +1,35 @@
 package models
 
 import (
+	"context"
+	"math"
 	"regexp"
 	"strings"
+	"time"
 
-	"github.com/globalsign/mgo/bson"
-	"github.com/go-bongo/bongo"
 	"github.com/mohemohe/parakeet/server/models/connection"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 type (
 	Entry struct {
-		bongo.DocumentBase `bson:",inline"`
-		Title              string        `bson:"title" json:"title"`
-		Tag                []string      `bson:"tag" json:"tag"`
-		Body               string        `bson:"body" json:"body"`
-		Author             bson.ObjectId `bson:"author" json:"author"`
-		Draft              bool          `bson:"draft" json:"draft"`
-		FindCount          *int          `bson:"find_count" json:"find_count,omitempty"`
+		ID       primitive.ObjectID `bson:"_id" json:"_id"`
+		Created  time.Time          `bson:"_created" json:"_created"`
+		Modified time.Time          `bson:"_modified" json:"_modified"`
+
+		Title     string             `bson:"title" json:"title"`
+		Tag       []string           `bson:"tag" json:"tag"`
+		Body      string             `bson:"body" json:"body"`
+		Author    primitive.ObjectID `bson:"author" json:"author"`
+		Draft     bool               `bson:"draft" json:"draft"`
+		FindCount *int               `bson:"find_count" json:"find_count,omitempty"`
 	}
 
 	Entries struct {
-		Info    *bongo.PaginationInfo `bson:"-" json:"info"`
-		Entries []Entry               `bson:"-" json:"entries"`
+		Info    *PaginationInfo `bson:"-" json:"info"`
+		Entries []Entry         `bson:"-" json:"entries"`
 	}
 )
 
@@ -33,13 +40,13 @@ func GetEntryById(id string, includeDraft bool, shouldCount bool) *Entry {
 	defer func() {
 		if shouldCount {
 			go func() {
-				err := conn.Collection(collections.Entries).Collection().UpdateId(bson.ObjectIdHex(id), bson.M{
+				_, err := conn.Collection(collections.Entries).UpdateByID(context.TODO(), ObjectIdHex(id), bson.M{
 					"$inc": bson.M{
 						"find_count": 1,
 					},
 				})
 				if err != nil && entry.FindCount == nil {
-					conn.Collection(collections.Entries).Collection().UpdateId(bson.ObjectIdHex(id), bson.M{
+					conn.Collection(collections.Entries).UpdateByID(context.TODO(), ObjectIdHex(id), bson.M{
 						"$set": bson.M{
 							"find_count": 1,
 						},
@@ -49,7 +56,7 @@ func GetEntryById(id string, includeDraft bool, shouldCount bool) *Entry {
 		}
 	}()
 
-	err := conn.Collection(collections.Entries).FindById(bson.ObjectIdHex(id), entry)
+	err := conn.Collection(collections.Entries).FindOne(context.TODO(), ObjectIdHex(id)).Decode(entry)
 	if err != nil {
 		return nil
 	}
@@ -84,9 +91,10 @@ func GetEntries(perPage int, page int, search string, includeDraft bool) *Entrie
 		titleCriteria := make([]bson.M, 0)
 		bodyCriteria := make([]bson.M, 0)
 		for _, v := range word {
-			regex := bson.RegEx{`.*` + regexp.QuoteMeta(v) + `.*`, ""}
-			titleCriteria = append(titleCriteria, bson.M{"title": regex})
-			bodyCriteria = append(bodyCriteria, bson.M{"body": regex})
+			// regex := primitive.Regex{`.*` + regexp.QuoteMeta(v) + `.*`, ""}
+			regex := primitive.Regex{Pattern: `.*` + regexp.QuoteMeta(v) + `.*`, Options: ""}
+			titleCriteria = append(titleCriteria, bson.M{"title": bson.M{"$regex": regex}})
+			bodyCriteria = append(bodyCriteria, bson.M{"body": bson.M{"$regex": regex}})
 		}
 
 		query["$or"] = []bson.M{
@@ -95,22 +103,37 @@ func GetEntries(perPage int, page int, search string, includeDraft bool) *Entrie
 		}
 	}
 
+	sortOptions := options.Find().SetSort(bson.M{"_created": -1})
+	skip := (page - 1) * perPage
+
 	conn := connection.Mongo()
-	find := conn.Collection(collections.Entries).Find(query)
-	if find == nil {
-		return nil
-	}
-	find.Query.Sort("-_created")
-	info, err := find.Paginate(perPage, page)
+	total, err := conn.Collection(collections.Entries).CountDocuments(context.TODO(), query)
 	if err != nil {
 		return nil
 	}
-	entryArray := make([]Entry, info.RecordsOnPage)
-	for i := 0; i < info.RecordsOnPage; i++ {
-		_ = find.Next(&entryArray[i])
+	cursor, err := conn.Collection(collections.Entries).Find(context.TODO(), query, sortOptions, options.Find().SetSkip(int64(skip)).SetLimit(int64(perPage)))
+	if cursor == nil {
+		return nil
+	}
+	defer cursor.Close(context.TODO())
+	entryArray := make([]Entry, 0)
+	for cursor.Next(context.TODO()) {
+		entry := new(Entry)
+		if err = cursor.Decode(entry); err != nil {
+			continue
+		}
+		entryArray = append(entryArray, *entry)
 	}
 	if len(entryArray) == 0 {
 		entryArray = []Entry{}
+	}
+
+	info := &PaginationInfo{
+		Current:       page,
+		TotalPages:    int(math.Ceil(float64(total) / float64(perPage))),
+		PerPage:       perPage,
+		TotalRecords:  int(total),
+		RecordsOnPage: len(entryArray),
 	}
 
 	entries = &Entries{
@@ -123,10 +146,20 @@ func GetEntries(perPage int, page int, search string, includeDraft bool) *Entrie
 
 func UpsertEntry(entry *Entry) error {
 	PurgeCache()
-	return connection.Mongo().Collection(collections.Entries).Save(entry)
+	filter := bson.M{"_id": entry.ID}
+
+	if entry.ID.IsZero() {
+		entry.Created = time.Now()
+	}
+	entry.Modified = time.Now()
+	_, err := connection.Mongo().Collection(collections.Entries).UpdateOne(context.TODO(), filter, bson.M{"$set": entry}, &options.UpdateOptions{Upsert: connection.TruePtr})
+	return err
 }
 
 func DeleteEntry(entry *Entry) error {
 	PurgeCache()
-	return connection.Mongo().Collection(collections.Entries).DeleteDocument(entry)
+	// filter := bson.M{"_id": bson.M{"$eq": entry.ID}}
+	filter := bson.M{"_id": entry.ID}
+	_, err := connection.Mongo().Collection(collections.Entries).DeleteOne(context.TODO(), filter)
+	return err
 }
