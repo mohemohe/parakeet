@@ -82,7 +82,7 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
           name: client
-          path: server/public
+          path: /tmp/public
 
       - uses: docker/login-action@v2
         with:
@@ -109,7 +109,7 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
           name: client
-          path: server/public
+          path: /tmp/public
 
       - uses: docker/login-action@v2
         with:

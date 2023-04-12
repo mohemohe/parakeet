@@ -27,7 +27,7 @@ RUN apk --no-cache add ca-certificates
 COPY --from=server-builder /etc/localtime /etc/localtime
 COPY --from=server-builder /parakeet/app /parakeet/app
 COPY --from=server-builder /go/src/$GOLANG_NAMESPACE/server/templates /parakeet/templates
-ADD ./server/public /parakeet/public
+ADD /tmp/public /parakeet/public
 
 EXPOSE 1323
 WORKDIR /parakeet
