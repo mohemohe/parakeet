@@ -1,14 +1,15 @@
 package controllers
 
 import (
-	"github.com/globalsign/mgo/bson"
-	"github.com/labstack/echo/v4"
-	"github.com/mohemohe/parakeet/server/models"
-	"github.com/mohemohe/parakeet/server/util"
 	"net/http"
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/globalsign/mgo/bson"
+	"github.com/labstack/echo/v4"
+	"github.com/mohemohe/parakeet/server/models"
+	"github.com/mohemohe/parakeet/server/util"
 )
 
 type (
@@ -106,7 +107,7 @@ func UpsertEntry(c echo.Context) error {
 		panic("bind error")
 	}
 	user := c.Get("User").(*models.User)
-	entry.Author = user.Id
+	entry.Author = user.ID
 	count := 0
 	entry.FindCount = &count
 
@@ -118,12 +119,11 @@ func UpsertEntry(c echo.Context) error {
 	} else {
 		current := models.GetEntryById(id, true, false)
 		if current != nil {
-			entry.Id = current.Id
+			entry.ID = current.ID
 			entry.Created = current.Created
 			if current.FindCount != nil {
 				entry.FindCount = current.FindCount
 			}
-			entry.SetIsNew(false) // HACK: force update
 			if current.Draft && !entry.Draft {
 				entry.Created = time.Now()
 				entry.Modified = time.Time{} // HACK: reset modified
@@ -148,7 +148,7 @@ func UpsertEntry(c echo.Context) error {
 			if notifyMastodon["baseurl"] != "" && notifyMastodon["token"] != "" && notifyMastodon["template"] != "" {
 				status := notifyMastodon["template"].(string)
 				status = strings.ReplaceAll(status, "%ENTRY_TITLE%", entry.Title)
-				status = strings.ReplaceAll(status, "%ENTRY_URL%", c.Scheme()+"://"+c.Request().Host+"/entry/"+entry.Id.Hex())
+				status = strings.ReplaceAll(status, "%ENTRY_URL%", c.Scheme()+"://"+c.Request().Host+"/entry/"+entry.ID.Hex())
 				go util.PostMastodon(status, notifyMastodon["baseurl"].(string), notifyMastodon["token"].(string))
 			}
 		}
@@ -159,7 +159,7 @@ func UpsertEntry(c echo.Context) error {
 			if notifyMisskey["baseurl"] != "" && notifyMisskey["token"] != "" && notifyMisskey["template"] != "" {
 				status := notifyMisskey["template"].(string)
 				status = strings.ReplaceAll(status, "%ENTRY_TITLE%", entry.Title)
-				status = strings.ReplaceAll(status, "%ENTRY_URL%", c.Scheme()+"://"+c.Request().Host+"/entry/"+entry.Id.Hex())
+				status = strings.ReplaceAll(status, "%ENTRY_URL%", c.Scheme()+"://"+c.Request().Host+"/entry/"+entry.ID.Hex())
 				go util.PostMisskey(status, notifyMisskey["baseurl"].(string), notifyMisskey["token"].(string))
 			}
 		}

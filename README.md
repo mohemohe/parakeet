@@ -36,7 +36,6 @@ Admin page is [/admin](http://127.0.0.1:1323/admin) and default root password is
 | ECHO_ENV      | production                                                                                                                |
 | ECHO_SSR      | true                                                                                                                      |
 | MONGO_ADDRESS | mongodb://{user}:{password}@{replset-1},{replset-2},{replset-3}/{database}?ssl=true&replicaSet={replset}&authSource=admin |
-| MONGO_SSL     | true                                                                                                                      |
 | ROOT_PASSWORD | {initial root password}                                                                                                   |
 | SIGN_SECRET   | {jwt secret}                                                                                                              |
 

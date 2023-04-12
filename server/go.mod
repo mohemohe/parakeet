@@ -30,7 +30,8 @@ require (
 	github.com/sirupsen/logrus v1.4.1
 	github.com/swaggo/echo-swagger v0.0.0-20191205130555-62f81ea88919
 	github.com/swaggo/swag v1.8.1
-	golang.org/x/crypto v0.0.0-20210921155107-089bfa567519
+	go.mongodb.org/mongo-driver v1.11.4 // indirect
+	golang.org/x/crypto v0.0.0-20220622213112-05595931fe9d
 	golang.org/x/net v0.0.0-20220425223048-2871e0cb64e4 // indirect
 	golang.org/x/sys v0.0.0-20220429233432-b5fbb4746d32 // indirect
 	golang.org/x/tools v0.1.10 // indirect

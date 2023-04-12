@@ -6,6 +6,7 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/mohemohe/parakeet/server/models"
 	"github.com/mohemohe/parakeet/server/util"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type (
@@ -67,6 +68,8 @@ func GetNotifyMastodon(c echo.Context) error {
 		panic("db error")
 	}
 
+	kv.Value = kv.Value.(primitive.D).Map()
+
 	return c.JSON(http.StatusOK, kv)
 }
 
@@ -109,6 +112,8 @@ func GetNotifyMisskey(c echo.Context) error {
 		panic("db error")
 	}
 
+	kv.Value = kv.Value.(primitive.D).Map()
+
 	return c.JSON(http.StatusOK, kv)
 }
 
@@ -150,6 +155,8 @@ func GetServerSideRendering(c echo.Context) error {
 	if kv == nil {
 		panic("db error")
 	}
+
+	kv.Value = kv.Value.(primitive.D).Map()
 
 	return c.JSON(http.StatusOK, kv)
 }
@@ -283,6 +290,8 @@ func GetCloudflare(c echo.Context) error {
 		panic("db error")
 	}
 
+	kv.Value = kv.Value.(primitive.D).Map()
+
 	return c.JSON(http.StatusOK, kv)
 }
 
@@ -406,6 +415,8 @@ func GetAWSS3(c echo.Context) error {
 	if kv == nil {
 		panic("db error")
 	}
+
+	kv.Value = kv.Value.(primitive.D).Map()
 
 	return c.JSON(http.StatusOK, kv.Value)
 }

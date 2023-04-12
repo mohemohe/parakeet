@@ -14,6 +14,7 @@ import (
 	"github.com/mohemohe/parakeet/server/models"
 	"github.com/mohemohe/parakeet/server/util"
 	"github.com/pkg/errors"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type (
@@ -34,6 +35,8 @@ func newClient() (*s3fs.S3FS, error) {
 	if kv == nil {
 		return nil, errors.New("'models.KVAWSS3' is nil")
 	}
+
+	kv.Value = kv.Value.(primitive.D).Map()
 
 	v := new(models.S3)
 	if err := util.JsonMapToStruct(kv.Value, v); err != nil {

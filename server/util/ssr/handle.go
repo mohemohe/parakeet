@@ -3,12 +3,6 @@ package ssr
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/globalsign/mgo/bson"
-	"github.com/labstack/echo/v4"
-	"github.com/mohemohe/parakeet/server/configs"
-	"github.com/mohemohe/parakeet/server/models"
-	"github.com/mohemohe/parakeet/server/util"
-	"github.com/pkg/errors"
 	"html"
 	"html/template"
 	"net/http"
@@ -16,6 +10,13 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/labstack/echo/v4"
+	"github.com/mohemohe/parakeet/server/configs"
+	"github.com/mohemohe/parakeet/server/models"
+	"github.com/mohemohe/parakeet/server/util"
+	"github.com/pkg/errors"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 func Handle(c echo.Context, pool *Pool) error {
@@ -121,7 +122,7 @@ func initializeState(c echo.Context) (map[string]interface{}, *models.Entry, boo
 	shouldHandle := false
 	kv := models.GetKVS(models.KVServerSideRendering)
 	if kv != nil {
-		value := kv.Value.(bson.M)
+		value := kv.Value.(primitive.D).Map()
 		enableEntriesSSR = value["entries"].(bool)
 		enableEntrySSR = value["entry"].(bool)
 		if value["timeout"] != nil {

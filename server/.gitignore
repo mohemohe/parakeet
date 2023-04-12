@@ -29,3 +29,4 @@ public/js/**/*.css.map
 public/js/**/report.html
 .env
 tmp
+__debug_bin
