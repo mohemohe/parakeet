@@ -148,10 +148,13 @@ func UpsertEntry(entry *Entry) error {
 	PurgeCache()
 	filter := bson.M{"_id": entry.ID}
 
+	now := time.Now()
+
 	if entry.ID.IsZero() {
-		entry.Created = time.Now()
+		entry.ID = primitive.NewObjectID()
+		entry.Created = now
 	}
-	entry.Modified = time.Now()
+	entry.Modified = now
 	_, err := connection.Mongo().Collection(collections.Entries).UpdateOne(context.TODO(), filter, bson.M{"$set": entry}, &options.UpdateOptions{Upsert: connection.TruePtr})
 	return err
 }
