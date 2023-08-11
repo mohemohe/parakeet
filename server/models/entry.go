@@ -15,16 +15,16 @@ import (
 
 type (
 	Entry struct {
-		ID       primitive.ObjectID `bson:"_id" json:"_id"`
-		Created  time.Time          `bson:"_created" json:"_created"`
-		Modified time.Time          `bson:"_modified" json:"_modified"`
+		ID       *primitive.ObjectID `bson:"_id" json:"_id,omitempty"`
+		Created  time.Time           `bson:"_created" json:"_created"`
+		Modified time.Time           `bson:"_modified" json:"_modified"`
 
-		Title     string             `bson:"title" json:"title"`
-		Tag       []string           `bson:"tag" json:"tag"`
-		Body      string             `bson:"body" json:"body"`
-		Author    primitive.ObjectID `bson:"author" json:"author"`
-		Draft     bool               `bson:"draft" json:"draft"`
-		FindCount *int               `bson:"find_count" json:"find_count,omitempty"`
+		Title     string              `bson:"title" json:"title"`
+		Tag       []string            `bson:"tag" json:"tag"`
+		Body      string              `bson:"body" json:"body"`
+		Author    *primitive.ObjectID `bson:"author" json:"author,omitempty"`
+		Draft     bool                `bson:"draft" json:"draft"`
+		FindCount *int                `bson:"find_count" json:"find_count,omitempty"`
 	}
 
 	Entries struct {
@@ -37,16 +37,18 @@ func GetEntryById(id string, includeDraft bool, shouldCount bool) *Entry {
 	conn := connection.Mongo()
 	entry := new(Entry)
 
+	objectID := ObjectIDFromHex(id)
+
 	defer func() {
 		if shouldCount {
 			go func() {
-				_, err := conn.Collection(collections.Entries).UpdateByID(context.TODO(), ObjectIdHex(id), bson.M{
+				_, err := conn.Collection(collections.Entries).UpdateByID(context.TODO(), *objectID, bson.M{
 					"$inc": bson.M{
 						"find_count": 1,
 					},
 				})
 				if err != nil && entry.FindCount == nil {
-					conn.Collection(collections.Entries).UpdateByID(context.TODO(), ObjectIdHex(id), bson.M{
+					conn.Collection(collections.Entries).UpdateByID(context.TODO(), *objectID, bson.M{
 						"$set": bson.M{
 							"find_count": 1,
 						},
@@ -146,16 +148,16 @@ func GetEntries(perPage int, page int, search string, includeDraft bool) *Entrie
 
 func UpsertEntry(entry *Entry) error {
 	PurgeCache()
-	filter := bson.M{"_id": entry.ID}
 
 	now := time.Now()
 
-	if entry.ID.IsZero() {
-		entry.ID = primitive.NewObjectID()
+	if entry.ID == nil {
+		newID := primitive.NewObjectID()
+		entry.ID = &newID
 		entry.Created = now
 	}
 	entry.Modified = now
-	_, err := connection.Mongo().Collection(collections.Entries).UpdateOne(context.TODO(), filter, bson.M{"$set": entry}, &options.UpdateOptions{Upsert: connection.TruePtr})
+	_, err := connection.Mongo().Collection(collections.Entries).UpdateByID(context.TODO(), entry.ID, bson.M{"$set": entry}, &options.UpdateOptions{Upsert: connection.TruePtr})
 	return err
 }
 

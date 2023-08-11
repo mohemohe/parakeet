@@ -172,6 +172,14 @@ func setDefaultConfig(key string, value interface{}) {
 	}
 }
 
+func ObjectIDFromHex(id string) *primitive.ObjectID {
+	objID, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return nil
+	}
+	return &objID
+}
+
 func ObjectIdHex(id string) bson.M {
 	objID, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
