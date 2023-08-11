@@ -8,12 +8,12 @@ on:
     tags:
       - v*.*.*
 
-concurrency: 
+concurrency:
   group: build-${{ github.ref }}
 
 jobs:
   build_client:
-    runs-on: ubuntu-latest
+    runs-on: buildjet-4vcpu-ubuntu-2204
 
     steps:
       - uses: actions/checkout@v3
@@ -39,28 +39,18 @@ jobs:
           name: client
           path: server/public
 
-  build_docker_image:
+  fetch_docker_metadata:
     needs: build_client
 
-    runs-on: ubuntu-latest
+    runs-on: buildjet-2vcpu-ubuntu-2204
 
+    outputs:
+      tags: ${{ steps.tags.outputs.tags }}
+      labels: ${{ steps.labels.outputs.labels }}
     steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-
-      - uses: actions/download-artifact@v3
-        with:
-          name: client
-          path: server/public
-
-      - uses: docker/setup-qemu-action@v2
-
-      - uses: docker/setup-buildx-action@v2
-
       - uses: docker/login-action@v2
         with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          username: mohemohe
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - uses: docker/metadata-action@v4
@@ -73,19 +63,74 @@ jobs:
             type=semver,pattern={{major}}.{{minor}}
             type=semver,pattern={{major}}
 
+      - id: tags
+        run: echo "tags=${{ steps.metadata.outputs.tags }}" >> $GITHUB_OUTPUT
+
+      - id: labels
+        run: echo "labels=${{ steps.metadata.outputs.labels }}" >> $GITHUB_OUTPUT
+
+  build_docker_image_amd64:
+    needs: fetch_docker_metadata
+
+    runs-on: buildjet-4vcpu-ubuntu-2204
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - uses: actions/download-artifact@v3
+        with:
+          name: client
+          path: server/public
+
+      - uses: docker/login-action@v2
+        with:
+          username: mohemohe
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
       - uses: docker/build-push-action@v3
         with:
           push: true
-          platforms: linux/amd64,linux/arm64,linux/arm/v7
-          tags: ${{ steps.metadata.outputs.tags }}
-          labels: ${{ steps.metadata.outputs.labels }}
-          cache-from: type=gha,scope=${{ matrix.arch }}
-          cache-to: type=gha,mode=max,scope=${{ matrix.arch }}
+          context: .
+          platforms: linux/amd64
+          tags: ${{ needs.fetch_docker_metadata.outputs.tags }}
+          labels: ${{ needs.fetch_docker_metadata.outputs.labels }}
+
+  build_docker_image_arm64:
+    needs: fetch_docker_metadata
+
+    runs-on: buildjet-4vcpu-ubuntu-2204-arm
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - uses: actions/download-artifact@v3
+        with:
+          name: client
+          path: server/public
+
+      - uses: docker/login-action@v2
+        with:
+          username: mohemohe
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - uses: docker/build-push-action@v3
+        with:
+          push: true
+          context: .
+          platforms: linux/arm64
+          tags: ${{ needs.fetch_docker_metadata.outputs.tags }}-arm64
+          labels: ${{ needs.fetch_docker_metadata.outputs.labels }}
 
   update_dockerhub_readme:
-    needs: build_docker_image
+    needs:
+      - build_docker_image_amd64
+      - build_docker_image_arm64
 
-    runs-on: ubuntu-latest
+    runs-on: buildjet-2vcpu-ubuntu-2204
 
     steps:
       - uses: actions/checkout@v3
@@ -94,7 +139,7 @@ jobs:
 
       - uses: peter-evans/dockerhub-description@v3
         with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          username: mohemohe
           password: ${{ secrets.DOCKERHUB_TOKEN }}
           repository: mohemohe/parakeet
           short-description: Fast weblog built in golang and top of echo. Supports React SSR and hydrate.
