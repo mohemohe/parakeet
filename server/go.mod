@@ -16,14 +16,17 @@ require (
 	github.com/go-openapi/jsonreference v0.20.2 // indirect
 	github.com/go-openapi/spec v0.20.9 // indirect
 	github.com/golang-jwt/jwt/v4 v4.4.1
+	github.com/golang/snappy v0.0.4 // indirect
 	github.com/joho/godotenv v1.4.0
 	github.com/kelseyhightower/envconfig v1.3.0
+	github.com/klauspost/compress v1.16.7 // indirect
 	github.com/labstack/echo/v4 v4.9.0
 	github.com/mailru/easyjson v0.7.7 // indirect
 	github.com/mitchellh/mapstructure v1.1.2
 	github.com/mobilusoss/go-s3fs v0.0.0-20190924083947-ac89030fc5b0
 	github.com/mohemohe/fetch v1.0.0
 	github.com/mohemohe/mgo-pubsub v0.0.0-20201211125819-c2e8968128ce
+	github.com/montanaflynn/stats v0.7.1 // indirect
 	github.com/neko-neko/echo-logrus/v2 v2.0.1
 	github.com/olebedev/gojax v0.0.0-20170318114811-bb153be84336
 	github.com/oleiade/reflections v1.0.0 // indirect
@@ -33,7 +36,9 @@ require (
 	github.com/sirupsen/logrus v1.4.1
 	github.com/swaggo/echo-swagger v0.0.0-20191205130555-62f81ea88919
 	github.com/swaggo/swag v1.16.1
-	go.mongodb.org/mongo-driver v1.11.4 // indirect
+	github.com/tidwall/pretty v1.0.0 // indirect
+	github.com/youmark/pkcs8 v0.0.0-20201027041543-1326539a0a0a // indirect
+	go.mongodb.org/mongo-driver v1.12.1 // indirect
 	golang.org/x/crypto v0.12.0
 	golang.org/x/net v0.14.0 // indirect
 	golang.org/x/tools v0.12.0 // indirect

@@ -55,7 +55,8 @@
   "scripts": {
     "build": "NODE_ENV=production parcel build",
     "watch": "NODE_ENV=development parcel watch",
-    "postinstall": "patch-package"
+    "postinstall": "patch-package",
+    "clean": "rm -rf .parcel-cache node_modules"
   },
   "devDependencies": {
     "@parcel/config-default": "^2.5.0",

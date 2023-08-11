@@ -6,10 +6,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/globalsign/mgo/bson"
 	"github.com/labstack/echo/v4"
 	"github.com/mohemohe/parakeet/server/models"
 	"github.com/mohemohe/parakeet/server/util"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type (
@@ -64,7 +64,7 @@ func GetEntry(c echo.Context) error {
 	count := c.Request().Header.Get("X-Parakeet-Count")
 	includeDraft := c.Get("User") != nil
 
-	entry := models.GetEntryById(id, includeDraft, !includeDraft || count == "true")
+	entry := models.GetEntryById(id, includeDraft, !includeDraft && count == "true")
 	if entry == nil {
 		return c.NoContent(http.StatusNotFound)
 	}
@@ -144,7 +144,7 @@ func UpsertEntry(c echo.Context) error {
 	if enableNotify {
 		mastodon := models.GetKVS(models.KVNotifyMastodon)
 		if mastodon != nil {
-			notifyMastodon := mastodon.Value.(bson.M)
+			notifyMastodon := mastodon.Value.(primitive.D).Map()
 			if notifyMastodon["baseurl"] != "" && notifyMastodon["token"] != "" && notifyMastodon["template"] != "" {
 				status := notifyMastodon["template"].(string)
 				status = strings.ReplaceAll(status, "%ENTRY_TITLE%", entry.Title)
@@ -155,7 +155,7 @@ func UpsertEntry(c echo.Context) error {
 
 		misskey := models.GetKVS(models.KVNotifyMisskey)
 		if misskey != nil {
-			notifyMisskey := misskey.Value.(bson.M)
+			notifyMisskey := misskey.Value.(primitive.D).Map()
 			if notifyMisskey["baseurl"] != "" && notifyMisskey["token"] != "" && notifyMisskey["template"] != "" {
 				status := notifyMisskey["template"].(string)
 				status = strings.ReplaceAll(status, "%ENTRY_TITLE%", entry.Title)

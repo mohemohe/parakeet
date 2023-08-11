@@ -16,9 +16,9 @@ import (
 
 type (
 	User struct {
-		ID       primitive.ObjectID `bson:"_id" json:"_id"`
-		Created  time.Time          `bson:"_created" json:"_created"`
-		Modified time.Time          `bson:"_modified" json:"_modified"`
+		ID       *primitive.ObjectID `bson:"_id" json:"_id"`
+		Created  time.Time           `bson:"_created" json:"_created"`
+		Modified time.Time           `bson:"_modified" json:"_modified"`
 
 		Name     string `bson:"name" json:"name"`
 		Email    string `bson:"email" json:"email"`
@@ -121,7 +121,9 @@ func UpsertUser(user *User) error {
 	if !util.IsBcrypt(user.Password) {
 		user.Password = *util.Bcrypt(user.Password)
 	}
-	if user.ID.IsZero() {
+	if user.ID == nil {
+		newID := primitive.NewObjectID()
+		user.ID = &newID
 		user.Created = time.Now()
 	}
 	user.Modified = time.Now()
