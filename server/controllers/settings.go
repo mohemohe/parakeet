@@ -1,10 +1,12 @@
 package controllers
 
 import (
+	"net/http"
+
 	"github.com/labstack/echo/v4"
 	"github.com/mohemohe/parakeet/server/models"
 	"github.com/mohemohe/parakeet/server/util"
-	"net/http"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type (
@@ -66,6 +68,8 @@ func GetNotifyMastodon(c echo.Context) error {
 		panic("db error")
 	}
 
+	kv.Value = kv.Value.(primitive.D).Map()
+
 	return c.JSON(http.StatusOK, kv)
 }
 
@@ -107,6 +111,8 @@ func GetNotifyMisskey(c echo.Context) error {
 	if kv == nil {
 		panic("db error")
 	}
+
+	kv.Value = kv.Value.(primitive.D).Map()
 
 	return c.JSON(http.StatusOK, kv)
 }
@@ -150,6 +156,8 @@ func GetServerSideRendering(c echo.Context) error {
 		panic("db error")
 	}
 
+	kv.Value = kv.Value.(primitive.D).Map()
+
 	return c.JSON(http.StatusOK, kv)
 }
 
@@ -175,53 +183,6 @@ func SetServerSideRendering(c echo.Context) error {
 	return c.JSON(http.StatusOK, &models.KV{
 		Key:   models.KVServerSideRendering,
 		Value: reqBody,
-	})
-}
-
-// @Tags setting
-// @Summary get MongoDB query cache
-// @Description MongoDB クエリーのキャッシュ設定を取得します
-// @Produce json
-// @Security AccessToken
-// @Success 200 {object} models.KV
-// @Failure 401 {object} middlewares.EmptyJson
-// @Router /v1/settings/cache/mongodb [get]
-func GetMongoDBQueryCache(c echo.Context) error {
-	kv := models.GetKVS(models.KVEnableMongoDBQueryCache)
-	if kv == nil {
-		panic("db error")
-	}
-	return c.JSON(http.StatusOK, kv)
-}
-
-// @Tags setting
-// @Summary set MongoDB query cache
-// @Description MongoDB クエリーのキャッシュ設定を更新します
-// @Produce json
-// @Security AccessToken
-// @Param Body body models.KV true "Body"
-// @Success 200 {object} models.KV
-// @Failure 401 {object} middlewares.EmptyJson
-// @Router /v1/settings/cache/mongodb [put]
-func SetGetMongoDBQueryCache(c echo.Context) error {
-	reqBody := new(models.KV)
-	if err := c.Bind(reqBody); err != nil {
-		panic("bind error")
-	}
-
-	enabled := reqBody.Value.(bool)
-
-	if err := models.SetKVS(models.KVEnableMongoDBQueryCache, enabled); err != nil {
-		panic(err)
-	}
-
-	if !enabled {
-		models.PurgeCache()
-	}
-
-	return c.JSON(http.StatusOK, &models.KV{
-		Key:   models.KVEnableMongoDBQueryCache,
-		Value: reqBody.Value,
 	})
 }
 
@@ -263,7 +224,7 @@ func SetSSRPageCache(c echo.Context) error {
 	}
 
 	if !enabled {
-		models.PurgeCache()
+		//TODO:
 	}
 
 	return c.JSON(http.StatusOK, &models.KV{
@@ -328,6 +289,8 @@ func GetCloudflare(c echo.Context) error {
 	if kv == nil {
 		panic("db error")
 	}
+
+	kv.Value = kv.Value.(primitive.D).Map()
 
 	return c.JSON(http.StatusOK, kv)
 }
@@ -452,6 +415,8 @@ func GetAWSS3(c echo.Context) error {
 	if kv == nil {
 		panic("db error")
 	}
+
+	kv.Value = kv.Value.(primitive.D).Map()
 
 	return c.JSON(http.StatusOK, kv.Value)
 }

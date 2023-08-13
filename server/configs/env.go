@@ -8,6 +8,7 @@ type (
 	EnvironmentVariable struct {
 		Echo struct {
 			Env string `default:"debug"`
+			SSR bool   `default:"true"`
 		}
 		Root struct {
 			Password string `default:"root"`
@@ -18,7 +19,6 @@ type (
 		Mongo struct {
 			Address  string `default:"mongodb://localhost:27017"`
 			Database string `default:"parakeet"`
-			SSL      bool   `default:"false"`
 		}
 	}
 )

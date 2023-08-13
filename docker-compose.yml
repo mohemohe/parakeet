@@ -2,7 +2,9 @@
 version: "3.2"
 services:
   parakeet:
-    build: .
+    build:
+      context: .
+      dockerfile: local.Dockerfile
     # image: mohemohe/parakeet:latest
     environment:
       - MONGO_ADDRESS=mongodb://mongo:27017

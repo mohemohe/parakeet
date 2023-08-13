@@ -1,8 +1,8 @@
 package middlewares
 
 import (
-	"github.com/dgrijalva/jwt-go"
-	"github.com/dgrijalva/jwt-go/request"
+	"github.com/golang-jwt/jwt/v4"
+	"github.com/golang-jwt/jwt/v4/request"
 	"github.com/labstack/echo/v4"
 	"github.com/mitchellh/mapstructure"
 	"github.com/mohemohe/parakeet/server/configs"
@@ -30,7 +30,7 @@ func Authorize(next echo.HandlerFunc) echo.HandlerFunc {
 			return next(c)
 		}
 
-		if user.Id.Hex() == tokenUser.ID && user.Email == tokenUser.Email && user.Role == tokenUser.Role {
+		if user.ID.Hex() == tokenUser.ID && user.Email == tokenUser.Email && user.Role == tokenUser.Role {
 			c.Set("User", user)
 		}
 

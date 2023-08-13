@@ -4,18 +4,15 @@ import type {IEntry} from "../stores/EntryStore";
 import {COLORS, DARK_COLORS} from "../constants/Style";
 import Card from "@material-ui/core/Card";
 import type {CardProps} from "@material-ui/core/Card";
-import ReactMarkdown from "react-markdown";
 import {Link} from "react-router-dom";
 import {LinkButton} from "../../common/components/LinkButton";
-import {Prism} from "./Prism";
-import {Plain} from "./Plain";
-
-const breaks = require("remark-breaks");
+import {UnsafeMarkdown} from "./UnsafeMarkdown";
 
 interface IProps extends CardProps {
     entry: IEntry
     stopToReadMore: boolean;
     syntaxHighlighting: boolean;
+    isSSR: boolean;
 }
 
 const styles = {
@@ -73,7 +70,7 @@ const styles = {
                         color: "#8d98a5 !important",
                     },
                     "& code": {
-                        color: "#a8ff60 !important",
+                        color: "#a8ff60",
                         background: "#393e48 !important",
                     },
                     "& pre": {
@@ -103,10 +100,21 @@ export class Entry extends React.Component<IProps, {}> {
 
     public render() {
         const { entry } = this.props;
-        const created = new Date(entry._created);
-        let modified: Date | undefined;
+
+        let created: string | undefined;
+        if (this.props.isSSR) {
+            created = entry._created;
+        } else {
+            created = new Date(entry._created).toLocaleString();
+        }
+
+        let modified: string | undefined;
         if (entry._modified && entry._modified !== "") {
-            modified = new Date(entry._modified);
+            if (this.props.isSSR) {
+                modified = entry._modified;
+            } else {
+                modified = new Date(entry._modified).toLocaleString();
+            }
         }
 
         let body = entry.body || "";
@@ -116,13 +124,6 @@ export class Entry extends React.Component<IProps, {}> {
             showReadMore = true;
         } else {
             body = body.replace(more, `<div id="entry_more"></div>`);
-        }
-
-        let renderers;
-        if (this.props.syntaxHighlighting) {
-            renderers = {code: Prism};
-        } else {
-            renderers = {code: Plain};
         }
 
         const nextProps = { ...this.props };
@@ -138,20 +139,13 @@ export class Entry extends React.Component<IProps, {}> {
                     </h2>
                     <div className={classes("entry_datetime", styles.subheader)}>
                         <div className={"entry_created"}>
-                            公開: {created.toLocaleString()}
+                            公開: {created}
                             {modified ? "," : ""}
                         </div>
-                        {modified ? <div className={"entry_updated"}>更新: {modified.toLocaleString()}</div> : <></>}
+                        {modified ? <div className={"entry_updated"}>更新: {modified}</div> : <></>}
                     </div>
                 </div>
-                <ReactMarkdown
-                    source={body}
-                    className={classes("entry_body", "markdown-body", styles.body)}
-                    plugins={[[breaks]]}
-                    escapeHtml={false}
-                    renderers={renderers}
-
-                />
+                <UnsafeMarkdown content={body} markdownClassName={styles.body} syntaxHighlighting={this.props.syntaxHighlighting} />
                 {showReadMore ?
                     <div className={classes("entry_readmore", styles.readMore)}>
                         <LinkButton className={"entry_readmore_button"} to={`/entry/${entry._id}?scroll=more`} buttonProps={{variant: "contained", color: "primary"}}>続きを読む</LinkButton>

@@ -57,6 +57,8 @@ func newJS(handler http.Handler) (*JS, bool) {
 		runtime.SetRandSource(goja.RandSource(mrand.New(mrand.NewSource(seed)).Float64))
 		util.Logger().Debugln("set random seed")
 
+		_ = runtime.GlobalObject().Set("window", map[string]interface{}{})
+
 		util.Logger().Debugln("start initiate js")
 		_, err := runtime.RunString(string(bundle))
 		if err != nil {

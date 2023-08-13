@@ -1,6 +1,10 @@
 package main
 
 import (
+	"net/http"
+	"strings"
+
+	"github.com/joho/godotenv"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/mohemohe/parakeet/server/configs"
@@ -10,9 +14,7 @@ import (
 	"github.com/mohemohe/parakeet/server/templates"
 	"github.com/neko-neko/echo-logrus/v2/log"
 	"github.com/playree/goingtpl"
-	"github.com/swaggo/echo-swagger"
-	"net/http"
-	"strings"
+	echoSwagger "github.com/swaggo/echo-swagger"
 
 	_ "github.com/mohemohe/parakeet/server/docs"
 )
@@ -41,6 +43,8 @@ func main() {
 }
 
 func initEcho(e *echo.Echo) {
+	e.HideBanner = true
+
 	e.Use(middleware.Recover())
 	e.Logger = log.Logger()
 	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{Skipper: func(c echo.Context) bool {
@@ -50,15 +54,20 @@ func initEcho(e *echo.Echo) {
 	if configs.GetEnv().Echo.Env == "debug" {
 		e.Logger.SetLevel(0)
 	}
-	e.Static("/public", "public")
-	e.Use(middlewares.SSRWithConfig(middlewares.SSRConfig{
-		Skipper: func(c echo.Context) bool {
-			return strings.HasPrefix(c.Path(), "/public") || strings.HasPrefix(c.Path(), "/admin") || strings.HasPrefix(c.Path(), "/api") || strings.HasPrefix(c.Path(), "/swagger") || c.Path() == "/favicon.ico"
-		},
-		Handler: e,
-	}))
 
-	e.GET("/admin", controllers.AdminIndex)
+	e.Static("/public", "public")
+	if configs.GetEnv().Echo.SSR {
+		e.Logger.Info("enable SSR and static file hosting")
+		e.Use(middlewares.SSRWithConfig(middlewares.SSRConfig{
+			Skipper: func(c echo.Context) bool {
+				return strings.HasPrefix(c.Path(), "/public") || strings.HasPrefix(c.Path(), "/admin") || strings.HasPrefix(c.Path(), "/api") || strings.HasPrefix(c.Path(), "/swagger") || c.Path() == "/favicon.ico"
+			},
+			Handler: e,
+		}))
+		e.GET("/admin", controllers.AdminIndex)
+	} else {
+		e.Logger.Info("disable SSR")
+	}
 
 	e.GET("/api/v1/healthcheck", controllers.GetHealthCheck)
 	e.GET("/api/v1/auth", controllers.AuthCheck, middlewares.Authorize, middlewares.Authorized)
@@ -83,8 +92,6 @@ func initEcho(e *echo.Echo) {
 	e.PUT("/api/v1/settings/notify/misskey", controllers.SetNotifyMisskey, middlewares.Authorize, middlewares.Authorized)
 	e.GET("/api/v1/settings/render/server", controllers.GetServerSideRendering, middlewares.Authorize, middlewares.Authorized)
 	e.PUT("/api/v1/settings/render/server", controllers.SetServerSideRendering, middlewares.Authorize, middlewares.Authorized)
-	e.GET("/api/v1/settings/cache/mongodb", controllers.GetMongoDBQueryCache, middlewares.Authorize, middlewares.Authorized)
-	e.PUT("/api/v1/settings/cache/mongodb", controllers.SetGetMongoDBQueryCache, middlewares.Authorize, middlewares.Authorized)
 	e.GET("/api/v1/settings/cache/page", controllers.GetSSRPageCache, middlewares.Authorize, middlewares.Authorized)
 	e.PUT("/api/v1/settings/cache/page", controllers.SetSSRPageCache, middlewares.Authorize, middlewares.Authorized)
 	e.GET("/api/v1/settings/cache/cloudflare", controllers.GetCloudflare, middlewares.Authorize, middlewares.Authorized)
@@ -117,6 +124,7 @@ func initTemplate(e *echo.Echo) {
 }
 
 func initEnv() {
+	_ = godotenv.Load()
 	_ = configs.GetEnv()
 	_ = configs.GetUnix()
 }

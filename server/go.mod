@@ -3,41 +3,45 @@ module github.com/mohemohe/parakeet/server
 go 1.12
 
 require (
-	github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751
+	github.com/agiledragon/gomonkey/v2 v2.3.1 // indirect
 	github.com/aws/aws-sdk-go v1.36.19 // indirect
-	github.com/dgrijalva/jwt-go v3.2.0+incompatible
-	github.com/dlclark/regexp2 v1.1.6 // indirect
-	github.com/dop251/goja v0.0.0-20190429205339-8d6ee3d16611
-	github.com/dop251/goja_nodejs v0.0.0-20171011081505-adff31b136e6
+	github.com/dop251/goja v0.0.0-20220430115111-e1f9dc0755e7
+	github.com/dop251/goja_nodejs v0.0.0-20211022123610-8dd9abb0616d
 	github.com/elazarl/goproxy v0.0.0-20190421051319-9d40249d3c2f // indirect
 	github.com/elazarl/goproxy/ext v0.0.0-20190421051319-9d40249d3c2f // indirect
-	github.com/emluque/dscache v0.0.0-20181022182702-0e9337345fd9
-	github.com/gin-gonic/gin v1.6.3 // indirect
 	github.com/globalsign/mgo v0.0.0-20181015135952-eeefdecb41b8
 	github.com/go-bongo/bongo v0.10.5-0.20180517124215-761759e31d8f
 	github.com/go-bongo/go-dotaccess v0.0.0-20150208020959-ae070a2d2a38 // indirect
-	github.com/go-openapi/spec v0.20.6 // indirect
-	github.com/go-openapi/swag v0.21.1 // indirect
-	github.com/go-sourcemap/sourcemap v2.1.2+incompatible // indirect
-	github.com/gofrs/uuid v3.3.0+incompatible // indirect
+	github.com/go-openapi/jsonpointer v0.20.0 // indirect
+	github.com/go-openapi/jsonreference v0.20.2 // indirect
+	github.com/go-openapi/spec v0.20.9 // indirect
+	github.com/golang-jwt/jwt/v4 v4.4.1
+	github.com/golang/snappy v0.0.4 // indirect
+	github.com/joho/godotenv v1.4.0
 	github.com/kelseyhightower/envconfig v1.3.0
-	github.com/labstack/echo/v4 v4.0.0
+	github.com/klauspost/compress v1.16.7 // indirect
+	github.com/labstack/echo/v4 v4.9.0
 	github.com/mailru/easyjson v0.7.7 // indirect
 	github.com/mitchellh/mapstructure v1.1.2
 	github.com/mobilusoss/go-s3fs v0.0.0-20190924083947-ac89030fc5b0
 	github.com/mohemohe/fetch v1.0.0
 	github.com/mohemohe/mgo-pubsub v0.0.0-20201211125819-c2e8968128ce
-	github.com/neko-neko/echo-logrus/v2 v2.0.0
+	github.com/montanaflynn/stats v0.7.1 // indirect
+	github.com/neko-neko/echo-logrus/v2 v2.0.1
 	github.com/olebedev/gojax v0.0.0-20170318114811-bb153be84336
 	github.com/oleiade/reflections v1.0.0 // indirect
+	github.com/otiai10/copy v1.7.0 // indirect
 	github.com/pkg/errors v0.9.1
 	github.com/playree/goingtpl v0.0.0-20180728103816-063435765262
 	github.com/sirupsen/logrus v1.4.1
 	github.com/swaggo/echo-swagger v0.0.0-20191205130555-62f81ea88919
-	github.com/swaggo/swag v1.8.1
-	golang.org/x/crypto v0.0.0-20210921155107-089bfa567519
-	golang.org/x/net v0.0.0-20220425223048-2871e0cb64e4 // indirect
-	golang.org/x/sys v0.0.0-20220429233432-b5fbb4746d32 // indirect
-	golang.org/x/tools v0.1.10 // indirect
+	github.com/swaggo/swag v1.16.1
+	github.com/tidwall/pretty v1.0.0 // indirect
+	github.com/youmark/pkcs8 v0.0.0-20201027041543-1326539a0a0a // indirect
+	go.mongodb.org/mongo-driver v1.12.1 // indirect
+	golang.org/x/crypto v0.12.0
+	golang.org/x/net v0.14.0 // indirect
+	golang.org/x/tools v0.12.0 // indirect
+	golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1 // indirect
 	gopkg.in/elazarl/goproxy.v1 v1.0.0-20180725130230-947c36da3153 // indirect
 )

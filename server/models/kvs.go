@@ -1,42 +1,37 @@
 package models
 
 import (
+	"time"
+
 	"github.com/globalsign/mgo/bson"
-	"github.com/go-bongo/bongo"
 	"github.com/mohemohe/parakeet/server/models/connection"
+	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo/options"
+	"golang.org/x/net/context"
 )
 
 type (
 	KV struct {
-		bongo.DocumentBase `bson:",inline"`
-		Key                string      `bson:"key" json:"key"`
-		Value              interface{} `bson:"value" json:"value"`
+		ID       primitive.ObjectID `bson:"_id" json:"_id"`
+		Created  time.Time          `bson:"_created" json:"_created"`
+		Modified time.Time          `bson:"_modified" json:"_modified"`
+
+		Key   string      `bson:"key" json:"key"`
+		Value interface{} `bson:"value" json:"value"`
 	}
 )
 
 func GetKVS(key string) *KV {
-	cacheKey := "kvs:" + key
-
 	result := new(KV)
-	if err := GetCache(cacheKey, result); err == nil {
-		return result
-	}
-
-	err := connection.Mongo().Collection(collections.KVS).FindOne(bson.M{"key": key}, result)
+	err := connection.Mongo().Collection(collections.KVS).FindOne(context.TODO(), bson.M{"key": key}).Decode(result)
 	if err != nil {
 		return nil
 	}
-
-	_ = SetCache(cacheKey, result)
 
 	return result
 }
 
 func SetKVS(key string, value interface{}) error {
-	_, err := connection.Mongo().Collection(collections.KVS).Collection().Upsert(bson.M{"key": key}, bson.M{"key": key, "value": value})
-	if err == nil {
-		PurgeInternalCache()
-		_ = SetCache("kvs:"+key, value)
-	}
+	_, err := connection.Mongo().Collection(collections.KVS).UpdateOne(context.TODO(), bson.M{"key": key}, bson.M{"$set": bson.M{"key": key, "value": value}}, &options.UpdateOptions{Upsert: connection.TruePtr})
 	return err
 }

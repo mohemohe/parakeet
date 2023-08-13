@@ -45,9 +45,6 @@ export class SettingsStore extends StoreBase {
     public render: IRender;
 
     @observable
-    public mongoDbQueryCache: boolean;
-
-    @observable
     public ssrPageCache: boolean;
 
     @observable.shallow
@@ -74,7 +71,6 @@ export class SettingsStore extends StoreBase {
             entry: false,
             timeout: 3000,
         } as IRender;
-        this.mongoDbQueryCache = false;
         this.ssrPageCache = false;
         this.cloudflare = {
             enable: false,
@@ -406,70 +402,6 @@ export class SettingsStore extends StoreBase {
             this.setState(State.DONE);
         } catch (e) {
             this.tryShowToast("レンダリング設定の保存に失敗しました");
-            console.error(e);
-            this.setState(State.ERROR);
-        }
-    }
-
-    @action
-    public async getMongoDbQueryCache() {
-        this.setMode(Mode.GET);
-        this.setState(State.RUNNING);
-
-        try {
-            const url = `${this.apiBasePath}v1/settings/cache/mongodb`;
-            const response = await fetch(url, {
-                method: "GET",
-                headers: this.generateFetchHeader(),
-            });
-
-            if (response.status !== 200) {
-                throw new Error();
-            }
-
-            const result = await response.json();
-            this.mongoDbQueryCache = result.value;
-
-            this.setState(State.DONE);
-        } catch (e) {
-            this.tryShowToast("キャッシュ設定の取得に失敗しました");
-            console.error(e);
-            this.setState(State.ERROR);
-        }
-    }
-
-    @action
-    public setMongoDbQueryCache(enable: boolean) {
-        this.mongoDbQueryCache = enable;
-    }
-
-    @action
-    public async putMongoDbQueryCache() {
-        this.setMode(Mode.GET);
-        this.setState(State.RUNNING);
-
-        try {
-            const url = `${this.apiBasePath}v1/settings/cache/mongodb`;
-            const response = await fetch(url, {
-                method: "PUT",
-                headers: this.generateFetchHeader(),
-                body: JSON.stringify({
-                    value: this.mongoDbQueryCache,
-                }),
-            });
-
-            if (response.status !== 200) {
-                throw new Error();
-            }
-
-            const result = await response.json();
-            this.mongoDbQueryCache = result.value;
-
-            this.tryShowToast("キャッシュ設定を編集しました");
-            stores.AuthStore.checkAuth();
-            this.setState(State.DONE);
-        } catch (e) {
-            this.tryShowToast("キャッシュ設定の保存に失敗しました");
             console.error(e);
             this.setState(State.ERROR);
         }
