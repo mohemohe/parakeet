@@ -1,9 +1,9 @@
 import * as React from "react";
 import { Link } from "react-router-dom";
 import { inject, observer } from "mobx-react";
-import {Collapse, Divider, List, ListItem, ListItemText, Paper} from "@material-ui/core";
-import ExpandLess from "@material-ui/icons/ExpandLess";
-import ExpandMore from "@material-ui/icons/ExpandMore";
+import {Collapse, Divider, List, ListItem, ListItemText, Paper} from "@mui/material";
+import ExpandLess from "@mui/icons-material/ExpandLess";
+import ExpandMore from "@mui/icons-material/ExpandMore";
 import {style} from "typestyle";
 import { COLORS, SIZES } from "../../constants/Style";
 import { IRouteInfo, ROUTES } from "../../constants/Route";

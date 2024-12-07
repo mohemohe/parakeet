@@ -1,7 +1,7 @@
 import React from "react";
 import {style} from "typestyle";
-import Card from "@material-ui/core/Card";
-import type { CardProps } from "@material-ui/core/Card";
+import Card from "@mui/material/Card";
+import type { CardProps } from "@mui/material/Card";
 import {COLORS, DARK_COLORS} from "../constants/Style";
 
 interface IProps extends CardProps {

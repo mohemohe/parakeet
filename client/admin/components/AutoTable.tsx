@@ -1,8 +1,8 @@
 import React from 'react';
-import {Paper, Table, TableHead, TableBody, TableCell, TableRow, Button} from '@material-ui/core';
-import ArrowBack from '@material-ui/icons/ArrowBack';
-import ArrowForward from '@material-ui/icons/ArrowForward';
-import {PaperProps} from '@material-ui/core/Paper';
+import {Paper, Table, TableHead, TableBody, TableCell, TableRow, Button} from '@mui/material';
+import ArrowBack from '@mui/icons-material/ArrowBack';
+import ArrowForward from '@mui/icons-material/ArrowForward';
+import {PaperProps} from '@mui/material/Paper';
 
 type Any = any;
 interface ITableItem extends Any {

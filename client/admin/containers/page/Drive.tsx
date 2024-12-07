@@ -2,15 +2,15 @@ import * as React from "react";
 import {inject, observer} from "mobx-react";
 import {Command, DriveStore, FileType, IFileInfo} from "../../stores/DriveStore";
 import * as mimeTypes from "mime-types";
-import Folder from "@material-ui/icons/Folder";
+import Folder from "@mui/icons-material/Folder";
 import {style} from "typestyle/lib";
-import Subject from "@material-ui/icons/Subject";
-import Audiotrack from "@material-ui/icons/Audiotrack";
-import Code from "@material-ui/icons/Code";
-import Help from "@material-ui/icons/Help";
-import Movie from "@material-ui/icons/Movie";
-import Photo from "@material-ui/icons/Photo";
-import InsertDriveFile from "@material-ui/icons/InsertDriveFile";
+import Subject from "@mui/icons-material/Subject";
+import Audiotrack from "@mui/icons-material/Audiotrack";
+import Code from "@mui/icons-material/Code";
+import Help from "@mui/icons-material/Help";
+import Movie from "@mui/icons-material/Movie";
+import Photo from "@mui/icons-material/Photo";
+import InsertDriveFile from "@mui/icons-material/InsertDriveFile";
 import type {RouterStore} from "mobx-react-router";
 import TextTruncate from "react-text-truncate";
 import {animation, contextMenu, Item, Menu, Separator} from "react-contexify";
@@ -28,7 +28,7 @@ import {
     DialogTitle,
     Paper,
     TextField, Typography
-} from "@material-ui/core";
+} from "@mui/material";
 import {TitleBar} from "../../../common/components/TitleBar";
 import {Container} from "../../../common/components/Container";
 import {Link} from "react-router-dom";

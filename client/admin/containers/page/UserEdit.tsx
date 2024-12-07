@@ -3,7 +3,7 @@ import {inject, observer} from "mobx-react";
 import {UserStore} from "../../stores/UserStore";
 import {RouteComponentProps} from "react-router-dom";
 import {ValidatableTextField} from "../../components/ValidatableTextField";
-import {FormControl, Input, InputLabel, Select, MenuItem, Button, Box} from "@material-ui/core";
+import {FormControl, Input, InputLabel, Select, MenuItem, Button, Box} from "@mui/material";
 import {style} from "typestyle";
 import {AuthStore} from "../../stores/AuthStore";
 import {TitleBar} from "../../../common/components/TitleBar";

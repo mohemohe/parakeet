@@ -1,7 +1,7 @@
 import {action, computed, observable} from "mobx";
 import StoreBase, {IModel, IPagitane, Mode, State} from "./StoreBase";
 import React from "react";
-import Edit from "@material-ui/icons/Edit";
+import Edit from "@mui/icons-material/Edit";
 import stores from "../../admin/stores";
 import {LinkButton} from "../../common/components/LinkButton";
 

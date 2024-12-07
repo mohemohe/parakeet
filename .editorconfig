@@ -1,0 +1,19 @@
+# .editorconfig file
+# This file is for unifying the coding style for different editors and IDEs
+# More information: https://editorconfig.org
+
+root = true
+
+# Default settings: use spaces with a width of 2
+[*]
+indent_style = space
+indent_size = 2
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+# Go files with tab width of 2
+[*.go]
+indent_style = tab
+tab_width = 2

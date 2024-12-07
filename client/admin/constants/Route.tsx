@@ -1,10 +1,10 @@
 import * as React from "react";
-import Home from "@material-ui/icons/Home";
-import Subject from "@material-ui/icons/Subject";
-import People from "@material-ui/icons/People";
-import InsertDriveFile from "@material-ui/icons/InsertDriveFile";
-import Settings from "@material-ui/icons/Settings";
-import Folder from "@material-ui/icons/Folder";
+import Home from "@mui/icons-material/Home";
+import Subject from "@mui/icons-material/Subject";
+import People from "@mui/icons-material/People";
+import InsertDriveFile from "@mui/icons-material/InsertDriveFile";
+import Settings from "@mui/icons-material/Settings";
+import Folder from "@mui/icons-material/Folder";
 import { Index } from "../containers/page/Index";
 import { LoginPage } from "../containers/page/auth/Login";
 import { LogoutPage } from "../containers/page/auth/Logout";

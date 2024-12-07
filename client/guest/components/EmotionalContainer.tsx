@@ -1,7 +1,7 @@
 import React from "react";
 import {style} from "typestyle";
-import Container from "@material-ui/core/Container";
-import type {ContainerProps} from "@material-ui/core/Container";
+import Container from "@mui/material/Container";
+import type {ContainerProps} from "@mui/material/Container";
 import {SIZES} from "../constants/Style";
 
 interface IProps extends ContainerProps {

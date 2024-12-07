@@ -5,6 +5,11 @@ import ReactDOM from "react-dom";
 import {setStylesTarget} from "typestyle";
 import App from "./containers/App";
 import "./style.scss";
+import { theme } from "../common/lib/theme";
+import { createEmotionCache } from "../common/lib/emotion";
+import { ThemeProvider } from "@mui/material/styles";
+import CssBaseline from "@mui/material/CssBaseline";
+import { CacheProvider } from "@emotion/react";
 
 const style = document.getElementById("typestyle");
 if (style) {
@@ -26,7 +31,16 @@ if (!initialState) {
     };
     (window as any).__INITIAL_STATE__ = initialState;
 
-    ReactDOM.render(<App isSSR={false} pathname={initialState.pathname} ssrState={initialState.state} title={initialState.title} />, document.querySelector("#app"));
+    const emotionCache = createEmotionCache();
+
+    ReactDOM.render(
+      <CacheProvider value={emotionCache}>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <App isSSR={false} pathname={initialState.pathname} ssrState={initialState.state} title={initialState.title} />
+      </ThemeProvider>
+    </CacheProvider>
+    , document.querySelector("#app"));
 } else {
     ReactDOM.hydrate(<App isSSR={false} pathname={initialState.pathname} ssrState={initialState.state} title={initialState.title} />, document.querySelector("#app"));
 }

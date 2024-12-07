@@ -3,7 +3,7 @@ import {style} from "typestyle";
 import {inject, observer} from "mobx-react";
 import {Route, Router as ReactRouter, Switch} from "react-router";
 import {createHashHistory} from "history";
-import MobxReactRouter, {RouterStore, syncHistoryWithStore} from "mobx-react-router";
+import MobxReactRouter, {RouterStore} from "@superwf/mobx-react-router";
 import Notfound from "./page/NotFound";
 import {AuthStatus, AuthStore} from "../stores/AuthStore";
 import {LoginPage} from "./page/auth/Login";
@@ -12,8 +12,8 @@ import {IRouteInfo, ROUTES} from "../constants/Route";
 import {LeftNav} from "./common/LeftNav";
 import {SyncedRouter} from "../../common/components/SyncedRouter";
 import {UserInfo} from "../components/UserInfo";
-import {IconButton} from "@material-ui/core";
-import ExitIcon from "@material-ui/icons/NoMeetingRoom";
+import {IconButton} from "@mui/material";
+import ExitIcon from "@mui/icons-material/NoMeetingRoom";
 import Toast from "./common/Toast";
 
 interface IProps {
@@ -53,11 +53,11 @@ export default class Router extends React.Component<IProps, IState> {
         super(props, state);
 
         const history = createHashHistory();
-        this.history = syncHistoryWithStore(history, this.props.RouterStore!);
+        this.history = syncHistoryWithStore(history, );
         this.routeArray = [];
     }
 
-    private history: MobxReactRouter.SynchronizedHistory;
+    private history: MobxReactRouter;
     private routeArray: any[];
 
     public componentDidMount() {
@@ -97,7 +97,7 @@ export default class Router extends React.Component<IProps, IState> {
                     <LeftNav>
                         <UserInfo identicon={this.props.AuthStore!.email} name={this.props.AuthStore!.name} role={this.props.AuthStore!.role}>
                             <div className={styles.logout}>
-                                <IconButton onClick={() => this.props.AuthStore!.logout()}>
+                                <IconButton onClick={() => this.props.AuthStore!.logout()} size="large">
                                     <ExitIcon />
                                 </IconButton>
                             </div>

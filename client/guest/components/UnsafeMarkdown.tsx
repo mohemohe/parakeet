@@ -81,7 +81,7 @@ export class UnsafeMarkdown extends React.Component<IProps, IState> {
 		const SyntaxHighlighter = this.SyntaxHighlighter;
 
 		return (
-			<ReactMarkdown
+            <ReactMarkdown
 				className={`side_content_body markdown-body ${styles.markdown} ${this.props.markdownClassName}`}
 				children={body as any}
 				remarkRehypeOptions={{
@@ -105,7 +105,7 @@ export class UnsafeMarkdown extends React.Component<IProps, IState> {
 							<code className={className} {...props}>
 								{children}
 							</code>
-						)
+						);
 					}
 				} : undefined}
 				// @ts-ignore
@@ -114,7 +114,7 @@ export class UnsafeMarkdown extends React.Component<IProps, IState> {
 				rehypePlugins={[rehypeRaw]}
 				{...this.props}
 			/>
-		);
+        );
 	}
 
 	private static migrateLanguage(language: string) {

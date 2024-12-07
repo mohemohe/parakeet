@@ -2,7 +2,7 @@ import * as React from "react";
 import {inject, observer} from "mobx-react";
 import {SettingsStore} from "../../../stores/SettingsStore";
 import {RouteComponentProps} from "react-router-dom";
-import {FormControl, Button, Box, Typography} from "@material-ui/core";
+import {FormControl, Button, Box, Typography} from "@mui/material";
 import {classes, style} from "typestyle";
 import {AuthStore} from "../../../stores/AuthStore";
 import {TitleBar} from "../../../../common/components/TitleBar";

@@ -2,8 +2,8 @@ import * as React from "react";
 import { style } from "typestyle";
 import { Redirect } from "react-router-dom";
 import { inject, observer } from "mobx-react";
-import { Card, CardActions, CardContent, Button, Typography, TextField } from "@material-ui/core";
-import SendIcon from "@material-ui/icons/Send";
+import { Card, CardActions, CardContent, Button, Typography, TextField } from "@mui/material";
+import SendIcon from "@mui/icons-material/Send";
 import { COLORS } from "../../../constants/Style";
 import {AuthStore, AuthStatus} from "../../../stores/AuthStore";
 

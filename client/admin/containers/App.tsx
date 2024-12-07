@@ -2,6 +2,11 @@ import * as React from "react";
 import { Provider } from "mobx-react";
 import store from "../stores";
 import Router from "./Router";
+import {RouterStore} from "@superwf/mobx-react-router";
+import {createHashHistory} from "history";
+
+const history = createHashHistory();
+store.RouterStore = new RouterStore(history);
 
 interface IProps {
 }

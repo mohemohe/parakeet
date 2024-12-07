@@ -1,7 +1,7 @@
 import React from "react";
 import {style} from "typestyle";
 import {Identicon} from "../../common/components/Identicon";
-import {Typography} from "@material-ui/core";
+import {Typography} from "@mui/material";
 import {COLORS} from "../constants/Style";
 
 export interface IProps extends React.HTMLProps<HTMLDivElement> {

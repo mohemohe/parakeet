@@ -1,7 +1,7 @@
 import * as React from "react";
 import {Container} from "../../../common/components/Container";
 import {Link} from "react-router-dom";
-import {Box} from "@material-ui/core";
+import {Box} from "@mui/material";
 
 interface IProps extends React.ClassAttributes<{}> {
 }

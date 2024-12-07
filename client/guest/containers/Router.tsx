@@ -2,9 +2,8 @@ import React from "react";
 import { style } from "typestyle";
 import { inject, observer } from "mobx-react";
 import {Route, Router as ReactRouter, StaticRouter, Switch} from "react-router";
-import {createMemoryHistory, createBrowserHistory} from "history";
-import MobxReactRouter, {syncHistoryWithStore} from "mobx-react-router";
-import type {RouterStore} from "mobx-react-router";
+import type {RouterStore} from "@superwf/mobx-react-router";
+import type {History} from "history";
 import Toast from "./common/Toast";
 import Notfound from "./page/NotFound";
 import Index from "./page/Index";
@@ -45,11 +44,10 @@ export default class Router extends React.Component<IProps, IState> {
     constructor(props: IProps, state: IState) {
         super(props, state);
 
-        const history = this.props.isSSR ? createMemoryHistory() : createBrowserHistory();
-        this.history = syncHistoryWithStore(history, this.props.RouterStore!);
+        this.history = this.props.RouterStore!.history;
         this.history.replace(this.props.pathname);
         this.pathname = this.props.pathname;
-        this.history.subscribe((location, action) => {
+        this.history.listen(({location, action}) => {
             if (location.pathname != this.pathname) {
                 this.pathname = location.pathname;
                 window.scrollTo(0, 0);
@@ -57,7 +55,7 @@ export default class Router extends React.Component<IProps, IState> {
         })
     }
 
-    private history: MobxReactRouter.SynchronizedHistory;
+    private history: History;
     private pathname: string;
 
     public render() {

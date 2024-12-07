@@ -5,7 +5,7 @@ import {AutoTable} from "../../components/AutoTable";
 import {LinkButton} from "../../../common/components/LinkButton";
 import {TitleBar} from "../../../common/components/TitleBar";
 import {Container} from "../../../common/components/Container";
-import {Box, Typography} from "@material-ui/core";
+import {Box, Typography} from "@mui/material";
 
 
 interface IProps extends React.ClassAttributes<{}> {

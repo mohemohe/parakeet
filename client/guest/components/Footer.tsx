@@ -1,7 +1,7 @@
 import React from "react";
 import {style} from "typestyle";
 import {COLORS, SIZES} from "../constants/Style";
-import Container from "@material-ui/core/Container";
+import Container from "@mui/material/Container";
 
 interface IProps extends React.ComponentClass<HTMLDivElement> {
 }

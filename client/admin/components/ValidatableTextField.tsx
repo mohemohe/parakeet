@@ -1,9 +1,9 @@
 import * as React from "react";
 import { style } from "typestyle/lib";
-import {IconButton, InputAdornment, TextField} from "@material-ui/core";
-import { StandardTextFieldProps } from "@material-ui/core/TextField";
+import {IconButton, InputAdornment, TextField} from "@mui/material";
+import { StandardTextFieldProps } from "@mui/material/TextField";
 import { COLORS } from "../constants/Style";
-import {Visibility, VisibilityOff} from "@material-ui/icons";
+import {Visibility, VisibilityOff} from "@mui/icons-material";
 
 interface IValidator {
     errorText?: string;
@@ -108,7 +108,9 @@ export class ValidatableTextField extends React.Component<IProps, IState> {
                 InputProps={{
                     endAdornment: this.props.togglePassword && (
                         <InputAdornment position="end">
-                            <IconButton onClick={() => this.setState({ showPassword: !this.state.showPassword })}>
+                            <IconButton
+                                onClick={() => this.setState({ showPassword: !this.state.showPassword })}
+                                size="large">
                                 {this.state.showPassword ? <VisibilityOff /> : <Visibility />}
                             </IconButton>
                         </InputAdornment>

@@ -1,7 +1,7 @@
 import React from "react";
 import CF from "codeflask";
 import {classes, style} from "typestyle";
-import Card from "@material-ui/core/Card";
+import Card from "@mui/material/Card";
 import Prism from "prismjs";
 import "prismjs/components/prism-markdown";
 
